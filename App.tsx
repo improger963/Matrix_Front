@@ -1,6 +1,6 @@
 
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
 import MatrixView from './components/MatrixView';
@@ -11,25 +11,16 @@ import FAQ from './components/FAQ';
 import Wallet from './components/Wallet';
 import Profile from './components/Profile';
 import TeamProgress from './components/TeamProgress';
-import { ShieldCheck, LayoutGrid, BotMessageSquare, Trophy, HelpCircle, BookOpen, Wallet as WalletIcon, UserCircle, TrendingUp, X } from 'lucide-react';
+import { ShieldCheck, LayoutGrid, BotMessageSquare, Trophy, HelpCircle, BookOpen, Wallet as WalletIcon, UserCircle, TrendingUp, MoreHorizontal } from 'lucide-react';
 import type { View, User } from './types';
 import { MOCK_USER } from './constants';
+import MoreMenu from './components/MoreMenu';
 
 
 const App: React.FC = () => {
     const [activeView, setActiveView] = useState<View>('dashboard');
     const [user, setUser] = useState<User>(MOCK_USER);
-    const [isSidebarOpen, setSidebarOpen] = useState(false);
-
-    useEffect(() => {
-        const handleResize = () => {
-            if (window.innerWidth >= 1024) {
-                setSidebarOpen(false);
-            }
-        };
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    const [isMoreMenuOpen, setMoreMenuOpen] = useState(false);
 
     const renderView = () => {
         switch (activeView) {
@@ -58,9 +49,7 @@ const App: React.FC = () => {
 
     const handleViewChange = (view: View) => {
         setActiveView(view);
-        if (window.innerWidth < 1024) {
-           setSidebarOpen(false);
-        }
+        setMoreMenuOpen(false);
     }
 
     const navItems = [
@@ -74,27 +63,25 @@ const App: React.FC = () => {
         { id: 'howitworks', label: 'Как это работает', icon: BookOpen },
         { id: 'faq', label: 'FAQ', icon: HelpCircle },
     ];
+    
+    const mainMobileNavItems = [
+        { id: 'dashboard', label: 'Главная', icon: LayoutGrid },
+        { id: 'matrix', label: 'Матрица', icon: ShieldCheck },
+        { id: 'team', label: 'Команда', icon: TrendingUp },
+        { id: 'wallet', label: 'Кошелек', icon: WalletIcon },
+    ];
+
+    const mainMobileNavIdsSet = new Set(mainMobileNavItems.map(item => item.id));
+    const moreNavItems = navItems.filter(item => !mainMobileNavIdsSet.has(item.id));
+    const isMoreMenuActive = moreNavItems.some(item => item.id === activeView);
+
 
     return (
         <div className="min-h-screen flex bg-dark-900 font-sans">
-            {/* Overlay for mobile */}
-            {isSidebarOpen && <div onClick={() => setSidebarOpen(false)} className="fixed inset-0 bg-black/60 z-30 lg:hidden" aria-hidden="true" />}
-
-            <aside className={`
-                fixed lg:relative inset-y-0 left-0 bg-dark-800 lg:w-64 p-4 lg:p-6 
-                transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 
-                transition-transform duration-300 ease-in-out z-40 lg:z-auto 
-                border-r border-dark-700 flex flex-col
-                ${!isSidebarOpen ? 'pointer-events-none' : 'pointer-events-auto'} lg:pointer-events-auto
-            `}>
-                <div className="flex items-center justify-between gap-3 mb-8">
-                    <div className="flex items-center gap-3">
-                        <ShieldCheck className="h-10 w-10 text-brand-primary" />
-                        <h1 className="text-xl font-bold text-white">MatrixFlow</h1>
-                    </div>
-                     <button onClick={() => setSidebarOpen(false)} className="lg:hidden p-1 text-gray-400 hover:text-white">
-                        <X className="h-6 w-6" />
-                    </button>
+            <aside className="hidden lg:flex flex-col bg-dark-800 w-64 p-6 border-r border-dark-700">
+                <div className="flex items-center gap-3 mb-8">
+                    <ShieldCheck className="h-10 w-10 text-brand-primary" />
+                    <h1 className="text-xl font-bold text-white">MatrixFlow</h1>
                 </div>
                 <nav className="flex-1 flex flex-col space-y-2">
                     {navItems.map(item => (
@@ -114,13 +101,51 @@ const App: React.FC = () => {
                 </nav>
             </aside>
             <div className="flex-1 flex flex-col relative z-10 min-w-0">
-                <Header user={user} onMenuClick={() => setSidebarOpen(true)} />
-                <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+                <Header user={user} />
+                <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto pb-24 lg:pb-8">
                     <div className="mt-8 animate-fade-in">
                         {renderView()}
                     </div>
                 </main>
             </div>
+            
+            <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-dark-800 border-t border-dark-700 z-50">
+                <div className="flex justify-around items-center h-16">
+                    {mainMobileNavItems.map(item => (
+                        <button
+                            key={item.id}
+                            onClick={() => handleViewChange(item.id as View)}
+                            className={`flex flex-col items-center justify-center w-full h-full transition-colors duration-200 ease-in-out
+                                ${activeView === item.id 
+                                    ? 'text-brand-primary' 
+                                    : 'text-gray-400 hover:text-brand-accent'
+                                }`}
+                        >
+                            <item.icon className="h-6 w-6 mb-1" />
+                            <span className="text-xs font-medium">{item.label}</span>
+                        </button>
+                    ))}
+                    <button
+                        onClick={() => setMoreMenuOpen(true)}
+                        className={`flex flex-col items-center justify-center w-full h-full transition-colors duration-200 ease-in-out
+                            ${isMoreMenuActive 
+                                ? 'text-brand-primary' 
+                                : 'text-gray-400 hover:text-brand-accent'
+                            }`}
+                    >
+                        <MoreHorizontal className="h-6 w-6 mb-1" />
+                        <span className="text-xs font-medium">Ещё</span>
+                    </button>
+                </div>
+            </nav>
+
+             <MoreMenu 
+                isOpen={isMoreMenuOpen}
+                onClose={() => setMoreMenuOpen(false)}
+                navItems={moreNavItems}
+                activeView={activeView}
+                onViewChange={handleViewChange}
+            />
         </div>
     );
 };

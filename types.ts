@@ -70,3 +70,12 @@ export interface Achievement {
         target: number;
     };
 }
+
+export interface Notification {
+    id: string;
+    icon: React.ElementType;
+    title: string;
+    description: string;
+    timestamp: string;
+    isRead: boolean;
+}

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import type { User } from '../types';
-import { MOCK_PROJECT_STATS } from '../constants';
+import { MOCK_PROJECT_STATS, MOCK_TRANSACTIONS } from '../constants';
 import Card from './ui/Card';
 import Button from './ui/Button';
 import Stat from './ui/Stat';
-import { DollarSign, Users, CheckSquare, Copy, Check, BarChart, UserPlus, Grid3X3, Globe, UserCheck, Award, CalendarDays } from 'lucide-react';
+import { DollarSign, Users, CheckSquare, Copy, Check, BarChart, UserPlus, Grid3X3, Globe, UserCheck, Award, CalendarDays, Gift } from 'lucide-react';
 
 const PersonalStat: React.FC<{ icon: React.ReactNode; label: string; value: string | number; }> = ({ icon, label, value }) => (
     <div className="bg-dark-700/50 p-4 rounded-lg flex items-center gap-4 transition-all hover:bg-dark-700 hover:shadow-lg">
@@ -34,6 +34,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     
     const referralsForNextLevel = 10;
     const progressPercentage = (user.referrals % referralsForNextLevel) / referralsForNextLevel * 100;
+    
+    const matrixEarnings = MOCK_TRANSACTIONS
+        .filter(t => t.type === 'earning')
+        .reduce((acc, t) => acc + t.amount, 0);
 
     return (
         <div className="space-y-6 animate-slide-in-up">
@@ -42,9 +46,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                      <UserCheck className="h-6 w-6 text-brand-accent" />
                      <h3 className="text-xl font-bold text-white">Личная статистика</h3>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                      <PersonalStat icon={<Award className="h-6 w-6"/>} label="Текущий уровень" value={user.level} />
-                     <PersonalStat icon={<DollarSign className="h-6 w-6"/>} label="Общий доход" value={`$${user.balance.toLocaleString('ru-RU')}`} />
+                     <PersonalStat icon={<DollarSign className="h-6 w-6"/>} label="Общий баланс" value={`$${user.balance.toLocaleString('ru-RU')}`} />
+                     <PersonalStat icon={<Gift className="h-6 w-6"/>} label="Доход от матриц" value={`$${matrixEarnings.toLocaleString('ru-RU')}`} />
                      <PersonalStat icon={<Users className="h-6 w-6"/>} label="Личные рефералы" value={user.referrals} />
                      <PersonalStat icon={<CheckSquare className="h-6 w-6"/>} label="Закрыто матриц" value={user.matrixCompletions} />
                      <PersonalStat icon={<CalendarDays className="h-6 w-6"/>} label="Дата регистрации" value={user.joinDate} />

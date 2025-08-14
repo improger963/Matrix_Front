@@ -1,13 +1,26 @@
-import type { User, MatrixNode, Leader, Transaction, ProjectStats, TeamMember, Achievement } from './types';
-import { Award, CheckCircle, Gift, Network, Rocket, ShieldCheck, Target, Users } from 'lucide-react';
 
+import type { User, MatrixNode, Leader, Transaction, ProjectStats, TeamMember, Achievement, Notification } from './types';
+import { Award, CheckCircle, Gift, Network, Rocket, ShieldCheck, Target, Users, UserPlus, DollarSign } from 'lucide-react';
+
+export const MOCK_TRANSACTIONS: Transaction[] = [
+    { id: 'T001', type: 'earning', amount: 50.00, date: '2024-07-20', status: 'completed' },
+    { id: 'T002', type: 'withdrawal', amount: -200.00, date: '2024-07-19', status: 'completed' },
+    { id: 'T003', type: 'deposit', amount: 100.00, date: '2024-07-18', status: 'completed' },
+    { id: 'T004', type: 'earning', amount: 25.50, date: '2024-07-17', status: 'completed' },
+    { id: 'T005', type: 'activation', amount: -10.00, date: '2024-07-15', status: 'completed' },
+    { id: 'T006', type: 'withdrawal', amount: -50.00, date: '2024-07-14', status: 'pending' },
+    { id: 'T007', type: 'deposit', amount: 500.00, date: '2024-07-12', status: 'completed' },
+    { id: 'T008', type: 'earning', amount: 150.00, date: '2024-07-11', status: 'completed' },
+];
+
+const CALCULATED_BALANCE = MOCK_TRANSACTIONS.reduce((acc, t) => acc + t.amount, 0);
 
 export const MOCK_USER: User = {
     id: 'U12345',
     name: 'Алексей Волков',
     avatarUrl: 'https://i.pravatar.cc/150?u=U12345',
     level: 5,
-    balance: 1250.75,
+    balance: CALCULATED_BALANCE,
     referrals: 14,
     matrixCompletions: 3,
     referralLink: 'https://matrixflow.app/join?ref=U12345',
@@ -155,17 +168,6 @@ export const MOCK_LEADERS: Leader[] = [
     { rank: 6, name: 'Андрей Соколов', avatarUrl: 'https://i.pravatar.cc/150?u=L6', earnings: 4900.80, level: 6 },
 ];
 
-export const MOCK_TRANSACTIONS: Transaction[] = [
-    { id: 'T001', type: 'earning', amount: 50.00, date: '2024-07-20', status: 'completed' },
-    { id: 'T002', type: 'withdrawal', amount: -200.00, date: '2024-07-19', status: 'completed' },
-    { id: 'T003', type: 'deposit', amount: 100.00, date: '2024-07-18', status: 'completed' },
-    { id: 'T004', type: 'earning', amount: 25.50, date: '2024-07-17', status: 'completed' },
-    { id: 'T005', type: 'activation', amount: -10.00, date: '2024-07-15', status: 'completed' },
-    { id: 'T006', type: 'withdrawal', amount: -50.00, date: '2024-07-14', status: 'pending' },
-    { id: 'T007', type: 'deposit', amount: 500.00, date: '2024-07-12', status: 'completed' },
-    { id: 'T008', type: 'earning', amount: 150.00, date: '2024-07-11', status: 'failed' },
-];
-
 export const MOCK_TEAM_MEMBERS: TeamMember[] = [
     { id: 'U67890', name: 'Мария Соколова', avatarUrl: 'https://i.pravatar.cc/150?u=U67890', joinDate: '2024-06-15', level: 4, referrals: 2, status: 'active' },
     { id: 'UABCDE', name: 'Сергей Новиков', avatarUrl: 'https://i.pravatar.cc/150?u=UABCDE', joinDate: '2024-06-20', level: 3, referrals: 1, status: 'active' },
@@ -195,4 +197,39 @@ export const MOCK_ACHIEVEMENTS: Achievement[] = [
     { id: 'ach06', title: 'Строитель сети', description: 'Ваша команда достигла 25 человек.', icon: Network, unlocked: false, progress: { current: 18, target: 25 } },
     { id: 'ach07', title: 'Первый доход', description: 'Заработайте свои первые $100.', icon: Gift, unlocked: true },
     { id: 'ach08', title: 'Инвестор', description: 'Достигните баланса в $1000.', icon: CheckCircle, unlocked: true, progress: { current: MOCK_USER.balance, target: 1000 } },
+];
+
+export const MOCK_NOTIFICATIONS: Notification[] = [
+    {
+        id: 'N001',
+        icon: UserPlus,
+        title: 'Новый реферал!',
+        description: 'Пользователь "Иван Петров" присоединился по вашей ссылке.',
+        timestamp: '5 минут назад',
+        isRead: false,
+    },
+    {
+        id: 'N002',
+        icon: ShieldCheck,
+        title: 'Матрица закрыта',
+        description: 'Вы успешно закрыли матрицу "Bronze" и получили вознаграждение.',
+        timestamp: '2 часа назад',
+        isRead: false,
+    },
+    {
+        id: 'N003',
+        icon: DollarSign,
+        title: 'Вывод средств',
+        description: 'Ваш запрос на вывод $50.00 был успешно обработан.',
+        timestamp: '1 день назад',
+        isRead: true,
+    },
+    {
+        id: 'N004',
+        icon: Award,
+        title: 'Новое достижение',
+        description: 'Вы разблокировали достижение "Командный игрок".',
+        timestamp: '2 дня назад',
+        isRead: true,
+    },
 ];
