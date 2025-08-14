@@ -1,7 +1,4 @@
 
-
-
-
 import React, { useState } from 'react';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
@@ -14,7 +11,10 @@ import Wallet from './components/Wallet';
 import Profile from './components/Profile';
 import TeamProgress from './components/TeamProgress';
 import LiveFeedView from './components/LiveFeedView';
-import { ShieldCheck, LayoutGrid, BotMessageSquare, Trophy, HelpCircle, BookOpen, Wallet as WalletIcon, UserCircle, TrendingUp, MoreHorizontal, Zap } from 'lucide-react';
+import Reviews from './components/Reviews';
+import Support from './components/Support';
+import News from './components/News';
+import { ShieldCheck, LayoutGrid, BotMessageSquare, Trophy, HelpCircle, BookOpen, Wallet as WalletIcon, UserCircle, TrendingUp, MoreHorizontal, Zap, MessageSquareQuote, LifeBuoy, Newspaper } from 'lucide-react';
 import type { View, User } from './types';
 import { MOCK_USER } from './constants';
 import MoreMenu from './components/MoreMenu';
@@ -54,6 +54,12 @@ const App: React.FC = () => {
                 return <FAQ />;
             case 'profile':
                 return <Profile user={user} onUpdateUser={setUser} />;
+            case 'reviews':
+                return <Reviews user={user} />;
+            case 'support':
+                return <Support />;
+            case 'news':
+                return <News />;
             default:
                 return <Dashboard user={user} />;
         }
@@ -75,6 +81,9 @@ const App: React.FC = () => {
         { id: 'livefeed', label: 'Живая лента', icon: Zap },
         { id: 'howitworks', label: 'Как это работает', icon: BookOpen },
         { id: 'faq', label: 'FAQ', icon: HelpCircle },
+        { id: 'reviews', label: 'Отзывы', icon: MessageSquareQuote },
+        { id: 'news', label: 'Новости', icon: Newspaper },
+        { id: 'support', label: 'Тех. Поддержка', icon: LifeBuoy },
     ];
     
     const mainMobileNavItems = [

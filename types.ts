@@ -1,4 +1,4 @@
-export type View = 'dashboard' | 'matrix' | 'marketing' | 'leaderboard' | 'howitworks' | 'faq' | 'wallet' | 'profile' | 'team' | 'livefeed';
+export type View = 'dashboard' | 'matrix' | 'marketing' | 'leaderboard' | 'howitworks' | 'faq' | 'wallet' | 'profile' | 'team' | 'livefeed' | 'reviews' | 'support' | 'news';
 
 export interface User {
   id: string;
@@ -36,7 +36,7 @@ export interface Leader {
 }
 
 export interface Transaction {
-    id: string;
+    id:string;
     type: 'deposit' | 'withdrawal' | 'earning' | 'activation' | 'transfer';
     amount: number;
     date: string;
@@ -102,4 +102,22 @@ export interface LiveFeedEvent {
   amount?: number;
   timestamp: Date;
   level?: number;
+}
+
+export interface Review {
+  id: string;
+  user: {
+    name: string;
+    avatarUrl: string;
+  };
+  rating: number; // 1 to 5
+  text: string;
+  timestamp: string;
+}
+
+export interface NewsArticle {
+  id: string;
+  title: string;
+  content: string;
+  timestamp: string;
 }
