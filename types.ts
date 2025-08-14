@@ -1,4 +1,4 @@
-export type View = 'dashboard' | 'matrix' | 'marketing' | 'leaderboard' | 'howitworks' | 'faq' | 'wallet' | 'profile' | 'team';
+export type View = 'dashboard' | 'matrix' | 'marketing' | 'leaderboard' | 'howitworks' | 'faq' | 'wallet' | 'profile' | 'team' | 'livefeed';
 
 export interface User {
   id: string;
@@ -27,6 +27,7 @@ export interface MatrixNode {
 }
 
 export interface Leader {
+    id: string;
     rank: number;
     name: string;
     avatarUrl: string;
@@ -36,10 +37,21 @@ export interface Leader {
 
 export interface Transaction {
     id: string;
-    type: 'deposit' | 'withdrawal' | 'earning' | 'activation';
+    type: 'deposit' | 'withdrawal' | 'earning' | 'activation' | 'transfer';
     amount: number;
     date: string;
     status: 'completed' | 'pending' | 'failed';
+    sender?: {
+        id: string;
+        name: string;
+        avatarUrl: string;
+    };
+    recipient?: {
+        id: string;
+        name: string;
+        avatarUrl: string;
+    };
+    comment?: string;
 }
 
 export interface ProjectStats {
@@ -72,10 +84,22 @@ export interface Achievement {
 }
 
 export interface Notification {
-    id: string;
+    id:string;
     icon: React.ElementType;
     title: string;
     description: string;
     timestamp: string;
     isRead: boolean;
+}
+
+export interface LiveFeedEvent {
+  id: string;
+  type: 'registration' | 'new_level' | 'withdrawal' | 'deposit' | 'matrix_close';
+  user: {
+    name: string;
+    avatarUrl: string;
+  };
+  amount?: number;
+  timestamp: Date;
+  level?: number;
 }

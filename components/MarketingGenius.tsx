@@ -1,16 +1,28 @@
 
 
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import Card from './ui/Card';
 import Button from './ui/Button';
 import { generateMarketingContentStream } from '../services/geminiService';
-import { Sparkles, LoaderCircle } from 'lucide-react';
+import { Sparkles, LoaderCircle, Clipboard, X } from 'lucide-react';
+
+const BlinkingCursor: React.FC = () => {
+    const [visible, setVisible] = useState(true);
+    useEffect(() => {
+        const interval = setInterval(() => setVisible(v => !v), 500);
+        return () => clearInterval(interval);
+    }, []);
+    return visible ? <span className="inline-block w-0.5 h-5 bg-brand-accent -mb-1 ml-0.5"></span> : <span className="inline-block w-0.5 h-5 -mb-1 ml-0.5"></span>;
+};
+
 
 const MarketingGenius: React.FC = () => {
     const [prompt, setPrompt] = useState('');
     const [generatedContent, setGeneratedContent] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [copied, setCopied] = useState(false);
 
     const handleGenerate = async () => {
         if (!prompt.trim()) {
@@ -32,6 +44,12 @@ const MarketingGenius: React.FC = () => {
         }
     };
     
+    const handleCopy = () => {
+        navigator.clipboard.writeText(generatedContent);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
     const suggestionPrompts = [
         "Напиши короткий пост для Telegram о преимуществах нашего проекта",
         "Создай рекламный текст для ВКонтакте, нацеленный на студентов",
@@ -70,12 +88,12 @@ const MarketingGenius: React.FC = () => {
                         </button>
                     ))}
                 </div>
-                <Button onClick={handleGenerate} disabled={isLoading}>
+                <Button onClick={handleGenerate} disabled={isLoading || !prompt.trim()}>
                     {isLoading ? (
-                        <>
+                        <span className="flex items-center">
                             <LoaderCircle className="animate-spin h-5 w-5 mr-2" />
                             Генерация...
-                        </>
+                        </span>
                     ) : (
                         'Сгенерировать контент'
                     )}
@@ -83,11 +101,26 @@ const MarketingGenius: React.FC = () => {
                 {error && <p className="text-red-500">{error}</p>}
             </div>
 
-            {generatedContent && (
+            {(generatedContent || isLoading) && (
                 <div className="mt-6">
-                    <h3 className="text-lg font-semibold text-white mb-2">Результат генерации:</h3>
+                    <div className="flex justify-between items-center mb-2">
+                         <h3 className="text-lg font-semibold text-white">Результат генерации:</h3>
+                         {generatedContent && !isLoading && (
+                            <div className="flex items-center gap-2">
+                                <Button variant="secondary" onClick={handleCopy} className="!px-3 !py-1.5 text-xs">
+                                    <Clipboard className="h-4 w-4 mr-1.5"/> {copied ? 'Скопировано!' : 'Копировать'}
+                                </Button>
+                                <Button variant="secondary" onClick={() => setGeneratedContent('')} className="!px-3 !py-1.5 text-xs">
+                                     <X className="h-4 w-4 mr-1.5"/> Очистить
+                                </Button>
+                            </div>
+                         )}
+                    </div>
                     <Card className="!bg-dark-900 max-h-96 overflow-y-auto">
-                        <pre className="text-gray-300 whitespace-pre-wrap font-sans">{generatedContent}</pre>
+                        <pre className="text-gray-300 whitespace-pre-wrap font-sans">
+                            {generatedContent}
+                            {isLoading && <BlinkingCursor/>}
+                        </pre>
                     </Card>
                 </div>
             )}

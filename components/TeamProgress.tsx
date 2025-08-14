@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import Card from './ui/Card';
 import type { User, TeamMember, Achievement } from '../types';
 import { MOCK_TEAM_MEMBERS, MOCK_ACHIEVEMENTS } from '../constants';
-import { Users, UserPlus, Activity, ChevronUp, ChevronDown, Trophy, Zap, Calendar, BarChart, Check, Shield } from 'lucide-react';
+import { Users, UserPlus, Activity, ChevronUp, ChevronDown, Trophy, Zap, Share2 } from 'lucide-react';
 
 type SortKey = 'name' | 'joinDate' | 'level' | 'referrals';
 type SortOrder = 'asc' | 'desc';
@@ -24,33 +24,40 @@ const AchievementCard: React.FC<{ achievement: Achievement }> = ({ achievement }
     const progressPercentage = progress ? (progress.current / progress.target) * 100 : 0;
     
     return (
-        <Card className={`!p-4 flex gap-4 items-center transition-all duration-300 ${unlocked ? 'bg-dark-700' : 'bg-dark-800/50'}`}>
-            <div className={`
-                relative flex-shrink-0 w-16 h-16 rounded-lg flex items-center justify-center
-                ${unlocked ? 'bg-brand-primary/20' : 'bg-dark-700'}
-            `}>
-                <Icon className={`h-8 w-8 ${unlocked ? 'text-brand-primary' : 'text-gray-500'}`} />
-                 {unlocked && (
-                    <div className="absolute -top-2 -right-2 bg-green-500 rounded-full p-1 border-2 border-dark-700">
-                        <Check className="h-3 w-3 text-white" />
+        <Card className={`
+            !p-4 flex flex-col justify-between gap-4 transition-all duration-300 h-full
+            ${unlocked ? 'bg-dark-700 relative animate-glow' : 'bg-dark-800/50 opacity-70'}
+        `}>
+            <div>
+                <div className="flex items-start justify-between">
+                    <div className={`
+                        relative flex-shrink-0 w-16 h-16 rounded-lg flex items-center justify-center
+                        ${unlocked ? 'bg-brand-primary/20' : 'bg-dark-700'}
+                    `}>
+                        <Icon className={`h-8 w-8 ${unlocked ? 'text-brand-primary' : 'text-gray-500'}`} />
                     </div>
-                )}
-            </div>
-            <div className="flex-1">
-                <h4 className={`font-bold ${unlocked ? 'text-white' : 'text-gray-400'}`}>{title}</h4>
+                    {unlocked && (
+                         <button className="flex items-center gap-1.5 text-xs bg-dark-600/50 hover:bg-dark-600 px-2 py-1 rounded-md text-brand-accent">
+                            <Share2 className="h-3 w-3" />
+                            <span>Поделиться</span>
+                        </button>
+                    )}
+                </div>
+                <h4 className={`font-bold mt-4 ${unlocked ? 'text-white' : 'text-gray-400'}`}>{title}</h4>
                 <p className="text-xs text-gray-500 mt-1">{description}</p>
-                {progress && (
-                    <div className="mt-2">
-                        <div className="flex justify-between text-xs text-gray-400 mb-1">
-                             <span>Прогресс</span>
-                             <span>{Math.min(progress.current, progress.target)}/{progress.target}</span>
-                        </div>
-                        <div className="w-full bg-dark-900 rounded-full h-1.5">
-                            <div className={`h-1.5 rounded-full ${unlocked ? 'bg-green-500' : 'bg-brand-secondary'}`} style={{ width: `${Math.min(progressPercentage, 100)}%` }}></div>
-                        </div>
-                    </div>
-                )}
             </div>
+            
+            {progress && (
+                <div className="mt-2">
+                    <div className="flex justify-between text-xs text-gray-400 mb-1">
+                            <span>Прогресс</span>
+                            <span>{Math.min(progress.current, progress.target)}/{progress.target}</span>
+                    </div>
+                    <div className="w-full bg-dark-900 rounded-full h-1.5">
+                        <div className={`h-1.5 rounded-full ${unlocked ? 'bg-green-500' : 'bg-brand-secondary'}`} style={{ width: `${Math.min(progressPercentage, 100)}%` }}></div>
+                    </div>
+                </div>
+            )}
         </Card>
     )
 };
@@ -206,14 +213,14 @@ const TeamProgress: React.FC<{ user: User }> = () => {
     
     const renderAchievementsView = () => (
         <Card>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {MOCK_ACHIEVEMENTS.map(ach => <AchievementCard key={ach.id} achievement={ach} />)}
             </div>
         </Card>
     );
 
     return (
-        <div className="space-y-6 animate-slide-in-up">
+        <div className="space-y-6">
             <div>
                 <h2 className="text-2xl font-bold text-white">Команда и Прогресс</h2>
                 <p className="text-gray-400">Анализируйте рост команды и отслеживайте свои достижения.</p>

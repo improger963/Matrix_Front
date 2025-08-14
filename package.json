@@ -13,7 +13,8 @@
     "react-dom": "^19.1.1",
     "@google/genai": "^1.14.0",
     "lucide-react": "^0.539.0",
-    "html-to-image": "^1.11.11"
+    "html-to-image": "^1.11.11",
+    "react-qr-code": "^2.0.12"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

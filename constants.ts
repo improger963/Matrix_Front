@@ -1,10 +1,36 @@
+import type { User, MatrixNode, Leader, Transaction, ProjectStats, TeamMember, Achievement, Notification, LiveFeedEvent } from './types';
+import { Award, CheckCircle, Gift, Network, Rocket, ShieldCheck, Target, Users, UserPlus, DollarSign, Share2 } from 'lucide-react';
 
+export const MOCK_USERS_DB: { [id: string]: Pick<User, 'id' | 'name' | 'avatarUrl'> } = {
+  'U12345': { id: 'U12345', name: 'Алексей Волков', avatarUrl: 'https://i.pravatar.cc/150?u=U12345' },
+  'U67890': { id: 'U67890', name: 'Мария Соколова', avatarUrl: 'https://i.pravatar.cc/150?u=U67890' },
+  'UABCDE': { id: 'UABCDE', name: 'Сергей Новиков', avatarUrl: 'https://i.pravatar.cc/150?u=UABCDE' },
+  'L1': { id: 'L1', name: 'Елена Максимова', avatarUrl: 'https://i.pravatar.cc/150?u=L1' },
+  'L2': { id: 'L2', name: 'Дмитрий Громов', avatarUrl: 'https://i.pravatar.cc/150?u=L2' },
+};
 
-import type { User, MatrixNode, Leader, Transaction, ProjectStats, TeamMember, Achievement, Notification } from './types';
-import { Award, CheckCircle, Gift, Network, Rocket, ShieldCheck, Target, Users, UserPlus, DollarSign } from 'lucide-react';
 
 export const MOCK_TRANSACTIONS: Transaction[] = [
+    { 
+        id: 'T009', 
+        type: 'transfer', 
+        amount: -25.00, 
+        date: '2024-07-21', 
+        status: 'completed',
+        sender: MOCK_USERS_DB['U12345'],
+        recipient: MOCK_USERS_DB['U67890'],
+        comment: 'Спасибо за помощь!'
+    },
     { id: 'T001', type: 'earning', amount: 50.00, date: '2024-07-20', status: 'completed' },
+    { 
+        id: 'T010', 
+        type: 'transfer', 
+        amount: 75.00, 
+        date: '2024-07-20', 
+        status: 'completed',
+        sender: MOCK_USERS_DB['L1'],
+        recipient: MOCK_USERS_DB['U12345'],
+    },
     { id: 'T002', type: 'withdrawal', amount: -200.00, date: '2024-07-19', status: 'completed' },
     { id: 'T003', type: 'deposit', amount: 100.00, date: '2024-07-18', status: 'completed' },
     { id: 'T004', type: 'earning', amount: 25.50, date: '2024-07-17', status: 'completed' },
@@ -161,12 +187,12 @@ export const MOCK_MATRIX_DATA: MatrixNode = addDownlineToNode(RAW_MOCK_MATRIX_DA
 
 
 export const MOCK_LEADERS: Leader[] = [
-    { rank: 1, name: 'Елена Максимова', avatarUrl: 'https://i.pravatar.cc/150?u=L1', earnings: 15200.50, level: 12 },
-    { rank: 2, name: 'Дмитрий Громов', avatarUrl: 'https://i.pravatar.cc/150?u=L2', earnings: 11850.00, level: 10 },
-    { rank: 3, name: 'Виктория Белова', avatarUrl: 'https://i.pravatar.cc/150?u=L3', earnings: 9750.25, level: 9 },
-    { rank: 4, name: 'Алексей Волков', avatarUrl: 'https://i.pravatar.cc/150?u=U12345', earnings: MOCK_USER.balance, level: MOCK_USER.level },
-    { rank: 5, name: 'Ирина Ковалева', avatarUrl: 'https://i.pravatar.cc/150?u=L5', earnings: 5600.00, level: 7 },
-    { rank: 6, name: 'Андрей Соколов', avatarUrl: 'https://i.pravatar.cc/150?u=L6', earnings: 4900.80, level: 6 },
+    { id: 'L1', rank: 1, name: 'Елена Максимова', avatarUrl: 'https://i.pravatar.cc/150?u=L1', earnings: 15200.50, level: 12 },
+    { id: 'L2', rank: 2, name: 'Дмитрий Громов', avatarUrl: 'https://i.pravatar.cc/150?u=L2', earnings: 11850.00, level: 10 },
+    { id: 'L3', rank: 3, name: 'Виктория Белова', avatarUrl: 'https://i.pravatar.cc/150?u=L3', earnings: 9750.25, level: 9 },
+    { id: 'U12345', rank: 4, name: 'Алексей Волков', avatarUrl: 'https://i.pravatar.cc/150?u=U12345', earnings: MOCK_USER.balance, level: MOCK_USER.level },
+    { id: 'L5', rank: 5, name: 'Ирина Ковалева', avatarUrl: 'https://i.pravatar.cc/150?u=L5', earnings: 5600.00, level: 7 },
+    { id: 'L6', rank: 6, name: 'Андрей Соколов', avatarUrl: 'https://i.pravatar.cc/150?u=L6', earnings: 4900.80, level: 6 },
 ];
 
 export const MOCK_TEAM_MEMBERS: TeamMember[] = [
@@ -233,4 +259,27 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
         timestamp: '2 дня назад',
         isRead: true,
     },
+];
+
+export const MOCK_LIVE_FEED_EVENTS: LiveFeedEvent[] = [
+    { id: 'EVT001', type: 'registration', user: { name: 'Елена С.', avatarUrl: 'https://i.pravatar.cc/150?u=EVT1' }, timestamp: new Date(Date.now() - 15 * 1000) },
+    { id: 'EVT002', type: 'withdrawal', user: { name: 'Дмитрий Г.', avatarUrl: 'https://i.pravatar.cc/150?u=L2' }, amount: 150.00, timestamp: new Date(Date.now() - 2 * 60 * 1000) },
+    { id: 'EVT003', type: 'new_level', user: { name: 'Виктория Б.', avatarUrl: 'https://i.pravatar.cc/150?u=L3' }, level: 10, timestamp: new Date(Date.now() - 5 * 60 * 1000) },
+    { id: 'EVT004', type: 'matrix_close', user: { name: 'Ирина К.', avatarUrl: 'https://i.pravatar.cc/150?u=L5' }, amount: 75.00, timestamp: new Date(Date.now() - 10 * 60 * 1000) },
+    { id: 'EVT005', type: 'deposit', user: { name: 'Андрей С.', avatarUrl: 'https://i.pravatar.cc/150?u=L6' }, amount: 200.00, timestamp: new Date(Date.now() - 25 * 60 * 1000) },
+    { id: 'EVT006', type: 'registration', user: { name: 'Ольга М.', avatarUrl: 'https://i.pravatar.cc/150?u=EVT6' }, timestamp: new Date(Date.now() - 45 * 60 * 1000) },
+    { id: 'EVT007', type: 'new_level', user: { name: 'Сергей Н.', avatarUrl: 'https://i.pravatar.cc/150?u=UABCDE' }, level: 4, timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000) },
+    { id: 'EVT008', type: 'registration', user: { name: 'Павел Р.', avatarUrl: 'https://i.pravatar.cc/150?u=EVT8' }, timestamp: new Date(Date.now() - 1.5 * 60 * 60 * 1000) },
+    { id: 'EVT009', type: 'deposit', user: { name: 'Анна Л.', avatarUrl: 'https://i.pravatar.cc/150?u=UFGHIJ' }, amount: 50.00, timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000) },
+    { id: 'EVT010', type: 'matrix_close', user: { name: 'Мария С.', avatarUrl: 'https://i.pravatar.cc/150?u=U67890' }, amount: 120.00, timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000) },
+    { id: 'EVT011', type: 'withdrawal', user: { name: 'Иван П.', avatarUrl: 'https://i.pravatar.cc/150?u=U11223' }, amount: 80.00, timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000) },
+    { id: 'EVT012', type: 'new_level', user: { name: 'Ольга К.', avatarUrl: 'https://i.pravatar.cc/150?u=U44556' }, level: 3, timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000) },
+    { id: 'EVT013', type: 'registration', user: { name: 'Кирилл В.', avatarUrl: 'https://i.pravatar.cc/150?u=EVT13' }, timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000) },
+    { id: 'EVT014', type: 'deposit', user: { name: 'Светлана А.', avatarUrl: 'https://i.pravatar.cc/150?u=EVT14' }, amount: 100.00, timestamp: new Date(Date.now() - 7 * 60 * 60 * 1000) },
+    { id: 'EVT015', type: 'new_level', user: { name: 'Елена Максимова', avatarUrl: 'https://i.pravatar.cc/150?u=L1' }, level: 13, timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000) },
+    { id: 'EVT016', type: 'matrix_close', user: { name: 'Дмитрий Громов', avatarUrl: 'https://i.pravatar.cc/150?u=L2' }, amount: 250.00, timestamp: new Date(Date.now() - 9 * 60 * 60 * 1000) },
+    { id: 'EVT017', type: 'withdrawal', user: { name: 'Алексей Волков', avatarUrl: 'https://i.pravatar.cc/150?u=U12345' }, amount: 100.00, timestamp: new Date(Date.now() - 10 * 60 * 60 * 1000) },
+    { id: 'EVT018', type: 'registration', user: { name: 'Наталья З.', avatarUrl: 'https://i.pravatar.cc/150?u=EVT18' }, timestamp: new Date(Date.now() - 11 * 60 * 60 * 1000) },
+    { id: 'EVT019', type: 'deposit', user: { name: 'Ирина Ковалева', avatarUrl: 'https://i.pravatar.cc/150?u=L5' }, amount: 300.00, timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000) },
+    { id: 'EVT020', type: 'new_level', user: { name: 'Андрей Соколов', avatarUrl: 'https://i.pravatar.cc/150?u=L6' }, level: 7, timestamp: new Date(Date.now() - 13 * 60 * 60 * 1000) },
 ];

@@ -1,5 +1,7 @@
 
 
+
+
 import React, { useState } from 'react';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
@@ -11,7 +13,8 @@ import FAQ from './components/FAQ';
 import Wallet from './components/Wallet';
 import Profile from './components/Profile';
 import TeamProgress from './components/TeamProgress';
-import { ShieldCheck, LayoutGrid, BotMessageSquare, Trophy, HelpCircle, BookOpen, Wallet as WalletIcon, UserCircle, TrendingUp, MoreHorizontal } from 'lucide-react';
+import LiveFeedView from './components/LiveFeedView';
+import { ShieldCheck, LayoutGrid, BotMessageSquare, Trophy, HelpCircle, BookOpen, Wallet as WalletIcon, UserCircle, TrendingUp, MoreHorizontal, Zap } from 'lucide-react';
 import type { View, User } from './types';
 import { MOCK_USER } from './constants';
 import MoreMenu from './components/MoreMenu';
@@ -21,6 +24,13 @@ const App: React.FC = () => {
     const [activeView, setActiveView] = useState<View>('dashboard');
     const [user, setUser] = useState<User>(MOCK_USER);
     const [isMoreMenuOpen, setMoreMenuOpen] = useState(false);
+
+    const handleLogout = () => {
+        // In a real app, this would clear tokens, etc.
+        console.log("User logged out");
+        // For demonstration, we can just reset to the initial state or show a login screen
+        // For now, we'll just log it.
+    };
 
     const renderView = () => {
         switch (activeView) {
@@ -35,7 +45,9 @@ const App: React.FC = () => {
             case 'marketing':
                 return <MarketingGenius />;
             case 'leaderboard':
-                return <Leaderboard />;
+                return <Leaderboard user={user} />;
+            case 'livefeed':
+                return <LiveFeedView />;
             case 'howitworks':
                 return <HowItWorks />;
             case 'faq':
@@ -60,6 +72,7 @@ const App: React.FC = () => {
         { id: 'profile', label: 'Профиль', icon: UserCircle },
         { id: 'marketing', label: 'AI-Копирайтер', icon: BotMessageSquare },
         { id: 'leaderboard', label: 'Лидеры', icon: Trophy },
+        { id: 'livefeed', label: 'Живая лента', icon: Zap },
         { id: 'howitworks', label: 'Как это работает', icon: BookOpen },
         { id: 'faq', label: 'FAQ', icon: HelpCircle },
     ];
@@ -78,7 +91,7 @@ const App: React.FC = () => {
 
     return (
         <div className="min-h-screen flex bg-dark-900 font-sans">
-            <aside className="hidden lg:flex flex-col bg-dark-800 w-64 p-6 border-r border-dark-700">
+            <aside className="hidden lg:flex flex-col bg-dark-800/70 backdrop-blur-sm w-64 p-6 border-r border-dark-700">
                 <div className="flex items-center gap-3 mb-8">
                     <ShieldCheck className="h-10 w-10 text-brand-primary" />
                     <h1 className="text-xl font-bold text-white">MatrixFlow</h1>
@@ -101,15 +114,15 @@ const App: React.FC = () => {
                 </nav>
             </aside>
             <div className="flex-1 flex flex-col relative z-10 min-w-0">
-                <Header user={user} />
+                <Header user={user} onViewChange={handleViewChange} onLogout={handleLogout} />
                 <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto pb-24 lg:pb-8">
-                    <div className="mt-8 animate-fade-in">
+                    <div key={activeView} className="mt-8 animate-fade-in">
                         {renderView()}
                     </div>
                 </main>
             </div>
             
-            <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-dark-800 border-t border-dark-700 z-50">
+            <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-dark-800/80 backdrop-blur-sm border-t border-dark-700 z-50">
                 <div className="flex justify-around items-center h-16">
                     {mainMobileNavItems.map(item => (
                         <button
