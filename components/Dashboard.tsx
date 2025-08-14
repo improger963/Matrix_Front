@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import type { User } from '../types';
 import { MOCK_PROJECT_STATS, MOCK_TRANSACTIONS } from '../constants';
@@ -52,7 +53,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                      <PersonalStat icon={<Gift className="h-6 w-6"/>} label="Доход от матриц" value={`$${matrixEarnings.toLocaleString('ru-RU')}`} />
                      <PersonalStat icon={<Users className="h-6 w-6"/>} label="Личные рефералы" value={user.referrals} />
                      <PersonalStat icon={<CheckSquare className="h-6 w-6"/>} label="Закрыто матриц" value={user.matrixCompletions} />
-                     <PersonalStat icon={<CalendarDays className="h-6 w-6"/>} label="Дата регистрации" value={user.joinDate} />
+                     <PersonalStat icon={<CalendarDays className="h-6 w-6"/>} label="Дата регистрации" value={new Date(user.joinDate).toLocaleDateString('ru-RU')} />
                 </div>
                 <div className="mt-6">
                     <div className="flex justify-between items-center mb-1">

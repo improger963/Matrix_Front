@@ -1,4 +1,5 @@
 
+
 import type { User, MatrixNode, Leader, Transaction, ProjectStats, TeamMember, Achievement, Notification } from './types';
 import { Award, CheckCircle, Gift, Network, Rocket, ShieldCheck, Target, Users, UserPlus, DollarSign } from 'lucide-react';
 
@@ -24,7 +25,7 @@ export const MOCK_USER: User = {
     referrals: 14,
     matrixCompletions: 3,
     referralLink: 'https://matrixflow.app/join?ref=U12345',
-    joinDate: '01.06.2024'
+    joinDate: '2024-06-01'
 };
 
 export const MOCK_PROJECT_STATS: ProjectStats = {

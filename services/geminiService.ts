@@ -1,17 +1,10 @@
 
-import { GoogleGenAI } from "@google/genai";
 
-if (!process.env.API_KEY) {
-    console.warn("API_KEY environment variable not set. AI features will not work.");
-}
+import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
 
 export const generateMarketingContentStream = async (prompt: string, onChunk: (text: string) => void) => {
-    if (!process.env.API_KEY) {
-        throw new Error("API ключ не настроен. Пожалуйста, установите переменную окружения API_KEY.");
-    }
-    
     const systemInstruction = `Вы — эксперт по маркетингу и копирайтингу для MLM-проектов. Ваша задача — создавать убедительные, мотивирующие и понятные тексты для привлечения новых участников. Используйте позитивный и энергичный тон. Тексты должны быть на русском языке.`;
 
     try {

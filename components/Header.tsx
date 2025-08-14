@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import type { User, Notification } from '../types';
 import { MOCK_NOTIFICATIONS } from '../constants';
@@ -71,14 +72,14 @@ const Header: React.FC<HeaderProps> = ({ user }) => {
                     )}
                 </div>
 
-                <div className="flex items-center gap-3 cursor-pointer group">
+                <button type="button" className="flex items-center gap-3 group">
                     <img src={user.avatarUrl} alt="User Avatar" className="h-10 w-10 rounded-full border-2 border-brand-secondary group-hover:border-brand-primary transition-colors" />
-                    <div className="hidden sm:block">
+                    <div className="hidden sm:block text-left">
                         <p className="font-semibold text-white">{user.name}</p>
                         <p className="text-xs text-gray-400">Уровень {user.level}</p>
                     </div>
                     <ChevronDown className="h-5 w-5 text-gray-500 group-hover:text-white transition-colors" />
-                </div>
+                </button>
             </div>
         </header>
     );

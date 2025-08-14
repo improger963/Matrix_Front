@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import Card from './ui/Card';
 import Button from './ui/Button';
@@ -69,7 +70,7 @@ const MarketingGenius: React.FC = () => {
                         </button>
                     ))}
                 </div>
-                <Button onClick={handleGenerate} disabled={isLoading || !process.env.API_KEY}>
+                <Button onClick={handleGenerate} disabled={isLoading}>
                     {isLoading ? (
                         <>
                             <LoaderCircle className="animate-spin h-5 w-5 mr-2" />
@@ -79,11 +80,6 @@ const MarketingGenius: React.FC = () => {
                         'Сгенерировать контент'
                     )}
                 </Button>
-                {!process.env.API_KEY && (
-                    <p className="text-yellow-500 text-sm">
-                        Внимание: API ключ не предоставлен. Эта функция не будет работать.
-                    </p>
-                )}
                 {error && <p className="text-red-500">{error}</p>}
             </div>
 
