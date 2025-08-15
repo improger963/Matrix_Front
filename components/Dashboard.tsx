@@ -1,20 +1,20 @@
 
 import React, { useState } from 'react';
-import { MOCK_PROJECT_STATS, MOCK_EARNINGS_7_DAYS, MOCK_TRANSACTIONS } from '../constants.ts';
+import { MOCK_METROPOLIS_STATS, MOCK_EARNINGS_7_DAYS, MOCK_TRANSACTIONS } from '../constants.ts';
 import Card from './ui/Card.tsx';
 import Button from './ui/Button.tsx';
 import Stat, { AnimatedBalance } from './ui/Stat.tsx';
 import LiveFeed from './LiveFeed.tsx';
 import DailyTasks from './DailyTasks.tsx';
-import { DollarSign, Users, CheckSquare, Copy, Check, BarChart, UserPlus, Grid3X3, Globe, UserCheck, Award, TrendingUp, Shield, BotMessageSquare, Target, Eye, ExternalLink } from 'lucide-react';
+import { DollarSign, Users, Copy, Check, Target, Eye, Building, UserPlus, BotMessageSquare } from 'lucide-react';
 import { useAppContext } from '../contexts/AppContext.tsx';
 
 const WelcomeBanner: React.FC<{ user: any; setActiveView: (view: any) => void }> = ({ user, setActiveView }) => (
     <Card className="animate-slide-in-up !bg-gradient-to-br !from-dark-800 !to-dark-700 border-dark-600">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
-                <h2 className="text-3xl font-bold text-white">Добро пожаловать, {user.name.split(' ')[0]}!</h2>
-                <p className="text-gray-400 mt-1">Ваш командный центр. Все показатели в норме и готовы к росту.</p>
+                <h2 className="text-3xl font-bold text-white">Добро пожаловать, Магнат {user.name.split(' ')[0]}!</h2>
+                <p className="text-gray-400 mt-1">Ваш центр управления недвижимостью. Империя ждет!</p>
             </div>
             <Button onClick={() => setActiveView('tasks')} className="animate-glow">
                 <Target className="w-5 h-5 mr-2" />
@@ -24,9 +24,9 @@ const WelcomeBanner: React.FC<{ user: any; setActiveView: (view: any) => void }>
     </Card>
 );
 
-const UserHub: React.FC<{ user: any; matrixEarnings: number }> = ({ user, matrixEarnings }) => {
-    const referralsForNextLevel = 10;
-    const progressPercentage = (user.referrals % referralsForNextLevel) / referralsForNextLevel * 100;
+const TycoonHub: React.FC<{ user: any }> = ({ user }) => {
+    const investorsForNextLevel = 10;
+    const progressPercentage = (user.investors % investorsForNextLevel) / investorsForNextLevel * 100;
 
     return (
         <Card className="animate-slide-in-up" style={{ animationDelay: '100ms' }}>
@@ -39,22 +39,22 @@ const UserHub: React.FC<{ user: any; matrixEarnings: number }> = ({ user, matrix
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4 text-center">
                 <div className="bg-dark-700/50 p-3 rounded-lg">
-                    <p className="text-xs text-gray-400">Баланс</p>
-                    <AnimatedBalance value={user.balance} className="text-lg text-green-400" />
+                    <p className="text-xs text-gray-400">Баланс (ГК)</p>
+                    <AnimatedBalance value={user.cityCredits} className="text-lg text-green-400" />
                 </div>
                 <div className="bg-dark-700/50 p-3 rounded-lg">
-                    <p className="text-xs text-gray-400">Рефералы</p>
-                    <p className="text-lg font-bold text-white">{user.referrals}</p>
+                    <p className="text-xs text-gray-400">Инвесторы</p>
+                    <p className="text-lg font-bold text-white">{user.investors}</p>
                 </div>
                 <div className="bg-dark-700/50 p-3 rounded-lg">
-                    <p className="text-xs text-gray-400">Матрицы</p>
-                    <p className="text-lg font-bold text-white">{user.matrixCompletions}</p>
+                    <p className="text-xs text-gray-400">Проекты</p>
+                    <p className="text-lg font-bold text-white">{user.projectsCompleted}</p>
                 </div>
             </div>
             <div>
                 <div className="flex justify-between items-center mb-1">
                     <p className="text-sm font-medium text-gray-300">Прогресс до уровня {user.level + 1}</p>
-                    <p className="text-sm font-bold text-brand-accent">{user.referrals % referralsForNextLevel} / {referralsForNextLevel}</p>
+                    <p className="text-sm font-bold text-brand-accent">{user.investors % investorsForNextLevel} / {investorsForNextLevel}</p>
                 </div>
                 <div className="w-full bg-dark-700 rounded-full h-2.5">
                     <div className="bg-gradient-to-r from-brand-secondary to-brand-primary h-2.5 rounded-full transition-all duration-500" style={{ width: `${progressPercentage}%` }}></div>
@@ -83,12 +83,12 @@ const EarningsChart: React.FC<{ data: { day: string, earnings: number }[] }> = (
         <Card className="animate-slide-in-up" style={{ animationDelay: '200ms' }}>
             <div className="flex justify-between items-center mb-4">
                 <div>
-                    <h3 className="text-xl font-bold text-white">Аналитика Доходов</h3>
-                    <p className="text-sm text-gray-400">За последние 7 дней</p>
+                    <h3 className="text-xl font-bold text-white">Аналитика Доходов (ГК)</h3>
+                    <p className="text-sm text-gray-400">Арендная плата за 7 дней</p>
                 </div>
                 <div className="text-right">
-                    <p className="text-2xl font-bold text-green-400">+${totalEarnings.toLocaleString('ru-RU')}</p>
-                    <p className="text-xs text-gray-400">Лучший день: ${bestDay.earnings} ({bestDay.day})</p>
+                    <p className="text-2xl font-bold text-green-400">+{totalEarnings.toLocaleString('ru-RU')}</p>
+                    <p className="text-xs text-gray-400">Лучший день: {bestDay.earnings} ({bestDay.day})</p>
                 </div>
             </div>
             <div className="relative h-40">
@@ -126,40 +126,34 @@ const EarningsChart: React.FC<{ data: { day: string, earnings: number }[] }> = (
     );
 };
 
-const MatrixSnapshot: React.FC<{ setActiveView: (view: any) => void }> = ({ setActiveView }) => {
+const ActiveProject: React.FC<{ setActiveView: (view: any) => void }> = ({ setActiveView }) => {
     const filled = 5;
     const total = 6;
     return (
          <Card className="animate-slide-in-up flex flex-col justify-between" style={{ animationDelay: '100ms' }}>
             <div>
-                <h3 className="text-xl font-bold text-white mb-4">Снимок Матрицы</h3>
-                <div className="flex justify-center items-center mb-4">
-                    <div className="flex flex-col items-center">
-                        <div className="w-12 h-12 bg-brand-primary rounded-full border-2 border-brand-accent animate-pulse"></div>
-                        <div className="flex gap-8 mt-4">
-                           <div className="w-10 h-10 bg-dark-700 rounded-full border-2 border-purple-400"></div>
-                           <div className="w-10 h-10 bg-dark-700 rounded-full border-2 border-purple-400"></div>
-                        </div>
-                    </div>
+                <h3 className="text-xl font-bold text-white mb-4">Активный Проект</h3>
+                <div className="flex justify-center items-center my-4">
+                    <Building className="w-20 h-20 text-brand-secondary" />
                 </div>
-                <p className="text-center text-gray-300">Заполнено <span className="font-bold text-white">{filled} / {total}</span> мест</p>
+                <p className="text-center text-gray-300">Привлечено инвесторов: <span className="font-bold text-white">{filled} / {total}</span></p>
                  <div className="w-full bg-dark-700 rounded-full h-2.5 mt-2">
                     <div className="bg-brand-primary h-2.5 rounded-full" style={{ width: `${(filled/total)*100}%` }}></div>
                 </div>
             </div>
-            <Button onClick={() => setActiveView('matrix')} variant="secondary" className="w-full mt-6">
+            <Button onClick={() => setActiveView('cityMap')} variant="secondary" className="w-full mt-6">
                 <Eye className="w-4 h-4 mr-2" />
-                Перейти в матрицу
+                Перейти на Карту
             </Button>
         </Card>
     );
 }
 
-const ReferralActions: React.FC<{ user: any, setActiveView: (view: any) => void, addToast: any }> = ({ user, setActiveView, addToast }) => {
+const GrowthActions: React.FC<{ user: any, setActiveView: (view: any) => void, addToast: any }> = ({ user, setActiveView, addToast }) => {
     const [copied, setCopied] = useState(false);
     const handleCopy = () => {
         navigator.clipboard.writeText(user.referralLink);
-        addToast("Реферальная ссылка скопирована!", "success");
+        addToast("Ссылка для инвесторов скопирована!", "success");
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
@@ -169,7 +163,7 @@ const ReferralActions: React.FC<{ user: any, setActiveView: (view: any) => void,
             <h3 className="text-xl font-bold text-white mb-4">Инструменты Роста</h3>
             <div className="space-y-4">
                  <div>
-                     <p className="text-sm font-medium text-gray-300 mb-1">Ваша ссылка для приглашений</p>
+                     <p className="text-sm font-medium text-gray-300 mb-1">Ваша ссылка для инвесторов</p>
                      <div className="flex items-center gap-2">
                         <input type="text" readOnly value={user.referralLink} className="truncate bg-dark-900/50 p-2 rounded-lg border border-dark-600 w-full text-sm"/>
                         <Button onClick={handleCopy} className="!px-3 !py-2 shrink-0">
@@ -180,8 +174,8 @@ const ReferralActions: React.FC<{ user: any, setActiveView: (view: any) => void,
                 <div>
                     <p className="text-sm font-medium text-gray-300 mb-2">Быстрые действия</p>
                     <div className="grid grid-cols-3 gap-2">
-                        <button onClick={() => setActiveView('wallet')} className="flex flex-col items-center gap-1.5 p-2 bg-dark-700/50 hover:bg-dark-700 rounded-lg transition-colors"><DollarSign className="w-6 h-6 text-brand-accent"/> <span className="text-xs">Финансы</span></button>
-                        <button onClick={() => setActiveView('team')} className="flex flex-col items-center gap-1.5 p-2 bg-dark-700/50 hover:bg-dark-700 rounded-lg transition-colors"><Users className="w-6 h-6 text-brand-accent"/> <span className="text-xs">Команда</span></button>
+                        <button onClick={() => setActiveView('bank')} className="flex flex-col items-center gap-1.5 p-2 bg-dark-700/50 hover:bg-dark-700 rounded-lg transition-colors"><DollarSign className="w-6 h-6 text-brand-accent"/> <span className="text-xs">Банк</span></button>
+                        <button onClick={() => setActiveView('guild')} className="flex flex-col items-center gap-1.5 p-2 bg-dark-700/50 hover:bg-dark-700 rounded-lg transition-colors"><Users className="w-6 h-6 text-brand-accent"/> <span className="text-xs">Гильдия</span></button>
                         <button onClick={() => setActiveView('marketing')} className="flex flex-col items-center gap-1.5 p-2 bg-dark-700/50 hover:bg-dark-700 rounded-lg transition-colors"><BotMessageSquare className="w-6 h-6 text-brand-accent"/> <span className="text-xs">AI-Помощник</span></button>
                     </div>
                 </div>
@@ -190,12 +184,12 @@ const ReferralActions: React.FC<{ user: any, setActiveView: (view: any) => void,
     )
 };
 
-const ProjectStatsBar: React.FC<{ stats: any }> = ({ stats }) => {
+const MetropolisStatsBar: React.FC<{ stats: any }> = ({ stats }) => {
     const statItems = [
-        { icon: <Globe className="h-6 w-6 text-blue-400" />, label: "Всего участников", value: stats.totalUsers.toLocaleString('ru-RU') },
-        { icon: <DollarSign className="h-6 w-6 text-green-400" />, label: "Всего заработано", value: `$${stats.totalEarned.toLocaleString('ru-RU')}` },
-        { icon: <UserPlus className="h-6 w-6 text-yellow-400" />, label: "Новых за сегодня", value: stats.usersToday.toLocaleString('ru-RU') },
-        { icon: <Grid3X3 className="h-6 w-6 text-purple-400" />, label: "Активных матриц", value: stats.activeMatrices.toLocaleString('ru-RU') },
+        { icon: <Users className="h-6 w-6 text-blue-400" />, label: "Всего магнатов", value: stats.totalTycoons.toLocaleString('ru-RU') },
+        { icon: <DollarSign className="h-6 w-6 text-green-400" />, label: "Всего выплачено (ГК)", value: `© ${stats.totalEarned.toLocaleString('ru-RU')}` },
+        { icon: <UserPlus className="h-6 w-6 text-yellow-400" />, label: "Новых за сегодня", value: stats.tycoonsToday.toLocaleString('ru-RU') },
+        { icon: <Building className="h-6 w-6 text-purple-400" />, label: "Активных проектов", value: stats.activeProjects.toLocaleString('ru-RU') },
     ];
 
     return (
@@ -220,10 +214,6 @@ const Dashboard: React.FC = () => {
     const { user, tasks, handleTaskAction, setActiveView, addToast } = useAppContext();
     
     const dailyTasks = tasks.filter(task => task.category === 'daily');
-    
-    const matrixEarnings = MOCK_TRANSACTIONS
-        .filter(t => t.type === 'earning')
-        .reduce((acc, t) => acc + t.amount, 0);
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
@@ -231,15 +221,15 @@ const Dashboard: React.FC = () => {
             {/* Main Content Column */}
             <div className="lg:col-span-3 space-y-6">
                 <WelcomeBanner user={user} setActiveView={setActiveView} />
-                <UserHub user={user} matrixEarnings={matrixEarnings} />
+                <TycoonHub user={user} />
                 <EarningsChart data={MOCK_EARNINGS_7_DAYS} />
-                <ProjectStatsBar stats={MOCK_PROJECT_STATS} />
+                <MetropolisStatsBar stats={MOCK_METROPOLIS_STATS} />
             </div>
 
             {/* Sidebar Column */}
             <div className="lg:col-span-2 space-y-6">
-                <MatrixSnapshot setActiveView={setActiveView} />
-                <ReferralActions user={user} setActiveView={setActiveView} addToast={addToast} />
+                <ActiveProject setActiveView={setActiveView} />
+                <GrowthActions user={user} setActiveView={setActiveView} addToast={addToast} />
                 <div className="animate-slide-in-up" style={{ animationDelay: '300ms' }}>
                     <DailyTasks tasks={dailyTasks} onTaskAction={handleTaskAction}/>
                 </div>

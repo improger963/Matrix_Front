@@ -2,8 +2,8 @@
 import React, { useMemo, useState } from 'react';
 import Card from './ui/Card.tsx';
 import Button from './ui/Button.tsx';
-import type { TeamMember, AcademyArticle } from '../types.ts';
-import { MOCK_TEAM_MEMBERS, MOCK_ACADEMY_ARTICLES } from '../constants.ts';
+import type { GuildMember, AcademyArticle } from '../types.ts';
+import { MOCK_GUILD_MEMBERS, MOCK_ACADEMY_ARTICLES } from '../constants.ts';
 import { getAITeamAnalysisStream } from '../services/geminiService.ts';
 import { BrainCircuit, LoaderCircle, Activity, UserPlus, BarChart3 } from 'lucide-react';
 
@@ -74,7 +74,7 @@ const DonutChart: React.FC<{ active: number; inactive: number }> = ({ active, in
     );
 };
 
-const AIAnalyst: React.FC<{ teamData: TeamMember[] }> = ({ teamData }) => {
+const AIAnalyst: React.FC<{ teamData: GuildMember[] }> = ({ teamData }) => {
     const [insight, setInsight] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -152,7 +152,7 @@ interface TeamAnalyticsViewProps {
     newLast7Days: number;
     averageLevel: number;
     performanceScore: number;
-    topReferrers: TeamMember[];
+    topReferrers: GuildMember[];
     insights: { icon: React.ElementType; text: string; type: string }[];
   };
 }
@@ -161,7 +161,7 @@ const TeamAnalyticsView: React.FC<TeamAnalyticsViewProps> = ({ teamAnalytics }) 
     const { performanceScore, activityRate, newLast7Days, averageLevel, activeCount, inactiveCount, topReferrers, insights } = teamAnalytics;
     return (
         <div className="space-y-6">
-            <AIAnalyst teamData={MOCK_TEAM_MEMBERS} />
+            <AIAnalyst teamData={MOCK_GUILD_MEMBERS} />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <Card className="lg:col-span-1 flex flex-col items-center justify-center text-center p-6 animate-slide-in-up">
                     <h3 className="text-lg font-bold text-white mb-4">Эффективность команды</h3>
@@ -197,7 +197,7 @@ const TeamAnalyticsView: React.FC<TeamAnalyticsViewProps> = ({ teamAnalytics }) 
                                 <div className="flex items-center gap-3"><span className="font-bold text-lg w-5">{index + 1}.</span><img src={member.avatarUrl} alt={member.name} className="h-10 w-10 rounded-full" />
                                     <div><p className="font-semibold text-white">{member.name}</p><p className="text-xs text-gray-400">Уровень {member.level}</p></div>
                                 </div>
-                                <div className="text-right"><p className="font-bold text-brand-accent text-lg">{member.referrals}</p><p className="text-xs text-gray-500">рефералов</p></div>
+                                <div className="text-right"><p className="font-bold text-brand-accent text-lg">{member.investors}</p><p className="text-xs text-gray-500">инвесторов</p></div>
                             </div>
                         ))}
                     </div>

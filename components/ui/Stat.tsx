@@ -25,9 +25,10 @@ const Stat: React.FC<StatProps> = ({ icon, label, value }) => {
 interface AnimatedBalanceProps {
     value: number;
     className?: string;
+    isCurrency?: boolean;
 }
 
-export const AnimatedBalance: React.FC<AnimatedBalanceProps> = ({ value, className = '' }) => {
+export const AnimatedBalance: React.FC<AnimatedBalanceProps> = ({ value, className = '', isCurrency = true }) => {
     const [displayValue, setDisplayValue] = useState(value);
     const prevValueRef = useRef(value);
     const frameRef = useRef<number | null>(null);
@@ -71,13 +72,16 @@ export const AnimatedBalance: React.FC<AnimatedBalanceProps> = ({ value, classNa
             prevValueRef.current = endValue;
         };
     }, [value]);
+    
+    const currencySymbol = isCurrency ? '$' : '©';
+    const formattedValue = displayValue.toLocaleString('ru-RU', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
 
     return (
         <span className={`font-mono font-bold tracking-tighter ${className}`}>
-            ${displayValue.toLocaleString('ru-RU', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-            })}
+            {currencySymbol}{formattedValue}
         </span>
     );
 };

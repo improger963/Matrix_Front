@@ -1,10 +1,10 @@
 
 import React, { useMemo, useEffect } from 'react';
-import type { MatrixNode } from '../types.ts';
+import type { ProjectNode } from '../types.ts';
 import { X, BarChart3, Users, GitBranch, PieChart, Zap, HelpCircle } from 'lucide-react';
 
 interface AnalyticsPanelProps {
-    node: MatrixNode;
+    node: ProjectNode;
     isOpen: boolean;
     onClose: () => void;
 }
@@ -19,31 +19,25 @@ interface NodeStats {
         spillover: number;
         clone: number;
     };
-    performance: {
-        hot: number;
-        stagnant: number;
-        normal: number;
-    };
 }
 
-const getDepth = (node: MatrixNode | undefined): number => {
+const getDepth = (node: ProjectNode | undefined): number => {
     if (!node || !node.children || node.children.length === 0) {
         return 0;
     }
     return 1 + Math.max(...node.children.map(getDepth));
 }
 
-const calculateStats = (node: MatrixNode): NodeStats => {
+const calculateStats = (node: ProjectNode): NodeStats => {
     const stats: NodeStats = {
         totalSlots: 0,
         filledSlots: 0,
         leftLegCount: 0,
         rightLegCount: 0,
         composition: { self: 0, spillover: 0, clone: 0 },
-        performance: { hot: 0, stagnant: 0, normal: 0 }
     };
 
-    const countFilledNodes = (n: MatrixNode | undefined): number => {
+    const countFilledNodes = (n: ProjectNode | undefined): number => {
         if (!n || !n.isFilled) return 0;
         let count = 1;
         if (n.children) {
@@ -56,16 +50,11 @@ const calculateStats = (node: MatrixNode): NodeStats => {
     stats.leftLegCount = countFilledNodes(node.children?.[0]);
     stats.rightLegCount = countFilledNodes(node.children?.[1]);
     
-    const collectStats = (n: MatrixNode | undefined) => {
+    const collectStats = (n: ProjectNode | undefined) => {
         if (!n || !n.isFilled) return;
 
         if (n.nodeType && stats.composition.hasOwnProperty(n.nodeType)) {
             stats.composition[n.nodeType]++;
-        }
-        if (n.performance && stats.performance.hasOwnProperty(n.performance)) {
-            stats.performance[n.performance]++;
-        } else {
-            stats.performance.normal++;
         }
 
         if (n.children) {
@@ -75,10 +64,6 @@ const calculateStats = (node: MatrixNode): NodeStats => {
     }
     
     collectStats(node);
-
-    if (node.isFilled && !node.performance) {
-         stats.performance.normal--;
-    }
 
     stats.filledSlots = stats.leftLegCount + stats.rightLegCount + (node.isFilled ? 1 : 0);
     stats.totalSlots = Math.pow(2, getDepth(node) + 1) - 1;
@@ -171,15 +156,15 @@ const AnalyticsPanel: React.FC<AnalyticsPanelProps> = ({ node, isOpen, onClose }
                             <div className="space-y-2 text-xs">
                                <div className="flex justify-between"><span><Users className="w-3 h-3 inline mr-1.5" />Лично приглашенные:</span> <span className="font-bold text-white">{stats.composition.self}</span></div>
                                <div className="flex justify-between"><span><GitBranch className="w-3 h-3 inline mr-1.5 text-cyan-400" />Переливы:</span> <span className="font-bold text-white">{stats.composition.spillover}</span></div>
-                               <div className="flex justify-between"><span><Users className="w-3 h-3 inline mr-1.5 text-purple-400" />Клоны:</span> <span className="font-bold text-white">{stats.composition.clone}</span></div>
+                               <div className="flex justify-between"><span><Users className="w-3 h-3 inline mr-1.5 text-purple-400" />Филиалы:</span> <span className="font-bold text-white">{stats.composition.clone}</span></div>
                             </div>
                         </div>
                          <div className="bg-dark-900/50 p-4 rounded-lg">
                             <h4 className="text-sm font-medium text-gray-400 mb-2 flex items-center gap-2"><Zap className="w-4 h-4" />Эффективность</h4>
                             <div className="space-y-2 text-xs">
-                               <div className="flex justify-between"><span><span className="text-red-500">●</span> "Горячие":</span> <span className="font-bold text-white">{stats.performance.hot}</span></div>
-                               <div className="flex justify-between"><span><span className="text-blue-400">●</span> "Неактивные":</span> <span className="font-bold text-white">{stats.performance.stagnant}</span></div>
-                               <div className="flex justify-between"><span><span className="text-gray-500">●</span> Стабильные:</span> <span className="font-bold text-white">{stats.performance.normal}</span></div>
+                               <div className="flex justify-between"><span><span className="text-red-500">●</span> "Горячие":</span> <span className="font-bold text-white">0</span></div>
+                               <div className="flex justify-between"><span><span className="text-blue-400">●</span> "Неактивные":</span> <span className="font-bold text-white">0</span></div>
+                               <div className="flex justify-between"><span><span className="text-gray-500">●</span> Стабильные:</span> <span className="font-bold text-white">{stats.filledSlots}</span></div>
                             </div>
                         </div>
                     </div>

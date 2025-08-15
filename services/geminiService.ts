@@ -1,6 +1,5 @@
 
-
-import type { TeamMember, AcademyArticle } from '../types.ts';
+import type { GuildMember, AcademyArticle } from '../types.ts';
 import { MOCK_ACADEMY_ARTICLES } from '../constants.ts';
 
 
@@ -92,7 +91,7 @@ export const generateImage = async (prompt: string, aspectRatio: string): Promis
 // This function simulates a call to a backend with team data to get AI-powered analysis.
 // In a real application, this would make a secure backend call which then queries Gemini.
 export const getAITeamAnalysisStream = async (
-    teamData: TeamMember[],
+    teamData: GuildMember[],
     onChunk: (text: string) => void
 ): Promise<void> => {
     console.log("Simulating AI team analysis for:", teamData);
@@ -106,7 +105,7 @@ export const getAITeamAnalysisStream = async (
     const activeCount = teamData.filter(m => m.status === 'active').length;
     const inactiveCount = totalMembers - activeCount;
     const activityRate = totalMembers > 0 ? (activeCount / totalMembers) * 100 : 0;
-    const topPerformer = [...teamData].sort((a, b) => b.referrals - a.referrals)[0];
+    const topPerformer = [...teamData].sort((a, b) => b.investors - a.investors)[0];
     const newMembers = teamData.filter(m => new Date(m.joinDate) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000));
     const totalLevel = teamData.reduce((sum, m) => sum + m.level, 0);
     const averageLevel = totalMembers > 0 ? (totalLevel / totalMembers) : 0;
@@ -116,7 +115,7 @@ export const getAITeamAnalysisStream = async (
     analysisText += `**✅ Ключевые моменты:**\n`;
     analysisText += `*   **Активность:** ${activityRate.toFixed(0)}% ваших партнеров активны (${activeCount} из ${totalMembers}). Это хороший показатель!\n`;
     if (topPerformer) {
-        analysisText += `*   **Лидер:** ${topPerformer.name} — ваш лучший рекрутер с ${topPerformer.referrals} рефералами. Отличная работа!\n`;
+        analysisText += `*   **Лидер:** ${topPerformer.name} — ваш лучший рекрутер с ${topPerformer.investors} инвесторами. Отличная работа!\n`;
     }
     if (newMembers.length > 0) {
         analysisText += `*   **Рост:** Вы привлекли ${newMembers.length} новых партнеров за последнюю неделю. Прекрасный темп!\n\n`;
@@ -145,7 +144,7 @@ export const getAITeamAnalysisStream = async (
     if (inactiveCount > 1) {
         analysisText += `1.  **Реактивация:** Создайте в AI-Копирайтере мотивирующее сообщение для неактивных партнеров и сделайте рассылку.\n`;
     }
-    if (topPerformer.referrals > 2) {
+    if (topPerformer.investors > 2) {
         analysisText += `2.  **Признание:** Публично похвалите ${topPerformer.name} в общем чате. Это мотивирует и его, и остальных.\n`;
     }
 

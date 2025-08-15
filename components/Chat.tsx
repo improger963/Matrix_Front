@@ -86,7 +86,7 @@ const UserProfileModal: React.FC<{ user: OnlineUser; onClose: () => void }> = ({
             <p className="text-gray-500 text-sm">ID: {user.id}</p>
             <div className="grid grid-cols-2 gap-4 my-6">
                 <div className="bg-dark-700 p-3 rounded-lg"><p className="text-xs text-gray-400">Уровень</p><p className="text-lg font-bold text-white">{user.level}</p></div>
-                <div className="bg-dark-700 p-3 rounded-lg"><p className="text-xs text-gray-400">Рефералы</p><p className="text-lg font-bold text-white">{user.referrals ?? 'N/A'}</p></div>
+                <div className="bg-dark-700 p-3 rounded-lg"><p className="text-xs text-gray-400">Инвесторы</p><p className="text-lg font-bold text-white">{user.investors ?? 'N/A'}</p></div>
             </div>
             <Button className="w-full" variant="secondary">Перейти в профиль</Button>
         </div>

@@ -1,16 +1,17 @@
 
-export type View = 'dashboard' | 'matrix' | 'marketing' | 'leaderboard' | 'howitworks' | 'faq' | 'wallet' | 'profile' | 'team' | 'livefeed' | 'reviews' | 'support' | 'news' | 'academy' | 'promo' | 'chat' | 'landingPage' | 'tasks';
 
-export interface User {
+export type View = 'dashboard' | 'cityMap' | 'project' | 'marketing' | 'leaderboard' | 'howitworks' | 'faq' | 'bank' | 'profile' | 'guild' | 'livefeed' | 'reviews' | 'support' | 'news' | 'academy' | 'promo' | 'chat' | 'landingPage' | 'tasks';
+
+export interface Tycoon {
   id: string;
   name: string;
   avatarUrl: string;
   level: number;
-  balance: number;
+  cityCredits: number;
   xp: number;
-  referrals: number;
-  matrixCompletions: number;
-  teamEarnings?: number;
+  investors: number; // Renamed from referrals
+  projectsCompleted: number; // Renamed from matrixCompletions
+  guildEarnings?: number; // Renamed from teamEarnings
   referralLink: string;
   joinDate: string;
   welcomeMessage?: string;
@@ -20,21 +21,27 @@ export interface User {
     vk?: string;
     website?: string;
   };
+  guildId?: string;
 }
 
-export interface MatrixNode {
+export interface ProjectNode {
   id: string;
   name: string;
   avatarUrl: string;
   isFilled: boolean;
-  children?: MatrixNode[];
+  children?: ProjectNode[];
   joinDate?: string;
   level?: number;
-  referrals?: number;
+  investors?: number;
   downline?: number;
-  performance?: 'hot' | 'stagnant';
-  nodeType?: 'self' | 'spillover' | 'clone';
+  nodeType?: 'self' | 'spillover' | 'clone'; // self is 'Инвестор', spillover is 'Городской контракт', clone is 'Филиал'
+  lastActivityDate?: string;
+  branchHealth?: 'healthy' | 'sleeping' | 'problematic';
+  // Game-specific properties
+  upgradeLevel: 1 | 2 | 3; // 1: Участок, 2: Дома, 3: Отель
+  district: string;
 }
+
 
 export interface Leader {
     id: string;
@@ -47,7 +54,7 @@ export interface Leader {
 
 export interface Transaction {
     id:string;
-    type: 'deposit' | 'withdrawal' | 'earning' | 'activation' | 'transfer';
+    type: 'deposit' | 'withdrawal' | 'earning' | 'activation' | 'transfer' | 'upgrade'; // 'earning' is 'Арендная плата'
     amount: number;
     date: string;
     status: 'completed' | 'pending' | 'failed';
@@ -64,20 +71,20 @@ export interface Transaction {
     comment?: string;
 }
 
-export interface ProjectStats {
-    totalUsers: number;
+export interface MetropolisStats {
+    totalTycoons: number;
     totalEarned: number;
-    usersToday: number;
-    activeMatrices: number;
+    tycoonsToday: number;
+    activeProjects: number;
 }
 
-export interface TeamMember {
+export interface GuildMember {
     id: string;
     name: string;
     avatarUrl: string;
     joinDate: string;
     level: number;
-    referrals: number;
+    investors: number; // Renamed from referrals
     status: 'active' | 'inactive';
 }
 
@@ -87,7 +94,7 @@ export interface Achievement {
     description: string;
     icon: React.ElementType;
     unlocked: boolean;
-    category: 'Team' | 'Financial' | 'Personal' | 'Milestone';
+    category: 'Guild' | 'Financial' | 'Personal' | 'Milestone'; // Renamed Team to Guild
     progress?: {
         current: number;
         target: number;
@@ -105,7 +112,7 @@ export interface Notification {
 
 export interface LiveFeedEvent {
   id: string;
-  type: 'registration' | 'new_level' | 'withdrawal' | 'deposit' | 'matrix_close';
+  type: 'registration' | 'new_level' | 'withdrawal' | 'deposit' | 'project_close'; // Renamed from matrix_close
   user: {
     name: string;
     avatarUrl: string;
@@ -136,7 +143,7 @@ export interface NewsArticle {
 export interface AcademyArticle {
   id: string;
   title: string;
-  category: 'Для новичков' | 'Продвижение' | 'Маркетинг-план';
+  category: 'Для новичков' | 'Продвижение' | 'Бизнес-план'; // Renamed
   type: 'video' | 'article';
   duration?: string; // for video
   coverUrl: string;
@@ -204,5 +211,5 @@ export interface OnlineUser {
   name: string;
   avatarUrl: string;
   level: number;
-  referrals?: number;
+  investors?: number;
 }

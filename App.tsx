@@ -1,23 +1,21 @@
 
-
-
 import React, { useState, useMemo } from 'react';
 import Header from './components/Header.tsx';
-import { ShieldCheck, LayoutGrid, BotMessageSquare, Trophy, HelpCircle, BookOpen, Wallet as WalletIcon, UserCircle, TrendingUp, MoreHorizontal, Zap, MessageSquareQuote, LifeBuoy, Newspaper, GraduationCap, Megaphone, MessageSquare, Link, Users, ChevronDown, ListChecks, BarChart3 } from 'lucide-react';
+import { Building2, LayoutGrid, BotMessageSquare, Trophy, HelpCircle, BookOpen, Landmark, Users, Link, Megaphone, MessageSquare, Zap, ChevronDown, ListChecks, Map, GraduationCap, Newspaper, MoreHorizontal } from 'lucide-react';
 import type { View } from './types.ts';
 import MoreMenu from './components/MoreMenu.tsx';
 import { AppProvider, useAppContext } from './contexts/AppContext.tsx';
 
 // Statically import components
 import Dashboard from './components/Dashboard.tsx';
-import MatrixView from './components/MatrixView.tsx';
+import CityMapView from './components/CityMapView.tsx';
 import MarketingGenius from './components/MarketingGenius.tsx';
 import Leaderboard from './components/Leaderboard.tsx';
 import HowItWorks from './components/HowItWorks.tsx';
 import FAQ from './components/FAQ.tsx';
-import Wallet from './components/Wallet.tsx';
+import BankView from './components/BankView.tsx';
 import Profile from './components/Profile.tsx';
-import TeamProgress from './components/TeamProgress.tsx';
+import GuildView from './components/GuildView.tsx';
 import LiveFeedView from './components/LiveFeedView.tsx';
 import Reviews from './components/Reviews.tsx';
 import Support from './components/Support.tsx';
@@ -27,6 +25,7 @@ import Promo from './components/Promo.tsx';
 import Chat from './components/Chat.tsx';
 import LandingPage from './components/LandingPage.tsx';
 import TasksView from './components/TasksView.tsx';
+import ProjectView from './components/ProjectView.tsx';
 
 export type NavItem = {
   type: 'item';
@@ -44,10 +43,10 @@ export type NavGroup = {
 
 const navConfig: (NavItem | NavGroup)[] = [
     { type: 'item', id: 'dashboard', label: 'Главная', icon: LayoutGrid },
-    { type: 'item', id: 'matrix', label: 'Матрица', icon: ShieldCheck },
-    { type: 'item', id: 'team', label: 'Аналитика', icon: BarChart3 },
+    { type: 'item', id: 'cityMap', label: 'Карта Города', icon: Map },
+    { type: 'item', id: 'guild', label: 'Моя Гильдия', icon: Users },
     { type: 'item', id: 'tasks', label: 'Задания', icon: ListChecks },
-    { type: 'item', id: 'wallet', label: 'Финансы', icon: WalletIcon },
+    { type: 'item', id: 'bank', label: 'Банк', icon: Landmark },
     { 
         type: 'group',
         title: 'Инструменты', 
@@ -66,7 +65,7 @@ const navConfig: (NavItem | NavGroup)[] = [
             { id: 'chat', label: 'Общий чат', icon: MessageSquare },
             { id: 'leaderboard', label: 'Лидеры', icon: Trophy },
             { id: 'livefeed', label: 'Живая лента', icon: Zap },
-            { id: 'reviews', label: 'Отзывы', icon: MessageSquareQuote },
+            { id: 'reviews', label: 'Отзывы', icon: MessageSquare },
         ]
     },
     {
@@ -106,10 +105,11 @@ const AppContent: React.FC = () => {
     const renderView = () => {
         switch (activeView) {
             case 'dashboard': return <Dashboard />;
-            case 'matrix': return <MatrixView />;
-            case 'team': return <TeamProgress initialTab={subView} />;
+            case 'cityMap': return <CityMapView />;
+            case 'project': return <ProjectView />;
+            case 'guild': return <GuildView initialTab={subView} />;
             case 'tasks': return <TasksView />;
-            case 'wallet': return <Wallet />;
+            case 'bank': return <BankView />;
             case 'profile': return <Profile />;
             case 'landingPage': return <LandingPage />;
             case 'marketing': return <MarketingGenius />;
@@ -134,9 +134,9 @@ const AppContent: React.FC = () => {
     
     const mainMobileNavItems = [
         { id: 'dashboard', label: 'Главная', icon: LayoutGrid },
-        { id: 'matrix', label: 'Матрица', icon: ShieldCheck },
-        { id: 'team', label: 'Аналитика', icon: BarChart3 },
-        { id: 'wallet', label: 'Финансы', icon: WalletIcon },
+        { id: 'cityMap', label: 'Карта', icon: Map },
+        { id: 'guild', label: 'Гильдия', icon: Users },
+        { id: 'bank', label: 'Банк', icon: Landmark },
     ];
     
     const allNavItemsForMoreMenu = navConfig.flatMap(el => el.type === 'item' ? [el] : el.items);
@@ -154,13 +154,14 @@ const AppContent: React.FC = () => {
       .filter((el): el is NavItem | NavGroup => el !== null), []);
       
     const isChatView = activeView === 'chat';
+    const isMapView = activeView === 'cityMap';
 
     return (
         <div className="min-h-screen flex bg-dark-900 font-sans">
             <aside className="hidden lg:flex flex-col bg-dark-800/70 backdrop-blur-sm w-64 p-4 border-r border-dark-700">
                 <div className="flex items-center gap-3 mb-8 px-2">
-                    <ShieldCheck className="h-10 w-10 text-brand-primary" />
-                    <h1 className="text-xl font-bold text-white">MatrixFlow</h1>
+                    <Building2 className="h-10 w-10 text-brand-primary" />
+                    <h1 className="text-xl font-bold text-white">Realty Guilds</h1>
                 </div>
                 <nav className="flex-1 flex flex-col space-y-1 overflow-y-auto">
                     {navConfig.map((el) => {
@@ -223,9 +224,9 @@ const AppContent: React.FC = () => {
 
             <div className="flex-1 flex flex-col relative z-10 min-w-0 overflow-hidden">
                 <Header onLogout={handleLogout} />
-                <main className={`flex-1 ${isChatView ? 'flex flex-col min-h-0' : 'overflow-y-auto'}`}>
+                <main className={`flex-1 ${isChatView || isMapView ? 'flex flex-col min-h-0' : 'overflow-y-auto'}`}>
                     <div key={activeView} className={`animate-fade-in w-full h-full ${
-                        isChatView 
+                        isChatView || isMapView
                             ? 'flex flex-col p-4 sm:p-6 lg:p-8'
                             : 'p-4 sm:p-6 lg:p-8 mt-8 pb-24 lg:pb-8'
                     }`}>
