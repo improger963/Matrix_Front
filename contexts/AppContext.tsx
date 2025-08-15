@@ -12,7 +12,8 @@ interface AppContextType {
     academyArticles: AcademyArticle[];
     completeAcademyArticle: (articleId: string) => void;
     activeView: View;
-    setActiveView: (view: View) => void;
+    setActiveView: (view: View, options?: { subView?: string }) => void;
+    subView: string | null;
     toasts: Toast[];
     addToast: (message: string, type?: Toast['type']) => void;
 }
@@ -24,6 +25,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const [tasks, setTasks] = useState<DailyTask[]>(MOCK_ALL_TASKS);
     const [academyArticles, setAcademyArticles] = useState<AcademyArticle[]>(MOCK_ACADEMY_ARTICLES);
     const [activeView, setActiveView] = useState<View>('dashboard');
+    const [subView, setSubView] = useState<string | null>(null);
     const [toasts, setToasts] = useState<Toast[]>([]);
 
     const addToast = useCallback((message: string, type: Toast['type'] = 'info') => {
@@ -34,6 +36,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const removeToast = (id: string) => {
         setToasts(prevToasts => prevToasts.filter(toast => toast.id !== id));
     };
+
+    const handleSetActiveView = useCallback((view: View, options?: { subView?: string }) => {
+        setActiveView(view);
+        setSubView(options?.subView || null);
+    }, []);
 
     const handleCompleteTask = useCallback((taskId: string, showToast: boolean = true) => {
         let taskTitle = '';
@@ -79,7 +86,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         switch (task.actionType) {
             case 'navigate':
                 if (task.target && typeof task.target === 'string' && !task.target.startsWith('http')) {
-                    setActiveView(task.target as View);
+                    handleSetActiveView(task.target as View);
                 }
                 break;
             case 'copy':
@@ -96,7 +103,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
             default:
                 break;
         }
-    }, [user.referralLink, handleCompleteTask, addToast]);
+    }, [user.referralLink, handleCompleteTask, addToast, handleSetActiveView]);
 
     const value = {
         user,
@@ -107,7 +114,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         academyArticles,
         completeAcademyArticle,
         activeView,
-        setActiveView,
+        setActiveView: handleSetActiveView,
+        subView,
         toasts,
         addToast
     };

@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useMemo } from 'react';
 import Header from './components/Header.tsx';
 import { ShieldCheck, LayoutGrid, BotMessageSquare, Trophy, HelpCircle, BookOpen, Wallet as WalletIcon, UserCircle, TrendingUp, MoreHorizontal, Zap, MessageSquareQuote, LifeBuoy, Newspaper, GraduationCap, Megaphone, MessageSquare, Link, Users, ChevronDown, ListChecks, BarChart3 } from 'lucide-react';
@@ -83,7 +84,7 @@ const navConfig: (NavItem | NavGroup)[] = [
 
 
 const AppContent: React.FC = () => {
-    const { activeView, setActiveView } = useAppContext();
+    const { activeView, subView, setActiveView } = useAppContext();
     const [isMoreMenuOpen, setMoreMenuOpen] = useState(false);
 
     const activeGroup = useMemo(() => 
@@ -106,7 +107,7 @@ const AppContent: React.FC = () => {
         switch (activeView) {
             case 'dashboard': return <Dashboard />;
             case 'matrix': return <MatrixView />;
-            case 'team': return <TeamProgress />;
+            case 'team': return <TeamProgress initialTab={subView} />;
             case 'tasks': return <TasksView />;
             case 'wallet': return <Wallet />;
             case 'profile': return <Profile />;

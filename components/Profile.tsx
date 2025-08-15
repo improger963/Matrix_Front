@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Card from './ui/Card.tsx';
 import Button from './ui/Button.tsx';
@@ -183,7 +182,7 @@ const Profile: React.FC = () => {
                              </div>
                         </div>
                     )}
-                    <Button onClick={() => setActiveView('team')} variant="secondary" className="w-full mt-4 text-xs">
+                    <Button onClick={() => setActiveView('team', { subView: 'achievements' })} variant="secondary" className="w-full mt-4 text-xs">
                         <Trophy className="h-4 w-4 mr-2"/> Все достижения
                     </Button>
                 </Card>
