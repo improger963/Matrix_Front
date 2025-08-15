@@ -17,7 +17,7 @@ const MemberRow: React.FC<{ member: BoardroomMember; isCurrentUser: boolean }> =
             <p className="text-xs text-gray-400">Влияние: {member.influence}</p>
         </div>
         <div className="text-right">
-            <p className="font-semibold text-accent-green">${member.earnings.toLocaleString()}</p>
+            <p className="font-semibold text-accent-green">{`$${Number(member.earnings || 0).toLocaleString('ru-RU')}`}</p>
             <p className="text-xs text-gray-400">Доход (30д)</p>
         </div>
     </div>
@@ -107,7 +107,7 @@ const TheBoardroomView: React.FC = () => {
                     <Card className="!bg-gradient-to-br from-dark-800 to-dark-700 text-center">
                         <DollarSign className="w-10 h-10 text-accent-gold mx-auto mb-2 animate-pulse"/>
                         <h3 className="text-lg font-semibold text-gray-300">Глобальный Бонусный Пул</h3>
-                        <p className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-accent-gold my-2">${globalBonusPool.toLocaleString()}</p>
+                        <p className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-accent-gold my-2">{`$${Number(globalBonusPool || 0).toLocaleString('ru-RU')}`}</p>
                         <p className="text-xs text-gray-500">Распределяется между членами Совета ежемесячно</p>
                     </Card>
 

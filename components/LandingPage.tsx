@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import Card from './ui/Card.tsx';
 import Button from './ui/Button.tsx';
@@ -27,7 +28,7 @@ const LandingPagePreview: React.FC<LandingPagePreviewProps> = ({ isEditing, welc
                     className="w-28 h-28 rounded-full mx-auto border-4 border-brand-primary mb-4 shadow-lg"
                 />
                 <h2 className="text-2xl font-bold text-white">{user.name}</h2>
-                <p className="text-sm text-brand-accent mb-6">Приглашает вас в свою команду</p>
+                <p className="text-sm text-brand-accent mb-6">Приглашает вас в свою Бизнес-сеть</p>
 
                 <div className="text-gray-300 text-sm leading-relaxed mb-8 min-h-[84px] p-3 rounded-lg bg-dark-900/50 border border-dark-700">
                     {isEditing ? (
@@ -50,12 +51,12 @@ const LandingPagePreview: React.FC<LandingPagePreviewProps> = ({ isEditing, welc
                 )}
 
                 <div className="grid grid-cols-3 gap-2 text-center mb-8">
-                    <div className="bg-dark-700/50 p-2 rounded-lg"><p className="text-xl font-bold text-white">{user.investors}</p><p className="text-xs text-gray-400">В команде</p></div>
+                    <div className="bg-dark-700/50 p-2 rounded-lg"><p className="text-xl font-bold text-white">{user.investors}</p><p className="text-xs text-gray-400">В сети</p></div>
                     <div className="bg-dark-700/50 p-2 rounded-lg"><p className="text-xl font-bold text-white">{user.exitsCompleted}</p><p className="text-xs text-gray-400">Exits</p></div>
-                    <div className="bg-dark-700/50 p-2 rounded-lg"><p className="text-xl font-bold text-white">{user.syndicateProfit?.toLocaleString('ru-RU')}</p><p className="text-xs text-gray-400">Доход ($CAP)</p></div>
+                    <div className="bg-dark-700/50 p-2 rounded-lg"><p className="text-xl font-bold text-white">{user.syndicateProfit?.toLocaleString('ru-RU')}</p><p className="text-xs text-gray-400">Прибыль ($CAP)</p></div>
                 </div>
 
-                <Button className="w-full !py-3">Присоединиться к команде</Button>
+                <Button className="w-full !py-3">Присоединиться к Бизнес-сети</Button>
             </div>
         </div>
     );

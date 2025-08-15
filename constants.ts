@@ -1,6 +1,7 @@
 
 
-import type { Partner, StartupNode, Leader, Transaction, MarketStats, SyndicateMember, Achievement, Notification, LiveFeedEvent, Review, NewsArticle, AcademyArticle, DailyTask, PromoMaterial, ChatMessage, OnlineUser, SyndicateGoal, BoardroomMember, BoardroomVote } from './types.ts';
+
+import type { Partner, ProjectNode, Leader, Transaction, MarketStats, SyndicateMember, Achievement, Notification, LiveFeedEvent, Review, NewsArticle, AcademyArticle, DailyTask, PromoMaterial, ChatMessage, OnlineUser, NetworkGoal, BoardroomMember, BoardroomVote } from './types.ts';
 import { Award, CheckCircle, Gift, Network, Rocket, ShieldCheck, Target, Users, UserPlus, DollarSign, Share2, GraduationCap, Megaphone, ListTodo, BotMessageSquare, Video, BookText, Edit3, MessageSquare, Star, Briefcase, TrendingUp } from 'lucide-react';
 
 export const MOCK_USERS_DB: { [id: string]: { id: string; name: string; avatarUrl: string; level: number; } } = {
@@ -85,7 +86,7 @@ export const MOCK_EARNINGS_7_DAYS: { day: string; earnings: number }[] = [
 
 // --- Утилиты для обработки данных ---
 
-const calculateDownline = (node: StartupNode): number => {
+const calculateDownline = (node: ProjectNode): number => {
     if (!node.children || node.children.length === 0) {
         return 0;
     }
@@ -99,7 +100,7 @@ const calculateDownline = (node: StartupNode): number => {
     return count;
 };
 
-const addDownlineToNode = (node: StartupNode): StartupNode => {
+const addDownlineToNode = (node: ProjectNode): ProjectNode => {
     const newNode = { ...node };
     if (newNode.isFilled) {
         newNode.downline = calculateDownline(newNode);
@@ -110,7 +111,7 @@ const addDownlineToNode = (node: StartupNode): StartupNode => {
     return newNode;
 };
 
-const RAW_MOCK_STARTUP_DATA: StartupNode = {
+const RAW_MOCK_STARTUP_DATA: ProjectNode = {
     id: 'U12345',
     name: 'Алексей В.',
     avatarUrl: 'https://i.pravatar.cc/150?u=U12345',
@@ -226,7 +227,7 @@ const RAW_MOCK_STARTUP_DATA: StartupNode = {
     ]
 };
 
-export const MOCK_STARTUP_DATA: StartupNode = addDownlineToNode(RAW_MOCK_STARTUP_DATA);
+export const MOCK_STARTUP_DATA: ProjectNode = addDownlineToNode(RAW_MOCK_STARTUP_DATA);
 
 
 export const MOCK_LEADERS: Leader[] = [
@@ -238,13 +239,13 @@ export const MOCK_LEADERS: Leader[] = [
     { id: 'L6', rank: 6, name: 'Андрей Соколов', avatarUrl: 'https://i.pravatar.cc/150?u=L6', earnings: 4900.80, level: 6 },
 ];
 
-export const MOCK_SYNDICATE_MEMBERS: SyndicateMember[] = [
-    { id: 'U67890', name: 'Мария Соколова', avatarUrl: 'https://i.pravatar.cc/150?u=U67890', joinDate: '2024-06-15', level: 4, investors: 2, status: 'active' },
-    { id: 'UABCDE', name: 'Сергей Новиков', avatarUrl: 'https://i.pravatar.cc/150?u=UABCDE', joinDate: '2024-06-20', level: 3, investors: 1, status: 'active' },
-    { id: 'REF003', name: 'Екатерина Иванова', avatarUrl: 'https://i.pravatar.cc/150?u=REF003', joinDate: '2024-06-22', level: 2, investors: 5, status: 'active' },
-    { id: 'REF004', name: 'Дмитрий Петров', avatarUrl: 'https://i.pravatar.cc/150?u=REF004', joinDate: '2024-06-25', level: 2, investors: 0, status: 'inactive' },
-    { id: 'REF005', name: 'Ольга Смирнова', avatarUrl: 'https://i.pravatar.cc/150?u=REF005', joinDate: '2024-07-01', level: 1, investors: 3, status: 'active' },
-    ...Array.from({ length: 12 }, (_, i) => ({
+export const MOCK_SYNDICATE_MEMBERS: Partner[] = [
+    { id: 'U67890', name: 'Мария Соколова', avatarUrl: 'https://i.pravatar.cc/150?u=U67890', joinDate: '2024-06-15', level: 4, investors: 2, status: 'active', capital: 850, xp: 210, exitsCompleted: 2, referralLink: 'https://nexus.capital/join?ref=U67890' },
+    { id: 'UABCDE', name: 'Сергей Новиков', avatarUrl: 'https://i.pravatar.cc/150?u=UABCDE', joinDate: '2024-06-20', level: 3, investors: 1, status: 'active', capital: 400, xp: 150, exitsCompleted: 1, referralLink: 'https://nexus.capital/join?ref=UABCDE' },
+    { id: 'REF003', name: 'Екатерина Иванова', avatarUrl: 'https://i.pravatar.cc/150?u=REF003', joinDate: '2024-06-22', level: 2, investors: 5, status: 'active', capital: 1200, xp: 180, exitsCompleted: 4, referralLink: 'https://nexus.capital/join?ref=REF003' },
+    { id: 'REF004', name: 'Дмитрий Петров', avatarUrl: 'https://i.pravatar.cc/150?u=REF004', joinDate: '2024-06-25', level: 2, investors: 0, status: 'inactive', capital: 50, xp: 40, exitsCompleted: 0, referralLink: 'https://nexus.capital/join?ref=REF004' },
+    { id: 'REF005', name: 'Ольга Смирнова', avatarUrl: 'https://i.pravatar.cc/150?u=REF005', joinDate: '2024-07-01', level: 1, investors: 3, status: 'active', capital: 600, xp: 95, exitsCompleted: 1, referralLink: 'https://nexus.capital/join?ref=REF005' },
+    ...Array.from({ length: 12 }, (_, i): Partner => ({
       id: `REF${i + 6}`,
       name: `Партнер ${i + 6}`,
       avatarUrl: `https://i.pravatar.cc/150?u=REF${i + 6}`,
@@ -252,17 +253,21 @@ export const MOCK_SYNDICATE_MEMBERS: SyndicateMember[] = [
       level: 1,
       investors: i % 3,
       status: i % 2 === 0 ? 'active' : 'inactive' as 'active' | 'inactive',
+      capital: (i % 3) * 150 + (i * 10),
+      xp: 25 + (i * 5),
+      exitsCompleted: Math.floor((i % 3) / 2),
+      referralLink: `https://nexus.capital/join?ref=REF${i + 6}`,
     })),
 ];
 
 
 export const MOCK_ACHIEVEMENTS: Achievement[] = [
     { id: 'ach01', title: 'Добро пожаловать!', description: 'Вы успешно зарегистрировались и готовы строить свою империю.', icon: Rocket, unlocked: true, category: 'Milestone' },
-    { id: 'ach02', title: 'Первый Инвестор', description: 'Вы привлекли своего первого инвестора.', icon: Users, unlocked: true, category: 'Syndicate' },
-    { id: 'ach03', title: 'Ядро Синдиката', description: 'Пригласите 10 личных инвесторов в свой Синдикат.', icon: Target, unlocked: true, progress: { current: MOCK_PARTNER.investors, target: 10 }, category: 'Syndicate' },
+    { id: 'ach02', title: 'Первый Инвестор', description: 'Вы привлекли своего первого инвестора.', icon: Users, unlocked: true, category: 'Network' },
+    { id: 'ach03', title: 'Ядро Синдиката', description: 'Пригласите 10 личных инвесторов в свой Синдикат.', icon: Target, unlocked: true, progress: { current: MOCK_PARTNER.investors, target: 10 }, category: 'Network' },
     { id: 'ach04', title: 'Первый Exit', description: 'Вы успешно закрыли первый раунд финансирования.', icon: ShieldCheck, unlocked: true, category: 'Personal' },
     { id: 'ach05', title: 'Серийный предприниматель', description: 'Успешно закройте 5 раундов.', icon: Briefcase, unlocked: false, progress: { current: MOCK_PARTNER.exitsCompleted, target: 5 }, category: 'Personal' },
-    { id: 'ach06', title: 'Рост Синдиката', description: 'Ваш синдикат достиг 25 партнеров.', icon: Network, unlocked: false, progress: { current: 18, target: 25 }, category: 'Syndicate' },
+    { id: 'ach06', title: 'Рост Синдиката', description: 'Ваш синдикат достиг 25 партнеров.', icon: Network, unlocked: false, progress: { current: 18, target: 25 }, category: 'Network' },
     { id: 'ach07', title: 'Первая прибыль', description: 'Заработайте свои первые $100 CAP.', icon: Gift, unlocked: true, category: 'Financial' },
     { id: 'ach08', title: 'Капиталист', description: 'Достигните баланса в $1000 CAP.', icon: CheckCircle, unlocked: true, progress: { current: MOCK_PARTNER.capital, target: 1000 }, category: 'Financial' },
 ];
@@ -410,7 +415,7 @@ export const MOCK_ONLINE_USERS: OnlineUser[] = [
     ...MOCK_SYNDICATE_MEMBERS
 ].reduce((acc: OnlineUser[], current) => {
     if (!acc.some(item => item.id === current.id)) {
-        acc.push({ id: current.id, name: current.name, avatarUrl: current.avatarUrl, level: current.level, investors: (current as SyndicateMember).investors || 0 });
+        acc.push({ id: current.id, name: current.name, avatarUrl: current.avatarUrl, level: current.level, investors: (current as Partner).investors || 0 });
     }
     return acc;
 }, []).slice(0, 15);
@@ -422,7 +427,7 @@ export const CHAT_RULES = [
     { title: 'Конфиденциальность', content: 'Не делитесь личной информацией (телефонами, адресами, паролями) в общем чате.' },
 ];
 
-export const MOCK_SYNDICATE_GOAL: SyndicateGoal = {
+export const MOCK_SYNDICATE_GOAL: NetworkGoal = {
     id: 'GOAL1',
     title: 'Привлечь 50 новых инвесторов в этом месяце',
     description: 'Общая цель для всего синдиката для получения командного бонуса.',

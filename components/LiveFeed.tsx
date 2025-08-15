@@ -41,10 +41,10 @@ const EventMessage: React.FC<{ event: LiveFeedEvent }> = ({ event }) => {
     switch (type) {
         case 'registration': return <>{userName} только что присоединился к проекту.</>;
         case 'new_level': return <>{userName} достиг(ла) {level} уровня!</>;
-        case 'withdrawal': return <>{userName} вывел(а) <span className="font-semibold text-red-400">${amount?.toFixed(2)}</span>.</>;
-        case 'deposit': return <>{userName} пополнил(а) баланс на <span className="font-semibold text-green-400">${amount?.toFixed(2)}</span>.</>;
-        case 'startup_exit': return <>{userName} закрыл(а) раунд и получил(а) <span className="font-semibold text-purple-400">${amount?.toFixed(2)}</span>.</>;
-        case 'upgrade': return <>{userName} улучшил(а) стартап до Раунда B.</>;
+        case 'withdrawal': return <>{userName} продал(а) <span className="font-semibold text-red-400">${amount?.toFixed(2)} CAP</span>.</>;
+        case 'deposit': return <>{userName} купил(а) <span className="font-semibold text-green-400">${amount?.toFixed(2)} CAP</span>.</>;
+        case 'startup_exit': return <>{userName} получил(а) Полное Финансирование и заработал(а) <span className="font-semibold text-purple-400">${amount?.toFixed(2)}</span>.</>;
+        case 'upgrade': return <>{userName} улучшил(а) Проект до Раунда B.</>;
         default: return null;
     }
 };

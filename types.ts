@@ -1,6 +1,8 @@
 
 
-export type View = 'dashboard' | 'market' | 'startup' | 'leaderboard' | 'howitworks' | 'faq' | 'capital' | 'profile' | 'syndicate' | 'livefeed' | 'reviews' | 'support' | 'news' | 'academy' | 'promo' | 'chat' | 'landingPage' | 'tasks' | 'boardroom';
+
+
+export type View = 'dashboard' | 'market' | 'project' | 'leaderboard' | 'howitworks' | 'faq' | 'assets' | 'profile' | 'network' | 'livefeed' | 'reviews' | 'support' | 'news' | 'academy' | 'promo' | 'chat' | 'landingPage' | 'tasks' | 'boardroom';
 
 export interface Partner {
   id: string;
@@ -23,23 +25,35 @@ export interface Partner {
     vk?: string;
   };
   syndicateId?: string;
+  status?: 'active' | 'inactive';
 }
 
-export interface StartupNode {
+export interface ProjectNode {
   id: string;
   name: string;
   avatarUrl: string;
   isFilled: boolean;
-  children?: StartupNode[];
+  children?: ProjectNode[];
   joinDate?: string;
   level?: number;
   investors?: number;
   downline?: number;
-  nodeType?: 'self' | 'syndicate_deal' | 'spinoff'; // self: 'Инвестор', syndicate_deal: 'Сделка из синдиката', spinoff: 'Спин-офф'
+  nodeType?: 'self' | 'syndicate_deal' | 'spinoff'; // self: 'Партнер', syndicate_deal: 'Транш от Бизнес-сети', spinoff: 'Филиал'
   lastActivityDate?: string;
   riskLevel?: 'low' | 'medium' | 'high';
   fundingStage: 1 | 2 | 3; // 1: Pre-seed, 2: Round A, 3: Round B
   industry: string;
+}
+
+export interface Project {
+  id: string;
+  name: string;
+  stage: {
+    name: string;
+    color: string;
+  };
+  progress: number[];
+  nextMilestone: string;
 }
 
 
@@ -78,23 +92,13 @@ export interface MarketStats {
     activeStartups: number;
 }
 
-export interface SyndicateMember {
-    id: string;
-    name: string;
-    avatarUrl: string;
-    joinDate: string;
-    level: number;
-    investors: number;
-    status: 'active' | 'inactive';
-}
-
 export interface Achievement {
     id: string;
     title: string;
     description: string;
     icon: React.ElementType;
     unlocked: boolean;
-    category: 'Syndicate' | 'Financial' | 'Personal' | 'Milestone';
+    category: 'Network' | 'Financial' | 'Personal' | 'Milestone';
     progress?: {
         current: number;
         target: number;
@@ -161,6 +165,7 @@ export interface DailyTask {
   subtitle?: string;
   description: string;
   reward: number; // XP points
+  rewardCAP?: number; // Optional $CAP reward
   icon: React.ElementType;
   isCompleted: boolean;
   actionText: string;
@@ -222,7 +227,7 @@ export interface OnlineUser {
   investors?: number;
 }
 
-export interface SyndicateGoal {
+export interface NetworkGoal {
     id: string;
     title: string;
     description: string;
@@ -248,4 +253,14 @@ export interface BoardroomVote {
     totalVotes: number;
     endsAt: string;
     userVote?: string; // option id
+}
+
+export interface SyndicateMember {
+    id: string;
+    name: string;
+    avatarUrl: string;
+    joinDate: string;
+    level: number;
+    investors: number;
+    status: 'active' | 'inactive';
 }

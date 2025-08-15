@@ -1,7 +1,9 @@
 
+
+
 import React, { createContext, useState, useContext, ReactNode, useCallback } from 'react';
-import type { Partner, DailyTask, View, Toast, AcademyArticle } from '../types.ts';
-import { MOCK_PARTNER, MOCK_ALL_TASKS, MOCK_ACADEMY_ARTICLES } from '../constants.ts';
+import type { Partner, DailyTask, View, Toast, AcademyArticle, Project } from '../types.ts';
+import { MOCK_PARTNER, MOCK_ALL_TASKS, MOCK_ACADEMY_ARTICLES, MOCK_PORTFOLIO } from '../constants.ts';
 import ToastContainer from '../components/ui/ToastContainer.tsx';
 
 interface AppContextType {
@@ -17,6 +19,8 @@ interface AppContextType {
     subView: string | null;
     toasts: Toast[];
     addToast: (message: string, type?: Toast['type']) => void;
+    portfolio: Project[];
+    activateFirstProject: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -28,6 +32,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const [activeView, setActiveView] = useState<View>('dashboard');
     const [subView, setSubView] = useState<string | null>(null);
     const [toasts, setToasts] = useState<Toast[]>([]);
+    const [portfolio, setPortfolio] = useState<Project[]>([]);
 
     const addToast = useCallback((message: string, type: Toast['type'] = 'info') => {
         const id = new Date().getTime().toString();
@@ -43,23 +48,34 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         setSubView(options?.subView || null);
     }, []);
 
+    const activateFirstProject = useCallback(() => {
+        setPortfolio([MOCK_PORTFOLIO[0]]);
+        addToast('Проект "Pre-seed" успешно запущен! Пора продавать Доли.', 'success');
+    }, [addToast]);
+
     const handleCompleteTask = useCallback((taskId: string, showToast: boolean = true) => {
         let taskTitle = '';
-        let taskReward = 0;
+        let taskRewardXP = 0;
+        let taskRewardCAP = 0;
         setTasks(prevTasks =>
             prevTasks.map(task => {
                 if (task.id === taskId && !task.isCompleted) {
                     taskTitle = task.title;
-                    taskReward = task.reward;
+                    taskRewardXP = task.reward;
+                    taskRewardCAP = task.rewardCAP || 0;
                     return { ...task, isCompleted: true };
                 }
                 return task;
             })
         );
         if (taskTitle) {
-            setUser(prevUser => ({ ...prevUser, xp: prevUser.xp + taskReward }));
+            setUser(prevUser => ({ ...prevUser, xp: prevUser.xp + taskRewardXP, capital: prevUser.capital + taskRewardCAP }));
             if (showToast) {
-                 addToast(`Задание "${taskTitle}" выполнено! +${taskReward} XP`, 'success');
+                 let rewardString = `+${taskRewardXP} XP`;
+                 if (taskRewardCAP > 0) {
+                     rewardString += `, +$${taskRewardCAP} CAP`;
+                 }
+                 addToast(`Миссия "${taskTitle}" выполнена! ${rewardString}`, 'success');
             }
         }
     }, [addToast]);
@@ -118,7 +134,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         setActiveView: handleSetActiveView,
         subView,
         toasts,
-        addToast
+        addToast,
+        portfolio,
+        activateFirstProject: activateFirstProject,
     };
 
     return (

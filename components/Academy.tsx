@@ -1,4 +1,7 @@
 
+
+
+
 import React, { useState, useMemo } from 'react';
 import Card from './ui/Card.tsx';
 import Button from './ui/Button.tsx';
@@ -116,125 +119,84 @@ const ArticleCard: React.FC<{ article: AcademyArticle; onSelect: (article: Acade
     );
 };
 
-
 // --- MAIN COMPONENT ---
 
-const Academy: React.FC = () => {
+export const Academy: React.FC = () => {
     const { user, academyArticles, completeAcademyArticle } = useAppContext();
     const [selectedArticle, setSelectedArticle] = useState<AcademyArticle | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
-    const [activeCategory, setActiveCategory] = useState<string>('all');
-    const [activeType, setActiveType] = useState<string>('all');
-    
-    const categories = useMemo(() => ['all', ...Array.from(new Set(academyArticles.map(a => a.category)))], [academyArticles]);
-    const types = ['all', 'video', 'article'];
+    const [filter, setFilter] = useState<'all' | AcademyArticle['category']>('all');
 
     const filteredArticles = useMemo(() => {
-        return academyArticles.filter(article => {
-            const matchesCategory = activeCategory === 'all' || article.category === activeCategory;
-            const matchesType = activeType === 'all' || article.type === activeType;
-            const matchesSearch = !searchQuery || article.title.toLowerCase().includes(searchQuery.toLowerCase());
-            return matchesCategory && matchesType && matchesSearch;
-        });
-    }, [academyArticles, searchQuery, activeCategory, activeType]);
+        return academyArticles
+            .filter(article => filter === 'all' || article.category === filter)
+            .filter(article => article.title.toLowerCase().includes(searchQuery.toLowerCase()));
+    }, [academyArticles, filter, searchQuery]);
 
-    const articlesByGroup = useMemo(() => {
-        return filteredArticles.reduce((acc, article) => {
-            (acc[article.category] = acc[article.category] || []).push(article);
-            return acc;
-        }, {} as Record<string, AcademyArticle[]>);
-    }, [filteredArticles]);
+    const categories = ['all', 'Для новичков', 'Масштабирование', 'Стратегия'] as const;
 
-    const stats = useMemo(() => {
-        const completed = academyArticles.filter(a => a.isCompleted).length;
-        const total = academyArticles.length;
-        const totalXp = academyArticles.reduce((sum, a) => sum + a.xpReward, 0);
-        const earnedXp = academyArticles.filter(a => a.isCompleted).reduce((sum, a) => sum + a.xpReward, 0);
-        return { completed, total, totalXp, earnedXp, progress: total > 0 ? (completed / total) * 100 : 0 };
-    }, [academyArticles]);
-    
+    const handleComplete = (id: string) => {
+        completeAcademyArticle(id);
+        setSelectedArticle(prev => prev ? { ...prev, isCompleted: true } : null);
+    };
 
     return (
-        <div className="space-y-6 animate-slide-in-up">
+        <div className="space-y-6">
             <Card>
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div className="flex items-center gap-3">
                         <GraduationCap className="h-8 w-8 text-brand-primary" />
                         <div>
                             <h2 className="text-2xl font-bold text-white">Nexus Institute</h2>
-                            <p className="text-gray-400">Ваш путь к успеху начинается здесь. Изучайте и применяйте!</p>
+                            <p className="text-gray-400">База знаний для вашего стремительного роста в проекте.</p>
                         </div>
                     </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-dark-700/50 p-4 rounded-lg">
-                    <div>
-                        <p className="text-sm text-gray-400">Общий прогресс</p>
-                        <div className="w-full bg-dark-900 rounded-full h-2.5 mt-2">
-                            <div className="bg-brand-primary h-2.5 rounded-full" style={{ width: `${stats.progress}%` }}></div>
-                        </div>
-                    </div>
-                    <div className="text-center">
-                        <p className="text-sm text-gray-400">Уроков пройдено</p>
-                        <p className="text-xl font-bold text-white">{stats.completed} / {stats.total}</p>
-                    </div>
-                     <div className="text-center">
-                        <p className="text-sm text-gray-400">Опыта получено (XP)</p>
-                        <p className="text-xl font-bold text-white">{stats.earnedXp} / {stats.totalXp}</p>
-                    </div>
-                </div>
-            </Card>
-
-            <Card>
-                <div className="flex flex-col md:flex-row gap-4 mb-4">
-                     <div className="relative flex-grow">
+                    <div className="relative w-full md:w-64">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                         <input
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Поиск по названию..."
-                            className="w-full bg-dark-900 border border-dark-600 rounded-md pl-9 pr-3 py-2 text-sm focus:ring-1 focus:ring-brand-primary focus:outline-none"
+                            className="w-full bg-dark-900 border border-dark-600 rounded-lg pl-9 pr-3 py-2 text-sm focus:ring-1 focus:ring-brand-primary focus:outline-none"
                         />
                     </div>
-                    <div className="flex items-center gap-2 bg-dark-800 p-1 rounded-lg">
-                        {categories.map(cat => (
-                           <button key={cat} onClick={() => setActiveCategory(cat)} className={`px-3 py-1 text-sm rounded-md transition-colors ${activeCategory === cat ? 'bg-brand-primary text-white' : 'text-gray-300 hover:bg-dark-700'}`}>{cat === 'all' ? 'Все' : cat}</button> 
-                        ))}
-                    </div>
-                     <div className="flex items-center gap-2 bg-dark-800 p-1 rounded-lg">
-                        <button onClick={() => setActiveType('all')} className={`px-3 py-1 text-sm rounded-md transition-colors ${activeType === 'all' ? 'bg-brand-primary text-white' : 'text-gray-300 hover:bg-dark-700'}`}>Все</button>
-                        <button onClick={() => setActiveType('video')} className={`px-3 py-1 text-sm rounded-md transition-colors ${activeType === 'video' ? 'bg-brand-primary text-white' : 'text-gray-300 hover:bg-dark-700'}`}><Video className="w-4 h-4 inline mr-1" />Видео</button>
-                        <button onClick={() => setActiveType('article')} className={`px-3 py-1 text-sm rounded-md transition-colors ${activeType === 'article' ? 'bg-brand-primary text-white' : 'text-gray-300 hover:bg-dark-700'}`}><FileText className="w-4 h-4 inline mr-1" />Статьи</button>
-                    </div>
                 </div>
+            </Card>
 
-                {Object.keys(articlesByGroup).length > 0 ? Object.entries(articlesByGroup).map(([category, articles]) => (
-                    <div key={category} className="mt-6">
-                        <h3 className="text-xl font-bold text-white mb-4">{category}</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {articles.map(article => (
-                                <ArticleCard key={article.id} article={article} onSelect={setSelectedArticle} userLevel={user.level} />
-                            ))}
-                        </div>
-                    </div>
-                )) : (
-                    <div className="text-center py-12 text-gray-500">
-                        <p>Ничего не найдено по вашему запросу.</p>
-                        <p className="text-sm">Попробуйте изменить фильтры или поисковый запрос.</p>
-                    </div>
-                )}
+            <Card>
+                 <div className="flex flex-wrap items-center gap-2 mb-6">
+                    {categories.map(cat => (
+                         <button 
+                            key={cat}
+                            onClick={() => setFilter(cat)}
+                            className={`px-3 py-1.5 text-xs font-semibold rounded-full transition-colors ${
+                                filter === cat ? 'bg-brand-primary text-white' : 'bg-dark-700 text-gray-300 hover:bg-dark-600'
+                            }`}
+                        >
+                            {cat === 'all' ? 'Все материалы' : cat}
+                        </button>
+                    ))}
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredArticles.map(article => (
+                        <ArticleCard 
+                            key={article.id}
+                            article={article}
+                            onSelect={setSelectedArticle}
+                            userLevel={user.level}
+                        />
+                    ))}
+                </div>
             </Card>
 
             {selectedArticle && (
                 <ArticleModal 
                     article={selectedArticle} 
-                    onClose={() => setSelectedArticle(null)} 
-                    onComplete={completeAcademyArticle} 
+                    onClose={() => setSelectedArticle(null)}
+                    onComplete={handleComplete}
                 />
             )}
         </div>
     );
 };
-
-export default Academy;

@@ -1,13 +1,13 @@
 
 
-import type { SyndicateMember, AcademyArticle } from '../types.ts';
+import type { Partner, AcademyArticle } from '../types.ts';
 import { MOCK_ACADEMY_ARTICLES } from '../constants.ts';
 
 
 // This function now simulates a call to a backend endpoint.
 // The backend would be responsible for securely calling the Gemini API.
 export const generateMarketingContentStream = async (prompt: string, onChunk: (text: string) => void) => {
-    const systemInstruction = `Вы — эксперт по маркетингу и копирайтингу для MLM-проектов. Ваша задача — создавать убедительные, мотивирующие и понятные тексты для привлечения новых участников. Используйте позитивный и энергичный тон. Тексты должны быть на русском языке.`;
+    const systemInstruction = `Вы — эксперт по маркетингу и копирайтингу для бизнес-платформ. Ваша задача — создавать убедительные, мотивирующие и понятные тексты для привлечения новых партнеров. Используйте позитивный и энергичный тон. Тексты должны быть на русском языке.`;
 
     try {
         // As per README.md, all AI calls should go through a secure backend endpoint.
@@ -92,10 +92,10 @@ export const generateImage = async (prompt: string, aspectRatio: string): Promis
 // This function simulates a call to a backend with team data to get AI-powered analysis.
 // In a real application, this would make a secure backend call which then queries Gemini.
 export const getAITeamAnalysisStream = async (
-    teamData: SyndicateMember[],
+    teamData: Partner[],
     onChunk: (text: string) => void
 ): Promise<void> => {
-    console.log("Симуляция AI-анализа команды для:", teamData);
+    console.log("Симуляция AI-анализа Бизнес-сети для:", teamData);
 
     if (teamData.length === 0) {
         throw new Error("Нет данных о команде для анализа.");
@@ -112,11 +112,11 @@ export const getAITeamAnalysisStream = async (
     const averageLevel = totalMembers > 0 ? (totalLevel / totalMembers) : 0;
 
     // 2. Build a dynamic response string
-    let analysisText = "**Отчет AI-Аналитика по вашему синдикату:**\n\n";
+    let analysisText = "**Отчет AI-Аналитика по вашей Бизнес-сети:**\n\n";
     analysisText += `**✅ Ключевые моменты:**\n`;
     analysisText += `*   **Активность:** ${activityRate.toFixed(0)}% ваших партнеров активны (${activeCount} из ${totalMembers}). Это хороший показатель!\n`;
     if (topPerformer) {
-        analysisText += `*   **Лидер:** ${topPerformer.name} — ваш лучший рекрутер с ${topPerformer.investors} инвесторами. Отличная работа!\n`;
+        analysisText += `*   **Лидер:** ${topPerformer.name} — ваш лучший рекрутер с ${topPerformer.investors} партнерами. Отличная работа!\n`;
     }
     if (newMembers.length > 0) {
         analysisText += `*   **Рост:** Вы привлекли ${newMembers.length} новых партнеров за последнюю неделю. Прекрасный темп!\n\n`;
@@ -150,12 +150,12 @@ export const getAITeamAnalysisStream = async (
     }
 
     if (academySuggestions.length > 0) {
-        analysisText += `3.  **Обучение:** Для вашей команды сейчас особенно полезны будут материалы из "Академии":\n`;
+        analysisText += `3.  **Обучение:** Для вашей команды сейчас особенно полезны будут материалы из "Nexus Institute":\n`;
         academySuggestions.forEach(article => {
             analysisText += `    *   *"${article.title}"*\n`;
         });
     } else {
-         analysisText += `3.  **Обучение:** Проверьте, все ли новые партнеры начали обучение в "Академии". Их быстрый старт — залог вашего успеха.\n`;
+         analysisText += `3.  **Обучение:** Проверьте, все ли новые партнеры начали обучение в "Nexus Institute". Их быстрый старт — залог вашего успеха.\n`;
     }
 
     // 4. Simulate streaming the response

@@ -1,10 +1,11 @@
 
+
 import React, { useMemo, useEffect } from 'react';
-import type { StartupNode } from '../types.ts';
+import type { ProjectNode } from '../types.ts';
 import { X, BarChart3, Users, GitBranch, PieChart, Zap, HelpCircle } from 'lucide-react';
 
 interface AnalyticsPanelProps {
-    node: StartupNode;
+    node: ProjectNode;
     isOpen: boolean;
     onClose: () => void;
 }
@@ -21,14 +22,14 @@ interface NodeStats {
     };
 }
 
-const getDepth = (node: StartupNode | undefined): number => {
+const getDepth = (node: ProjectNode | undefined): number => {
     if (!node || !node.children || node.children.length === 0) {
         return 0;
     }
     return 1 + Math.max(...node.children.map(getDepth));
 }
 
-const calculateStats = (node: StartupNode): NodeStats => {
+const calculateStats = (node: ProjectNode): NodeStats => {
     const stats: NodeStats = {
         totalSlots: 0,
         filledSlots: 0,
@@ -37,7 +38,7 @@ const calculateStats = (node: StartupNode): NodeStats => {
         composition: { self: 0, syndicate_deal: 0, spinoff: 0 },
     };
 
-    const countFilledNodes = (n: StartupNode | undefined): number => {
+    const countFilledNodes = (n: ProjectNode | undefined): number => {
         if (!n || !n.isFilled) return 0;
         let count = 1;
         if (n.children) {
@@ -50,7 +51,7 @@ const calculateStats = (node: StartupNode): NodeStats => {
     stats.leftLegCount = countFilledNodes(node.children?.[0]);
     stats.rightLegCount = countFilledNodes(node.children?.[1]);
     
-    const collectStats = (n: StartupNode | undefined) => {
+    const collectStats = (n: ProjectNode | undefined) => {
         if (!n || !n.isFilled) return;
 
         if (n.nodeType && stats.composition.hasOwnProperty(n.nodeType)) {
@@ -137,11 +138,11 @@ const AnalyticsPanel: React.FC<AnalyticsPanelProps> = ({ node, isOpen, onClose }
                         Анализ ветки для: <span className="font-bold text-brand-accent">{node.name}</span>
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <StatCard title="Заполнение структуры" value={`${fillPercentage}%`} description="Процент заполненных мест в видимой структуре.">
+                        <StatCard title="Заполнение структуры" value={`${fillPercentage}%`} description="Процент заполненных Долей в видимой структуре.">
                              <div className="w-full bg-dark-700 rounded-full h-2.5 mt-2">
                                  <div className="bg-brand-primary h-2.5 rounded-full" style={{ width: `${fillPercentage}%` }}></div>
                              </div>
-                             <p className="text-xs text-right text-gray-400 mt-1">{stats.filledSlots} / {stats.totalSlots} мест</p>
+                             <p className="text-xs text-right text-gray-400 mt-1">{stats.filledSlots} / {stats.totalSlots} Долей</p>
                         </StatCard>
 
                         <StatCard title="Баланс ветвей" value={`${stats.leftLegCount} / ${stats.rightLegCount}`} description="Соотношение партнеров в левой и правой ветви. Идеальный баланс способствует стабильному росту.">
@@ -154,9 +155,9 @@ const AnalyticsPanel: React.FC<AnalyticsPanelProps> = ({ node, isOpen, onClose }
                         <div className="bg-dark-900/50 p-4 rounded-lg">
                             <h4 className="text-sm font-medium text-gray-400 mb-2 flex items-center gap-2"><PieChart className="w-4 h-4" />Состав структуры</h4>
                             <div className="space-y-2 text-xs">
-                               <div className="flex justify-between"><span><Users className="w-3 h-3 inline mr-1.5" />Инвесторы:</span> <span className="font-bold text-white">{stats.composition.self}</span></div>
-                               <div className="flex justify-between"><span><GitBranch className="w-3 h-3 inline mr-1.5 text-cyan-400" />Сделки из синдиката:</span> <span className="font-bold text-white">{stats.composition.syndicate_deal}</span></div>
-                               <div className="flex justify-between"><span><Users className="w-3 h-3 inline mr-1.5 text-purple-400" />Спин-оффы:</span> <span className="font-bold text-white">{stats.composition.spinoff}</span></div>
+                               <div className="flex justify-between"><span><Users className="w-3 h-3 inline mr-1.5" />Партнеры:</span> <span className="font-bold text-white">{stats.composition.self}</span></div>
+                               <div className="flex justify-between"><span><GitBranch className="w-3 h-3 inline mr-1.5 text-cyan-400" />Транши от Бизнес-сети:</span> <span className="font-bold text-white">{stats.composition.syndicate_deal}</span></div>
+                               <div className="flex justify-between"><span><Users className="w-3 h-3 inline mr-1.5 text-purple-400" />Филиалы:</span> <span className="font-bold text-white">{stats.composition.spinoff}</span></div>
                             </div>
                         </div>
                          <div className="bg-dark-900/50 p-4 rounded-lg">

@@ -4,10 +4,10 @@ import React, { useState } from 'react';
 import Card from './ui/Card.tsx';
 import Button from './ui/Button.tsx';
 import { useAppContext } from '../contexts/AppContext.tsx';
-import { MOCK_CAPITAL_HISTORY_30_DAYS, MOCK_MARKET_PULSE, MOCK_PORTFOLIO, MOCK_LIVE_FEED_EVENTS } from '../constants.ts';
+import { MOCK_CAPITAL_HISTORY_30_DAYS, MOCK_MARKET_PULSE, MOCK_LIVE_FEED_EVENTS } from '../constants.ts';
 import { AnimatedBalance } from './ui/Stat.tsx';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
-import { ArrowRight, Briefcase, TrendingUp, Activity, PieChart, Target, Zap, UserPlus, ShieldCheck, ChevronsUp, DollarSign, BarChart } from 'lucide-react';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { ArrowRight, Briefcase, TrendingUp, Activity, PieChart, Target, Zap, UserPlus, ShieldCheck, ChevronsUp, DollarSign, BarChart, Rocket } from 'lucide-react';
 
 
 const ActiveMission: React.FC = () => {
@@ -124,12 +124,12 @@ const CapitalOverview: React.FC = () => {
 };
 
 const PortfolioWidget: React.FC = () => {
-    const { setActiveView } = useAppContext();
+    const { setActiveView, portfolio } = useAppContext();
     return (
         <Card className="lg:col-span-2 animate-slide-in-up" style={{ animationDelay: '200ms' }}>
             <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2"><Briefcase className="w-6 h-6 text-brand-primary" /> Портфель Стартапов</h3>
             <div className="space-y-4">
-                {MOCK_PORTFOLIO.map(startup => (
+                {portfolio.map(startup => (
                     <div key={startup.id} className="p-3 bg-dark-700/50 rounded-lg">
                          <div className="flex items-center justify-between">
                             <p className="font-semibold text-white">{startup.name}</p>
@@ -209,6 +209,25 @@ const MarketPulse: React.FC = () => {
 }
 
 const DashboardView: React.FC = () => {
+    const { portfolio, setActiveView } = useAppContext();
+
+    if (portfolio.length === 0) {
+        return (
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                 <Card className="animate-slide-in-up !bg-gradient-to-br from-brand-primary/20 to-dark-800/20 border-brand-primary/50 text-center p-8 lg:col-span-5">
+                     <h2 className="text-3xl font-bold text-white">Добро пожаловать в Nexus Capital!</h2>
+                    <p className="text-gray-400 mt-2 max-w-lg mx-auto">Ваш командный центр готов. Сделайте свой первый шаг — активируйте стартовый портфель, чтобы начать свой путь к вершине.</p>
+                     <Button onClick={() => setActiveView('market')} className="mt-6 animate-glow">
+                        <Rocket className="w-5 h-5 mr-2" />
+                        Активировать первый стартап
+                    </Button>
+                </Card>
+                <CapitalOverview />
+                <MarketPulse />
+            </div>
+        )
+    }
+
     return (
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
             <ActiveMission />

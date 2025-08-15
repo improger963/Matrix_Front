@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import Card from './ui/Card.tsx';
 import { MOCK_LEADERS } from '../constants.ts';
@@ -39,7 +40,7 @@ const PodiumPlace: React.FC<{ leader: Leader; place: 1 | 2 | 3 }> = ({ leader, p
                  <div className={`absolute -top-3 left-1/2 -translate-x-1/2 ${style.textColor}`}>{style.icon}</div>
             </div>
             <p className="font-bold text-white text-lg truncate">{leader.name}</p>
-            <p className={`font-bold text-xl ${style.textColor}`}>${leader.earnings.toLocaleString('ru-RU')}</p>
+            <p className={`font-bold text-xl ${style.textColor}`}>{`$${Number(leader.earnings || 0).toLocaleString('ru-RU')}`}</p>
             <div className={`mt-2 flex-grow w-full rounded-t-lg ${style.bgColor} ${style.borderColor} border-t-4 flex flex-col justify-center items-center p-2 ${style.height}`}>
                 <p className={`font-black text-6xl ${style.textColor}`}>{place}</p>
             </div>
@@ -59,7 +60,7 @@ const LeaderRow: React.FC<{ leader: Leader; isCurrentUser: boolean }> = ({ leade
                     <span className="font-medium text-white">{leader.name} {isCurrentUser && '(Вы)'}</span>
                 </div>
             </td>
-            <td className="p-4 font-semibold text-green-400">${leader.earnings.toLocaleString('ru-RU')}</td>
+            <td className="p-4 font-semibold text-green-400">{`$${Number(leader.earnings || 0).toLocaleString('ru-RU')}`}</td>
             <td className="p-4 font-medium text-white">{leader.level}</td>
         </tr>
      );
@@ -120,7 +121,7 @@ const Leaderboard: React.FC = () => {
                             <p className="font-bold text-white">{leader.name} {leader.id === user.id && '(Вы)'}</p>
                             <div className="flex items-center gap-4 text-sm text-gray-400 mt-1">
                                 <span>Ур: {leader.level}</span>
-                                <span className="text-green-400 font-semibold">${leader.earnings.toLocaleString('ru-RU')}</span>
+                                <span className="text-green-400 font-semibold">{`$${Number(leader.earnings || 0).toLocaleString('ru-RU')}`}</span>
                             </div>
                         </div>
                     </div>
