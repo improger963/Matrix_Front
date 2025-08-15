@@ -23,8 +23,10 @@ const PersonalStat: React.FC<{ icon: React.ReactNode; label: string; value: Reac
 
 
 const Dashboard: React.FC = () => {
-    const { user, dailyTasks, handleTaskAction, setActiveView, addToast } = useAppContext();
+    const { user, tasks, handleTaskAction, setActiveView, addToast } = useAppContext();
     const [copied, setCopied] = useState(false);
+    
+    const dailyTasks = tasks.filter(task => task.category === 'daily');
 
     const handleCopy = () => {
         navigator.clipboard.writeText(user.referralLink);

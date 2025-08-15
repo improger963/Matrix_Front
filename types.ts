@@ -1,5 +1,5 @@
 
-export type View = 'dashboard' | 'matrix' | 'marketing' | 'leaderboard' | 'howitworks' | 'faq' | 'wallet' | 'profile' | 'team' | 'livefeed' | 'reviews' | 'support' | 'news' | 'academy' | 'promo' | 'chat' | 'landingPage';
+export type View = 'dashboard' | 'matrix' | 'marketing' | 'leaderboard' | 'howitworks' | 'faq' | 'wallet' | 'profile' | 'team' | 'livefeed' | 'reviews' | 'support' | 'news' | 'academy' | 'promo' | 'chat' | 'landingPage' | 'tasks';
 
 export interface User {
   id: string;
@@ -149,8 +149,10 @@ export interface DailyTask {
   icon: React.ElementType;
   isCompleted: boolean;
   actionText: string;
-  actionType: 'navigate' | 'copy' | 'none';
-  targetView?: View;
+  actionType: 'navigate' | 'copy' | 'external_link' | 'none';
+  target?: View | string;
+  category: 'onboarding' | 'daily' | 'special';
+  progress?: { current: number; target: number };
 }
 
 export interface PromoMaterial {

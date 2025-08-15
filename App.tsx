@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Header from './components/Header.tsx';
-import { ShieldCheck, LayoutGrid, BotMessageSquare, Trophy, HelpCircle, BookOpen, Wallet as WalletIcon, UserCircle, TrendingUp, MoreHorizontal, Zap, MessageSquareQuote, LifeBuoy, Newspaper, GraduationCap, Megaphone, MessageSquare, Link, Users, ChevronDown } from 'lucide-react';
+import { ShieldCheck, LayoutGrid, BotMessageSquare, Trophy, HelpCircle, BookOpen, Wallet as WalletIcon, UserCircle, TrendingUp, MoreHorizontal, Zap, MessageSquareQuote, LifeBuoy, Newspaper, GraduationCap, Megaphone, MessageSquare, Link, Users, ChevronDown, ListChecks } from 'lucide-react';
 import type { View } from './types.ts';
 import MoreMenu from './components/MoreMenu.tsx';
 import { AppProvider, useAppContext } from './contexts/AppContext.tsx';
@@ -25,6 +25,7 @@ import Academy from './components/Academy.tsx';
 import Promo from './components/Promo.tsx';
 import Chat from './components/Chat.tsx';
 import LandingPage from './components/LandingPage.tsx';
+import TasksView from './components/TasksView.tsx';
 
 export type NavItem = {
   type: 'item';
@@ -44,6 +45,7 @@ const navConfig: (NavItem | NavGroup)[] = [
     { type: 'item', id: 'dashboard', label: 'Главная', icon: LayoutGrid },
     { type: 'item', id: 'matrix', label: 'Матрица', icon: ShieldCheck },
     { type: 'item', id: 'team', label: 'Команда', icon: TrendingUp },
+    { type: 'item', id: 'tasks', label: 'Задания', icon: ListChecks },
     { type: 'item', id: 'wallet', label: 'Финансы', icon: WalletIcon },
     { 
         type: 'group',
@@ -105,6 +107,7 @@ const AppContent: React.FC = () => {
             case 'dashboard': return <Dashboard />;
             case 'matrix': return <MatrixView />;
             case 'team': return <TeamProgress />;
+            case 'tasks': return <TasksView />;
             case 'wallet': return <Wallet />;
             case 'profile': return <Profile />;
             case 'landingPage': return <LandingPage />;

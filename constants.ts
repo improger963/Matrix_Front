@@ -1,6 +1,6 @@
 
 import type { User, MatrixNode, Leader, Transaction, ProjectStats, TeamMember, Achievement, Notification, LiveFeedEvent, Review, NewsArticle, AcademyArticle, DailyTask, PromoMaterial, ChatMessage } from './types.ts';
-import { Award, CheckCircle, Gift, Network, Rocket, ShieldCheck, Target, Users, UserPlus, DollarSign, Share2, GraduationCap, Megaphone, ListTodo, BotMessageSquare, Video, BookText } from 'lucide-react';
+import { Award, CheckCircle, Gift, Network, Rocket, ShieldCheck, Target, Users, UserPlus, DollarSign, Share2, GraduationCap, Megaphone, ListTodo, BotMessageSquare, Video, BookText, Edit3, MessageSquare, Star } from 'lucide-react';
 
 export const MOCK_USERS_DB: { [id: string]: { id: string; name: string; avatarUrl: string; level: number; } } = {
   'U12345': { id: 'U12345', name: 'Алексей Волков', avatarUrl: 'https://i.pravatar.cc/150?u=U12345', level: 5 },
@@ -354,13 +354,24 @@ export const MOCK_ACADEMY_ARTICLES: AcademyArticle[] = [
     { id: 'A006', title: 'Финансовая грамотность для участника', category: 'Для новичков', type: 'article', coverUrl: 'https://images.unsplash.com/photo-1642792962358-83132a2e475c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60', isLocked: true },
 ];
 
-export const MARKETING_GENIUS_TASK_ID = 'T02';
+export const MARKETING_GENIUS_TASK_ID = 'D02';
 
-export const MOCK_DAILY_TASKS: DailyTask[] = [
-    { id: 'T01', title: 'Войти в аккаунт', description: 'Ежедневный вход для поддержания активности.', reward: '+5 очков', icon: ListTodo, isCompleted: true, actionText: 'Выполнено', actionType: 'none' },
-    { id: MARKETING_GENIUS_TASK_ID, title: 'Сгенерировать пост', description: 'Используйте AI-Копирайтер для создания контента.', reward: '+15 очков', icon: BotMessageSquare, isCompleted: false, actionText: 'К AI-Копирайтеру', actionType: 'navigate', targetView: 'marketing' },
-    { id: 'T03', title: 'Поделиться ссылкой', description: 'Поделитесь реферальной ссылкой в любой соцсети.', reward: '+25 очков', icon: Share2, isCompleted: false, actionText: 'Скопировать ссылку', actionType: 'copy' },
+export const MOCK_ALL_TASKS: DailyTask[] = [
+    // Onboarding Tasks
+    { id: 'O01', category: 'onboarding', title: 'Заполнить профиль', description: 'Добавьте информацию о себе и аватар.', reward: '+50 очков', icon: Edit3, isCompleted: true, actionText: 'В профиль', actionType: 'navigate', target: 'profile' },
+    { id: 'O02', category: 'onboarding', title: 'Изучить "Как это работает"', description: 'Поймите основы маркетинга проекта.', reward: '+25 очков', icon: GraduationCap, isCompleted: true, actionText: 'Читать', actionType: 'navigate', target: 'howitworks' },
+    { id: 'O03', category: 'onboarding', title: 'Первое сообщение в чате', description: 'Поприветствуйте других участников в общем чате.', reward: '+15 очков', icon: MessageSquare, isCompleted: false, actionText: 'Перейти в чат', actionType: 'navigate', target: 'chat' },
+
+    // Daily Tasks
+    { id: 'D01', category: 'daily', title: 'Войти в аккаунт', description: 'Ежедневный вход для поддержания активности.', reward: '+5 очков', icon: ListTodo, isCompleted: true, actionText: 'Выполнено', actionType: 'none' },
+    { id: MARKETING_GENIUS_TASK_ID, category: 'daily', title: 'Сгенерировать пост', description: 'Используйте AI-Копирайтер для создания контента.', reward: '+15 очков', icon: BotMessageSquare, isCompleted: false, actionText: 'К AI-Копирайтеру', actionType: 'navigate', target: 'marketing' },
+    { id: 'D03', category: 'daily', title: 'Поделиться ссылкой', description: 'Поделитесь реферальной ссылкой в любой соцсети.', reward: '+25 очков', icon: Share2, isCompleted: false, actionText: 'Скопировать ссылку', actionType: 'copy' },
+    
+    // Special Tasks
+    { id: 'S01', category: 'special', title: 'Марафон "Новичок"', description: 'Пригласите 3-х партнеров за первую неделю.', reward: '+$50 на баланс', icon: Rocket, isCompleted: false, actionText: 'Подробнее', actionType: 'none', progress: { current: 1, target: 3 } },
+    { id: 'S02', category: 'special', title: 'Оставить отзыв', description: 'Поделитесь своим мнением о проекте и получите бонус.', reward: '+100 очков', icon: Star, isCompleted: false, actionText: 'Оставить отзыв', actionType: 'navigate', target: 'reviews' },
 ];
+
 
 export const MOCK_PROMO_MATERIALS: PromoMaterial[] = [
     { id: 'P01', type: 'banner', title: 'Баннер для поста (Квадрат)', content: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&h=1200&q=80', size: '1200x1200' },

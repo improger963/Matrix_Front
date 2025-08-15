@@ -1,9 +1,9 @@
-
 import React from 'react';
 import Card from './ui/Card.tsx';
 import Button from './ui/Button.tsx';
 import type { DailyTask } from '../types.ts';
-import { Check, Gift, Zap } from 'lucide-react';
+import { Check, Gift, Zap, ArrowRight } from 'lucide-react';
+import { useAppContext } from '../contexts/AppContext.tsx';
 
 interface DailyTasksProps {
     tasks: DailyTask[];
@@ -11,15 +11,16 @@ interface DailyTasksProps {
 }
 
 const DailyTasks: React.FC<DailyTasksProps> = ({ tasks, onTaskAction }) => {
+    const { setActiveView } = useAppContext();
     const completedTasks = tasks.filter(t => t.isCompleted).length;
-    const progressPercentage = (completedTasks / tasks.length) * 100;
+    const progressPercentage = tasks.length > 0 ? (completedTasks / tasks.length) * 100 : 0;
 
     return (
         <Card>
             <div className="flex items-center justify-between mb-4">
                  <div className="flex items-center gap-3">
                     <Zap className="h-6 w-6 text-brand-accent" />
-                    <h3 className="text-xl font-bold text-white">Ежедневные задания</h3>
+                    <h3 className="text-xl font-bold text-white">Сегодняшние задания</h3>
                 </div>
                 <span className="text-sm font-bold text-brand-accent">{completedTasks}/{tasks.length}</span>
             </div>
@@ -28,7 +29,7 @@ const DailyTasks: React.FC<DailyTasksProps> = ({ tasks, onTaskAction }) => {
                 <div className="bg-brand-primary h-1.5 rounded-full" style={{ width: `${progressPercentage}%` }}></div>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-3 mb-4">
                 {tasks.map(task => (
                     <div
                         key={task.id}
@@ -60,6 +61,10 @@ const DailyTasks: React.FC<DailyTasksProps> = ({ tasks, onTaskAction }) => {
                     </div>
                 ))}
             </div>
+            <Button variant="secondary" className="w-full" onClick={() => setActiveView('tasks')}>
+                Перейти ко всем заданиям
+                <ArrowRight className="h-4 w-4 ml-2" />
+            </Button>
         </Card>
     );
 };
