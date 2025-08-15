@@ -1,10 +1,32 @@
 
 import React, { useState, useMemo } from 'react';
-import { Briefcase, ChevronDown, UserCircle, LifeBuoy, LogOut, Wallet } from 'lucide-react';
+import { Briefcase, ChevronDown, UserCircle, LifeBuoy, LogOut, Wallet, Award, Zap } from 'lucide-react';
 import type { View } from '../../types.ts';
 import type { NavItem, NavGroup } from '../../App.tsx';
 import { useAppContext } from '../../contexts/AppContext.tsx';
 import { AnimatedBalance } from '../ui/Stat.tsx';
+import { RANK_THRESHOLDS } from '../../constants.ts';
+
+const RankWidget: React.FC = () => {
+    const { user } = useAppContext();
+    const currentRankThreshold = RANK_THRESHOLDS[user.rank];
+    const nextRank = Object.keys(RANK_THRESHOLDS).find(rank => RANK_THRESHOLDS[rank as keyof typeof RANK_THRESHOLDS] > currentRankThreshold);
+    const nextRankThreshold = nextRank ? RANK_THRESHOLDS[nextRank as keyof typeof RANK_THRESHOLDS] : user.reputation;
+    const reputationProgress = nextRank ? ((user.reputation - currentRankThreshold) / (nextRankThreshold - currentRankThreshold)) * 100 : 100;
+    
+    return (
+        <div className="bg-dark-900/50 p-2 rounded-lg">
+            <div className="flex justify-between items-center text-xs mb-1">
+                <p className="font-bold text-brand-accent">{user.rank}</p>
+                <p className="text-gray-400">{user.reputation} / {nextRankThreshold} RP</p>
+            </div>
+            <div className="w-full bg-dark-700 rounded-full h-1">
+                <div className="bg-brand-primary h-1 rounded-full" style={{ width: `${reputationProgress}%` }}></div>
+            </div>
+        </div>
+    )
+}
+
 
 interface DesktopLayoutProps {
     children: React.ReactNode;
@@ -138,8 +160,9 @@ const DesktopLayout: React.FC<DesktopLayoutProps> = ({ children, navConfig, acti
             </aside>
 
             <div className="flex-1 flex flex-col relative z-10 min-w-0 overflow-hidden">
-                 <header className="sticky top-0 z-20 flex justify-end items-center bg-dark-800/80 backdrop-blur-sm p-4 border-b border-dark-700 mx-8 mt-6 rounded-xl border">
-                      <button 
+                 <header className="sticky top-0 z-20 flex justify-between items-center bg-dark-800/80 backdrop-blur-sm p-4 border-b border-dark-700 mx-8 mt-6 rounded-xl border">
+                    <RankWidget />
+                    <button 
                         onClick={() => setActiveView('assets')} 
                         className="flex items-center gap-2 bg-dark-700/50 hover:bg-dark-700 px-3 py-2 rounded-lg transition-colors"
                         title="Перейти к Управлению Активами"

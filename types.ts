@@ -1,8 +1,7 @@
 
+export type View = 'dashboard' | 'market' | 'project' | 'leaderboard' | 'howitworks' | 'faq' | 'assets' | 'profile' | 'network' | 'livefeed' | 'reviews' | 'support' | 'news' | 'academy' | 'promo' | 'chat' | 'landingPage' | 'tasks' | 'boardroom' | 'achievements';
 
-
-
-export type View = 'dashboard' | 'market' | 'project' | 'leaderboard' | 'howitworks' | 'faq' | 'assets' | 'profile' | 'network' | 'livefeed' | 'reviews' | 'support' | 'news' | 'academy' | 'promo' | 'chat' | 'landingPage' | 'tasks' | 'boardroom';
+export type CareerRank = 'Стажер' | 'Аналитик' | 'Партнер' | 'Старший Партнер' | 'Директор';
 
 export interface Partner {
   id: string;
@@ -10,10 +9,11 @@ export interface Partner {
   avatarUrl: string;
   level: number;
   capital: number;
-  xp: number;
-  investors: number;
-  exitsCompleted: number;
-  syndicateProfit?: number;
+  reputation: number; // XP is now Reputation (RP)
+  rank: CareerRank;
+  partners: number; // Renamed from investors
+  fundingCompleted: number; // Renamed from exitsCompleted
+  networkProfit?: number; // Renamed from syndicateProfit
   referralLink: string;
   joinDate: string;
   welcomeMessage?: string;
@@ -24,36 +24,19 @@ export interface Partner {
     website?: string;
     vk?: string;
   };
-  syndicateId?: string;
+  networkId?: string; // Renamed from syndicateId
   status?: 'active' | 'inactive';
 }
 
-export interface ProjectNode {
-  id: string;
-  name: string;
-  avatarUrl: string;
-  isFilled: boolean;
-  children?: ProjectNode[];
-  joinDate?: string;
-  level?: number;
-  investors?: number;
-  downline?: number;
-  nodeType?: 'self' | 'syndicate_deal' | 'spinoff'; // self: 'Партнер', syndicate_deal: 'Транш от Бизнес-сети', spinoff: 'Филиал'
-  lastActivityDate?: string;
-  riskLevel?: 'low' | 'medium' | 'high';
-  fundingStage: 1 | 2 | 3; // 1: Pre-seed, 2: Round A, 3: Round B
-  industry: string;
-}
-
+// Represents a project the user is managing (e.g., Pre-seed, Series A)
 export interface Project {
   id: string;
-  name: string;
-  stage: {
-    name: string;
-    color: string;
-  };
-  progress: number[];
-  nextMilestone: string;
+  type: 'Pre-seed' | 'Series A' | 'IPO Stage';
+  entryCost: number;
+  totalShares: number;
+  sharesSold: number;
+  isActive: boolean;
+  milestones: { shares: number, label: string }[];
 }
 
 
@@ -64,11 +47,12 @@ export interface Leader {
     avatarUrl: string;
     earnings: number;
     level: number;
+    careerRank: CareerRank;
 }
 
 export interface Transaction {
     id:string;
-    type: 'deposit' | 'withdrawal' | 'profit' | 'investment' | 'transfer' | 'upgrade' | 'syndicate_profit'; // 'profit': 'Прибыль'
+    type: 'deposit' | 'withdrawal' | 'profit' | 'investment' | 'transfer' | 'upgrade' | 'network_profit';
     amount: number;
     date: string;
     status: 'completed' | 'pending' | 'failed';
@@ -89,7 +73,7 @@ export interface MarketStats {
     totalPartners: number;
     totalProfit: number;
     newPartnersToday: number;
-    activeStartups: number;
+    activeProjects: number;
 }
 
 export interface Achievement {
@@ -98,7 +82,7 @@ export interface Achievement {
     description: string;
     icon: React.ElementType;
     unlocked: boolean;
-    category: 'Network' | 'Financial' | 'Personal' | 'Milestone';
+    category: 'Карьера' | 'Финансы' | 'Лидерство' | 'Стратегия';
     progress?: {
         current: number;
         target: number;
@@ -117,7 +101,7 @@ export interface Notification {
 
 export interface LiveFeedEvent {
   id: string;
-  type: 'registration' | 'new_level' | 'withdrawal' | 'deposit' | 'startup_exit' | 'upgrade';
+  type: 'registration' | 'new_level' | 'withdrawal' | 'deposit' | 'funding_completed' | 'upgrade';
   user: {
     name: string;
     avatarUrl: string;
@@ -154,24 +138,23 @@ export interface AcademyArticle {
   coverUrl: string;
   isLocked: boolean;
   content: string;
-  xpReward: number;
+  rewardRP: number; // Renamed from xpReward
   isCompleted: boolean;
   linkedMissionId?: string;
 }
 
-export interface DailyTask {
+export interface Mission {
   id:string;
   title: string;
-  subtitle?: string;
   description: string;
-  reward: number; // XP points
-  rewardCAP?: number; // Optional $CAP reward
+  rewardRP: number;
+  rewardCAP?: number;
   icon: React.ElementType;
-  isCompleted: boolean;
+  status: 'locked' | 'available' | 'in_progress' | 'completed' | 'claimed';
   actionText: string;
   actionType: 'navigate' | 'copy' | 'external_link' | 'none' | 'open_assistant';
   target?: View | string;
-  category: 'onboarding' | 'daily' | 'special' | 'mission';
+  category: 'Путь Партнера' | 'Ежедневные Брифинги' | 'Еженедельные Контракты';
   progress?: { current: number; target: number };
 }
 
@@ -199,6 +182,7 @@ export interface ChatMessage {
     name: string;
     avatarUrl: string;
     level: number;
+    rank: CareerRank;
   };
   text: string;
   timestamp: string; // ISO 8601 format
@@ -224,7 +208,8 @@ export interface OnlineUser {
   name: string;
   avatarUrl: string;
   level: number;
-  investors?: number;
+  partners?: number;
+  rank: CareerRank;
 }
 
 export interface NetworkGoal {
@@ -253,14 +238,4 @@ export interface BoardroomVote {
     totalVotes: number;
     endsAt: string;
     userVote?: string; // option id
-}
-
-export interface SyndicateMember {
-    id: string;
-    name: string;
-    avatarUrl: string;
-    joinDate: string;
-    level: number;
-    investors: number;
-    status: 'active' | 'inactive';
 }

@@ -51,9 +51,9 @@ const LandingPagePreview: React.FC<LandingPagePreviewProps> = ({ isEditing, welc
                 )}
 
                 <div className="grid grid-cols-3 gap-2 text-center mb-8">
-                    <div className="bg-dark-700/50 p-2 rounded-lg"><p className="text-xl font-bold text-white">{user.investors}</p><p className="text-xs text-gray-400">В сети</p></div>
-                    <div className="bg-dark-700/50 p-2 rounded-lg"><p className="text-xl font-bold text-white">{user.exitsCompleted}</p><p className="text-xs text-gray-400">Exits</p></div>
-                    <div className="bg-dark-700/50 p-2 rounded-lg"><p className="text-xl font-bold text-white">{user.syndicateProfit?.toLocaleString('ru-RU')}</p><p className="text-xs text-gray-400">Прибыль ($CAP)</p></div>
+                    <div className="bg-dark-700/50 p-2 rounded-lg"><p className="text-xl font-bold text-white">{user.partners}</p><p className="text-xs text-gray-400">В сети</p></div>
+                    <div className="bg-dark-700/50 p-2 rounded-lg"><p className="text-xl font-bold text-white">{user.fundingCompleted}</p><p className="text-xs text-gray-400">Exits</p></div>
+                    <div className="bg-dark-700/50 p-2 rounded-lg"><p className="text-xl font-bold text-white">{user.networkProfit?.toLocaleString('ru-RU')}</p><p className="text-xs text-gray-400">Прибыль ($CAP)</p></div>
                 </div>
 
                 <Button className="w-full !py-3">Присоединиться к Бизнес-сети</Button>

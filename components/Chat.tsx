@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react'
 import { Send, Smile, Paperclip, X, MessageSquareReply, Pin, User, Users, Search, BookOpen, ChevronDown, MoreHorizontal } from 'lucide-react';
 import { useAppContext } from '../contexts/AppContext.tsx';
 import { MOCK_CHAT_MESSAGES, MOCK_ONLINE_USERS, CHAT_RULES, PINNED_CHAT_MESSAGE } from '../constants.ts';
-import type { ChatMessage, OnlineUser } from '../types.ts';
+import type { ChatMessage, OnlineUser, CareerRank } from '../types.ts';
 import Button from './ui/Button.tsx';
 
 // --- STYLING HELPERS ---
@@ -87,7 +87,7 @@ const UserProfileModal: React.FC<{ user: OnlineUser; onClose: () => void }> = ({
             <p className="text-gray-500 text-sm">ID: {user.id}</p>
             <div className="grid grid-cols-2 gap-4 my-6">
                 <div className="bg-dark-700 p-3 rounded-lg"><p className="text-xs text-gray-400">Уровень</p><p className="text-lg font-bold text-white">{user.level}</p></div>
-                <div className="bg-dark-700 p-3 rounded-lg"><p className="text-xs text-gray-400">Инвесторы</p><p className="text-lg font-bold text-white">{user.investors ?? 'N/A'}</p></div>
+                <div className="bg-dark-700 p-3 rounded-lg"><p className="text-xs text-gray-400">Партнеры</p><p className="text-lg font-bold text-white">{user.partners ?? 'N/A'}</p></div>
             </div>
             <Button className="w-full" variant="secondary">Перейти в профиль</Button>
         </div>
@@ -103,7 +103,7 @@ const MessageBubble: React.FC<{ message: ChatMessage; isStartOfGroup: boolean; o
         <div className={`flex items-start gap-2 group animate-message-in ${isCurrentUser ? 'justify-end' : 'justify-start'} ${isStartOfGroup ? 'mt-3' : 'mt-1'}`}>
             {!isCurrentUser && (
                 <div className="w-8 flex-shrink-0">
-                    {isStartOfGroup && <img src={message.user.avatarUrl} alt={message.user.name} className="h-8 w-8 rounded-full cursor-pointer" onClick={() => onUserClick(message.user)} />}
+                    {isStartOfGroup && <img src={message.user.avatarUrl} alt={message.user.name} className="h-8 w-8 rounded-full cursor-pointer" onClick={() => onUserClick(message.user as OnlineUser)} />}
                 </div>
             )}
             <div className={`relative max-w-xs md:max-w-md`}>
@@ -120,7 +120,7 @@ const MessageBubble: React.FC<{ message: ChatMessage; isStartOfGroup: boolean; o
                     <button className="p-2 hover:bg-dark-700 rounded-r-full"><MoreHorizontal className="h-4 w-4" /></button>
                 </div>
                 <div className={`p-2 px-3 rounded-2xl ${isCurrentUser ? 'bg-gradient-to-br from-brand-primary to-purple-700 text-white rounded-br-none' : 'bg-dark-700 text-gray-200 rounded-bl-none'}`}>
-                    {isStartOfGroup && !isCurrentUser && <p className={`${getLevelColor(message.user.level)} text-sm mb-1 cursor-pointer`} style={shineEffect(message.user.level)} onClick={() => onUserClick(message.user)}>{message.user.name}</p>}
+                    {isStartOfGroup && !isCurrentUser && <p className={`${getLevelColor(message.user.level)} text-sm mb-1 cursor-pointer`} style={shineEffect(message.user.level)} onClick={() => onUserClick(message.user as OnlineUser)}>{message.user.name}</p>}
                     {message.replyTo && (
                         <div className="p-2 mb-2 bg-black/20 border-l-2 border-brand-accent rounded">
                             <p className="font-bold text-xs">{message.replyTo.userName}</p>
@@ -288,7 +288,7 @@ const Chat: React.FC = () => {
         const messageToSend: ChatMessage = {
             id: `MSG_${Date.now()}`,
             type: 'user',
-            user: { id: user.id, name: user.name, avatarUrl: user.avatarUrl, level: user.level },
+            user: { id: user.id, name: user.name, avatarUrl: user.avatarUrl, level: user.level, rank: user.rank },
             text: newMessage.trim(),
             timestamp: new Date().toISOString(),
             ...(replyingTo && { replyTo: { messageId: replyingTo.id, userName: replyingTo.user.name, text: replyingTo.text } }),

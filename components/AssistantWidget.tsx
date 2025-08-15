@@ -1,10 +1,9 @@
 
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Bot, X, Sparkles, Send, LoaderCircle, BrainCircuit } from 'lucide-react';
 import { generateMarketingContentStream } from '../services/geminiService.ts';
 import { getAITeamAnalysisStream } from '../services/geminiService.ts';
-import { MOCK_SYNDICATE_MEMBERS } from '../constants.ts';
+import { MOCK_NETWORK_MEMBERS } from '../constants.ts';
 import { useAppContext } from '../contexts/AppContext.tsx';
 import Button from './ui/Button.tsx';
 
@@ -47,7 +46,7 @@ const AssistantWidget: React.FC = () => {
 
         try {
             if (userMessage.toLowerCase().includes('анализ')) {
-                await getAITeamAnalysisStream(MOCK_SYNDICATE_MEMBERS, (chunk) => {
+                await getAITeamAnalysisStream(MOCK_NETWORK_MEMBERS, (chunk) => {
                     setMessages(prev => prev.map(m => m.id === aiResponseId ? { ...m, text: m.text + chunk } : m));
                 });
             } else {
@@ -65,7 +64,7 @@ const AssistantWidget: React.FC = () => {
     };
     
     const quickActions = [
-        { label: 'Проанализируй мой синдикат', prompt: 'Сделай детальный AI-анализ моего синдиката' },
+        { label: 'Проанализируй мою Бизнес-сеть', prompt: 'Сделай детальный AI-анализ моей Бизнес-сети' },
         { label: 'Напиши пост для Telegram', prompt: 'Напиши короткий рекламный пост для Telegram о Nexus Capital' },
     ];
     
@@ -74,7 +73,7 @@ const AssistantWidget: React.FC = () => {
             <div className={`fixed bottom-6 right-6 z-[90] transition-transform duration-300 ${isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}>
                 {showProactiveTip && (
                     <div className="absolute bottom-full right-0 mb-2 w-64 bg-dark-700 p-3 rounded-lg shadow-xl animate-fade-in">
-                         <p className="text-xs text-white"><b className="text-brand-accent">N.C.A. Совет:</b> Похоже, у вас есть неактивные партнеры. Запросите анализ синдиката, чтобы получить план по их реактивации!</p>
+                         <p className="text-xs text-white"><b className="text-brand-accent">N.C.A. Совет:</b> Похоже, у вас есть неактивные партнеры. Запросите анализ Бизнес-сети, чтобы получить план по их реактивации!</p>
                          <button onClick={() => setShowProactiveTip(false)} className="absolute top-1 right-1 p-1 text-gray-500 hover:text-white"><X className="w-3 h-3"/></button>
                     </div>
                 )}

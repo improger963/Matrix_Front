@@ -1,18 +1,17 @@
 
-
 import React, { useState } from 'react';
 import Card from './ui/Card.tsx';
 import Button from './ui/Button.tsx';
 import { useAppContext } from '../contexts/AppContext.tsx';
-import { MOCK_CAPITAL_HISTORY_30_DAYS, MOCK_MARKET_PULSE, MOCK_LIVE_FEED_EVENTS } from '../constants.ts';
+import { MOCK_CAPITAL_HISTORY_30_DAYS, MOCK_MARKET_PULSE, MOCK_LIVE_FEED_EVENTS, MOCK_PROJECTS } from '../constants.ts';
 import { AnimatedBalance } from './ui/Stat.tsx';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { ArrowRight, Briefcase, TrendingUp, Activity, PieChart, Target, Zap, UserPlus, ShieldCheck, ChevronsUp, DollarSign, BarChart, Rocket } from 'lucide-react';
+import { ArrowRight, Briefcase, TrendingUp, Activity, PieChart, Target, Zap, UserPlus, ShieldCheck, ChevronsUp, Rocket } from 'lucide-react';
 
 
 const ActiveMission: React.FC = () => {
-    const { tasks, setActiveView, handleTaskAction, user } = useAppContext();
-    const activeMission = tasks.find(t => !t.isCompleted && (t.category === 'onboarding' || t.category === 'mission')) || tasks.find(t => !t.isCompleted);
+    const { missions, setActiveView, handleMissionAction, user } = useAppContext();
+    const activeMission = missions.find(t => t.status === 'available' || t.status === 'in_progress') || missions.find(t => t.status === 'completed');
     
     if (!activeMission) {
         return (
@@ -32,6 +31,7 @@ const ActiveMission: React.FC = () => {
     }
     
     const progress = activeMission.progress ? (activeMission.progress.current / activeMission.progress.target) * 100 : 0;
+    const isClaimable = activeMission.status === 'completed';
 
     return (
         <Card className="animate-slide-in-up !bg-gradient-to-br !from-brand-primary/20 !to-dark-800/20 border-brand-primary/50 lg:col-span-5">
@@ -55,10 +55,11 @@ const ActiveMission: React.FC = () => {
                 </div>
                  <div className="w-full md:w-auto flex flex-col items-stretch md:items-end text-right">
                     <div className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent-gold to-yellow-300 flex items-center gap-1.5 self-end mb-3">
-                       <Zap className="w-5 h-5" /> +{activeMission.reward} XP
+                       <Zap className="w-5 h-5" /> +{activeMission.rewardRP} RP
+                       {activeMission.rewardCAP && <span className="text-accent-green ml-2"> +${activeMission.rewardCAP} CAP</span>}
                     </div>
-                    <Button onClick={() => handleTaskAction(activeMission)} className="w-full">
-                        {activeMission.actionText} <ArrowRight className="w-4 h-4 ml-2" />
+                    <Button onClick={() => handleMissionAction(activeMission)} className={`w-full ${isClaimable ? 'animate-glow !bg-green-500 hover:!bg-green-400' : ''}`}>
+                        {activeMission.actionText} {!isClaimable && <ArrowRight className="w-4 h-4 ml-2" />}
                     </Button>
                  </div>
             </div>
@@ -124,30 +125,31 @@ const CapitalOverview: React.FC = () => {
 };
 
 const PortfolioWidget: React.FC = () => {
-    const { setActiveView, portfolio } = useAppContext();
+    const { setActiveView } = useAppContext();
+    const activeProject = MOCK_PROJECTS.find(p => p.isActive);
+    if (!activeProject) return null;
+
     return (
         <Card className="lg:col-span-2 animate-slide-in-up" style={{ animationDelay: '200ms' }}>
-            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2"><Briefcase className="w-6 h-6 text-brand-primary" /> Портфель Стартапов</h3>
+            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2"><Briefcase className="w-6 h-6 text-brand-primary" /> Портфель Проектов</h3>
             <div className="space-y-4">
-                {portfolio.map(startup => (
-                    <div key={startup.id} className="p-3 bg-dark-700/50 rounded-lg">
-                         <div className="flex items-center justify-between">
-                            <p className="font-semibold text-white">{startup.name}</p>
-                            <p className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: startup.stage.color + '20', color: startup.stage.color }}>{startup.stage.name}</p>
-                         </div>
-                         <div className="flex items-center gap-2 mt-2">
-                             {startup.progress.map((p, i) => (
-                                <div key={i} className="flex-1 bg-dark-900 h-1.5 rounded-full"><div className="bg-brand-primary h-1.5 rounded-full" style={{width: `${p}%`}}></div></div>
-                             ))}
-                         </div>
-                         <p className="text-xs text-gray-400 mt-2">
-                            <span className="font-semibold text-brand-accent">Следующая веха: </span>{startup.nextMilestone}
-                         </p>
+                <div className="p-3 bg-dark-700/50 rounded-lg">
+                    <div className="flex items-center justify-between">
+                        <p className="font-semibold text-white">Активный Проект: "{activeProject.type}"</p>
+                        <p className="text-xs font-semibold px-2 py-0.5 rounded-full bg-green-500/20 text-green-300">Финансирование</p>
                     </div>
-                ))}
+                    <div className="flex items-center gap-2 mt-2">
+                        <div className="flex-1 bg-dark-900 h-2 rounded-full">
+                            <div className="bg-brand-primary h-2 rounded-full" style={{ width: `${(activeProject.sharesSold/activeProject.totalShares)*100}%` }}></div>
+                        </div>
+                    </div>
+                    <p className="text-xs text-gray-400 mt-2">
+                        <span className="font-semibold text-brand-accent">Следующая веха: </span>Продать {activeProject.totalShares - activeProject.sharesSold} Долей для Полного Финансирования.
+                    </p>
+                </div>
             </div>
-             <Button onClick={() => setActiveView('market')} variant="secondary" className="w-full mt-4">
-                Управлять портфелем <ArrowRight className="w-4 h-4 ml-2" />
+             <Button onClick={() => setActiveView('project')} variant="secondary" className="w-full mt-4">
+                Управлять Проектом <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
         </Card>
     );
@@ -158,22 +160,22 @@ const TickerFeed: React.FC = () => {
     const eventIcons: Record<string, React.ReactNode> = {
         registration: <UserPlus className="h-4 w-4 text-blue-400" />,
         new_level: <ChevronsUp className="h-4 w-4 text-yellow-400" />,
-        startup_exit: <ShieldCheck className="h-4 w-4 text-purple-400" />,
-        upgrade: <BarChart className="h-4 w-4 text-cyan-400"/>
+        funding_completed: <ShieldCheck className="h-4 w-4 text-purple-400" />,
+        upgrade: <TrendingUp className="h-4 w-4 text-cyan-400"/>
     }
     return (
         <Card className="lg:col-span-2 animate-slide-in-up" style={{ animationDelay: '300ms' }}>
-            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2"><Activity className="w-6 h-6 text-brand-primary" /> Активность Синдиката</h3>
+            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2"><Activity className="w-6 h-6 text-brand-primary" /> Активность Бизнес-сети</h3>
             <div className="space-y-3 overflow-hidden">
                 {events.map((event, i) => (
                     <div key={event.id} className="flex items-center gap-3 text-sm animate-slide-in-up" style={{animationDelay: `${i*100}ms`}}>
                         <div className="w-8 h-8 bg-dark-700 rounded-full flex items-center justify-center flex-shrink-0">{eventIcons[event.type] || <Zap className="h-4 w-4 text-gray-400"/>}</div>
                         <p className="text-gray-300 flex-1 truncate">
                            <span className="font-semibold text-white">{event.user.name}</span>
-                           {event.type === 'startup_exit' && ` закрыл раунд с прибылью ${event.amount}$`}
-                           {event.type === 'new_level' && ` достиг уровня ${event.level}`}
-                           {event.type === 'registration' && ` присоединился к проекту`}
-                           {event.type === 'upgrade' && ` улучшил стартап до Раунда B`}
+                           {event.type === 'funding_completed' && ` получил(а) Полное Финансирование`}
+                           {event.type === 'new_level' && ` достиг(ла) уровня ${event.level}`}
+                           {event.type === 'registration' && ` присоединился(лась) к проекту`}
+                           {event.type === 'upgrade' && ` улучшил(а) Проект до Раунда B`}
                         </p>
                     </div>
                 ))}
@@ -196,38 +198,19 @@ const MarketPulse: React.FC = () => {
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-xs text-gray-400 mt-3">
                             <div>Средний ROI: <p className="font-bold text-accent-green text-base">{sector.avgROI}%</p></div>
-                             <div>Время до Exit: <p className="font-bold text-white text-base">{sector.avgExitTime} д.</p></div>
+                             <div>Время до Финансирования: <p className="font-bold text-white text-base">{sector.avgExitTime} д.</p></div>
                         </div>
                     </div>
                 ))}
              </div>
-             <Button onClick={() => setActiveView('market')} variant="secondary" className="w-full mt-4">
-                Перейти на рынок <ArrowRight className="w-4 h-4 ml-2" />
+             <Button onClick={() => setActiveView('project')} variant="secondary" className="w-full mt-4">
+                Перейти к Проектам <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
         </Card>
     )
 }
 
 const DashboardView: React.FC = () => {
-    const { portfolio, setActiveView } = useAppContext();
-
-    if (portfolio.length === 0) {
-        return (
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-                 <Card className="animate-slide-in-up !bg-gradient-to-br from-brand-primary/20 to-dark-800/20 border-brand-primary/50 text-center p-8 lg:col-span-5">
-                     <h2 className="text-3xl font-bold text-white">Добро пожаловать в Nexus Capital!</h2>
-                    <p className="text-gray-400 mt-2 max-w-lg mx-auto">Ваш командный центр готов. Сделайте свой первый шаг — активируйте стартовый портфель, чтобы начать свой путь к вершине.</p>
-                     <Button onClick={() => setActiveView('market')} className="mt-6 animate-glow">
-                        <Rocket className="w-5 h-5 mr-2" />
-                        Активировать первый стартап
-                    </Button>
-                </Card>
-                <CapitalOverview />
-                <MarketPulse />
-            </div>
-        )
-    }
-
     return (
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
             <ActiveMission />

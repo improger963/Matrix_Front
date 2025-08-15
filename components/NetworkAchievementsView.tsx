@@ -1,20 +1,19 @@
 
-
 import React, { useState } from 'react';
 import Card from './ui/Card.tsx';
 import type { Achievement } from '../types.ts';
 import { MOCK_ACHIEVEMENTS } from '../constants.ts';
-import { Zap, CheckCircle } from 'lucide-react';
+import { Shield, CheckCircle, Lock } from 'lucide-react';
 
 const AchievementCard: React.FC<{ achievement: Achievement }> = ({ achievement }) => {
     const { unlocked, icon: Icon, title, description, progress, category } = achievement;
     const progressPercentage = progress ? (progress.current / progress.target) * 100 : 0;
 
     const categoryStyles: Record<Achievement['category'], { text: string, bg: string }> = {
-        Network: { text: 'text-cyan-400', bg: 'bg-cyan-500/10' },
-        Financial: { text: 'text-green-400', bg: 'bg-green-500/10' },
-        Personal: { text: 'text-purple-400', bg: 'bg-purple-500/10' },
-        Milestone: { text: 'text-yellow-400', bg: 'bg-yellow-500/10' },
+        Лидерство: { text: 'text-cyan-400', bg: 'bg-cyan-500/10' },
+        Финансы: { text: 'text-green-400', bg: 'bg-green-500/10' },
+        Стратегия: { text: 'text-purple-400', bg: 'bg-purple-500/10' },
+        Карьера: { text: 'text-yellow-400', bg: 'bg-yellow-500/10' },
     };
 
     return (
@@ -23,14 +22,18 @@ const AchievementCard: React.FC<{ achievement: Achievement }> = ({ achievement }
                 <div className="flex items-start justify-between">
                     <div className={`relative flex-shrink-0 w-16 h-16 rounded-lg flex items-center justify-center ${unlocked ? 'bg-brand-primary/20' : 'bg-dark-700'}`}>
                         <Icon className={`h-8 w-8 ${unlocked ? 'text-brand-primary' : 'text-gray-500'}`} />
-                        {unlocked && <CheckCircle className="absolute -top-2 -right-2 h-6 w-6 text-green-400 bg-dark-700 rounded-full" />}
+                        {unlocked ? 
+                            <CheckCircle className="absolute -top-2 -right-2 h-6 w-6 text-green-400 bg-dark-700 rounded-full" />
+                            :
+                            <Lock className="absolute -top-2 -right-2 h-6 w-6 text-gray-500 bg-dark-700 rounded-full p-1" />
+                        }
                     </div>
                     <span className={`text-xs font-bold px-2 py-1 rounded-full ${categoryStyles[category].bg} ${categoryStyles[category].text}`}>{category}</span>
                 </div>
                 <h4 className={`font-bold mt-4 ${unlocked ? 'text-white' : 'text-gray-400'}`}>{title}</h4>
                 <p className="text-xs text-gray-500 mt-1">{description}</p>
             </div>
-            {progress && (
+            {progress && !unlocked && (
                  <div className="mt-2">
                     <div className="flex justify-between text-xs text-gray-400 mb-1">
                         <span>Прогресс</span>
@@ -51,9 +54,10 @@ interface NetworkAchievementsViewProps {
     totalCount: number;
     progress: number;
   };
+  isHallOfFame?: boolean;
 }
 
-const NetworkAchievementsView: React.FC<NetworkAchievementsViewProps> = ({ achievementStats }) => {
+const NetworkAchievementsView: React.FC<NetworkAchievementsViewProps> = ({ achievementStats, isHallOfFame = false }) => {
     const [achievementCategory, setAchievementCategory] = useState<string>('all');
     
     const achievementCategories = ['all', ...Array.from(new Set(MOCK_ACHIEVEMENTS.map(a => a.category)))];
@@ -62,21 +66,12 @@ const NetworkAchievementsView: React.FC<NetworkAchievementsViewProps> = ({ achie
 
     return (
         <div className="space-y-6">
-             <Card>
-                <h3 className="text-xl font-bold text-white mb-4">Общий прогресс достижений</h3>
-                <div className="flex items-center gap-4 bg-dark-800/50 p-4 rounded-lg">
-                    <div className="flex-1">
-                         <div className="flex justify-between items-center mb-1">
-                            <p className="text-sm font-medium text-gray-300">Разблокировано</p>
-                            <p className="text-sm font-bold text-brand-accent">{achievementStats.unlockedCount} / {achievementStats.totalCount}</p>
-                        </div>
-                        <div className="w-full bg-dark-900 rounded-full h-2.5">
-                            <div className="bg-gradient-to-r from-brand-secondary to-brand-primary h-2.5 rounded-full" style={{ width: `${achievementStats.progress}%` }}></div>
-                        </div>
-                    </div>
-                    <div className="text-center">
-                        <Zap className="h-8 w-8 text-yellow-400 mx-auto"/>
-                        <p className="text-sm text-gray-400 mt-1">Награда за все</p>
+            <Card>
+                <div className="flex items-center gap-3 mb-2">
+                    <Shield className="h-8 w-8 text-brand-primary" />
+                    <div>
+                        <h2 className="text-3xl font-bold text-white">Зал Славы</h2>
+                        <p className="text-gray-400">Ваши главные вехи карьеры в Nexus Capital.</p>
                     </div>
                 </div>
             </Card>

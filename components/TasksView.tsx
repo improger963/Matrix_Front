@@ -4,10 +4,11 @@ import React, { useMemo, useState } from 'react';
 import Card from './ui/Card.tsx';
 import Button from './ui/Button.tsx';
 import { useAppContext } from '../contexts/AppContext.tsx';
-import type { DailyTask } from '../types.ts';
+import type { Mission } from '../types.ts';
 import { ListChecks, Check, Trophy, Zap, Gift } from 'lucide-react';
 
-const TaskCard: React.FC<{ task: DailyTask, onAction: (task: DailyTask) => void }> = ({ task, onAction }) => {
+const TaskCard: React.FC<{ task: Mission, onAction: (task: Mission) => void }> = ({ task, onAction }) => {
+    const isCompleted = task.status === 'completed' || task.status === 'claimed';
     const progressPercentage = task.progress ? (task.progress.current / task.progress.target) * 100 : 0;
 
     const categoryStyles = {
@@ -40,14 +41,23 @@ const TaskCard: React.FC<{ task: DailyTask, onAction: (task: DailyTask) => void 
             buttonVariant: 'secondary' as 'secondary'
         }
     };
+    
+    const getCategoryStyleKey = (category: Mission['category']): keyof typeof categoryStyles => {
+        switch(category) {
+            case 'Путь Партнера': return 'onboarding';
+            case 'Ежедневные Брифинги': return 'daily';
+            case 'Еженедельные Контракты': return 'special';
+            default: return 'mission';
+        }
+    }
 
-    const styles = categoryStyles[task.category];
+    const styles = categoryStyles[getCategoryStyleKey(task.category)];
 
     return (
         <div className={`
             relative rounded-xl border p-5 transition-all duration-300 overflow-hidden
             bg-gradient-to-br ${styles.bg} ${styles.border}
-            ${task.isCompleted ? 'opacity-50 saturate-50' : 'hover:border-brand-accent/70 hover:shadow-2xl hover:shadow-brand-primary/20 hover:-translate-y-1'}
+            ${isCompleted ? 'opacity-50 saturate-50' : 'hover:border-brand-accent/70 hover:shadow-2xl hover:shadow-brand-primary/20 hover:-translate-y-1'}
         `}>
             <div className="flex flex-col h-full">
                 <div className="flex items-start gap-4">
@@ -55,13 +65,12 @@ const TaskCard: React.FC<{ task: DailyTask, onAction: (task: DailyTask) => void 
                         <task.icon className={`h-6 w-6 ${styles.iconColor}`} />
                     </div>
                     <div className="flex-1">
-                        {task.subtitle && <p className="text-xs font-bold uppercase tracking-wider text-brand-accent">{task.subtitle}</p>}
                         <h4 className="font-bold text-white mt-1">{task.title}</h4>
                         <p className="text-sm text-gray-400 mt-1 text-balance" dangerouslySetInnerHTML={{ __html: task.description }}></p>
                     </div>
                 </div>
                 
-                {task.progress && !task.isCompleted && (
+                {task.progress && !isCompleted && (
                     <div className="mt-4">
                         <div className="flex justify-between text-xs text-gray-400 mb-1">
                             <span>Прогресс</span>
@@ -75,10 +84,10 @@ const TaskCard: React.FC<{ task: DailyTask, onAction: (task: DailyTask) => void 
 
                 <div className="mt-auto pt-4 flex items-center justify-between">
                     <div className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent-gold to-yellow-300 flex items-center gap-1.5">
-                       <Zap className="w-4 h-4" /> +{task.reward} XP
+                       <Zap className="w-4 h-4" /> +{task.rewardRP} RP
                     </div>
                     <div>
-                        {task.isCompleted ? (
+                        {isCompleted ? (
                             <div className="flex items-center justify-center gap-2 text-green-400 font-semibold p-2 rounded-lg bg-green-500/10 w-full sm:w-36 animate-check-in">
                                 <Check className="h-5 w-5" />
                                 <span>Выполнено</span>
@@ -132,26 +141,25 @@ const WeeklyPrizeCard: React.FC = () => {
 
 
 const TasksView: React.FC = () => {
-    const { tasks, handleTaskAction } = useAppContext();
+    const { missions, handleMissionAction } = useAppContext();
 
     const categorizedTasks = useMemo(() => {
-        const categories: { [key in DailyTask['category']]?: DailyTask[] } = {};
-        tasks.forEach(task => {
+        const categories: { [key in Mission['category']]?: Mission[] } = {};
+        missions.forEach(task => {
             if (!categories[task.category]) {
                 categories[task.category] = [];
             }
             categories[task.category]!.push(task);
         });
         return categories;
-    }, [tasks]);
+    }, [missions]);
 
-    const categoryOrder: DailyTask['category'][] = ['onboarding', 'mission', 'daily', 'special'];
+    const categoryOrder: Mission['category'][] = ['Путь Партнера', 'Ежедневные Брифинги', 'Еженедельные Контракты'];
 
-    const categoryTitles: { [key in DailyTask['category']]: string } = {
-        onboarding: '🚀 Путь новичка',
-        daily: 'Ежедневные ритуалы',
-        special: '💎 Особые контракты',
-        mission: 'Практические миссии'
+    const categoryTitles: { [key in Mission['category']]: string } = {
+        'Путь Партнера': '🚀 Путь новичка',
+        'Ежедневные Брифинги': 'Ежедневные ритуалы',
+        'Еженедельные Контракты': '💎 Особые контракты',
     };
     
     return (
@@ -171,10 +179,10 @@ const TasksView: React.FC = () => {
 
                  <div className="lg:col-span-2">
                      <Card>
-                         <h3 className="text-xl font-bold text-white mb-4">{categoryTitles.onboarding}</h3>
+                         <h3 className="text-xl font-bold text-white mb-4">{categoryTitles['Путь Партнера']}</h3>
                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                             {(categorizedTasks.onboarding || []).map(task => (
-                                 <TaskCard key={task.id} task={task} onAction={handleTaskAction} />
+                             {(categorizedTasks['Путь Партнера'] || []).map(task => (
+                                 <TaskCard key={task.id} task={task} onAction={handleMissionAction} />
                              ))}
                          </div>
                      </Card>
@@ -183,17 +191,17 @@ const TasksView: React.FC = () => {
 
             {categoryOrder.map(category => {
                 const tasksInCategory = categorizedTasks[category] || [];
-                if (category === 'onboarding' || tasksInCategory.length === 0) return null;
+                if (category === 'Путь Партнера' || tasksInCategory.length === 0) return null;
                 return (
                     <div key={category}>
                         <h3 className="text-2xl font-bold text-white mb-4 ml-2">
-                             {categoryTitles[category as DailyTask['category']]}
+                             {categoryTitles[category as Mission['category']]}
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {tasksInCategory
-                                .sort((a, b) => (a.isCompleted ? 1 : -1) - (b.isCompleted ? 1 : -1) || 0)
+                                .sort((a, b) => ((a.status === 'completed' || a.status === 'claimed') ? 1 : -1) - ((b.status === 'completed' || b.status === 'claimed') ? 1 : -1) || 0)
                                 .map(task => (
-                                    <TaskCard key={task.id} task={task} onAction={handleTaskAction} />
+                                    <TaskCard key={task.id} task={task} onAction={handleMissionAction} />
                             ))}
                         </div>
                     </div>

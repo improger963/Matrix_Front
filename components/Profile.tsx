@@ -2,9 +2,10 @@
 import React, { useState } from 'react';
 import Card from './ui/Card.tsx';
 import Button from './ui/Button.tsx';
-import { UserCircle, Copy, Check, Send, Globe, KeyRound, Shield, Eye, AtSign, Link as LinkIcon, Trophy } from 'lucide-react';
+import { UserCircle, Copy, Check, Send, Globe, KeyRound, Shield, Eye, AtSign, Link as LinkIcon, Trophy, Award } from 'lucide-react';
 import { useAppContext } from '../contexts/AppContext.tsx';
 import { MOCK_ACHIEVEMENTS } from '../constants.ts';
+import { RANK_THRESHOLDS } from '../constants.ts';
 
 const InputField: React.FC<{ label: string; id: string; value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; placeholder?: string; icon: React.ReactNode; type?: string }> = ({ label, id, value, onChange, placeholder, icon, type = 'text' }) => (
     <div>
@@ -66,6 +67,12 @@ const Profile: React.FC = () => {
     
     const unlockedAchievements = MOCK_ACHIEVEMENTS.filter(a => a.unlocked).slice(0, 3);
     const nextAchievement = MOCK_ACHIEVEMENTS.find(a => !a.unlocked && a.progress);
+
+    const currentRankThreshold = RANK_THRESHOLDS[user.rank];
+    const nextRank = Object.keys(RANK_THRESHOLDS).find(rank => RANK_THRESHOLDS[rank as keyof typeof RANK_THRESHOLDS] > currentRankThreshold);
+    const nextRankThreshold = nextRank ? RANK_THRESHOLDS[nextRank as keyof typeof RANK_THRESHOLDS] : user.reputation;
+    const reputationProgress = nextRank ? ((user.reputation - currentRankThreshold) / (nextRankThreshold - currentRankThreshold)) * 100 : 100;
+
     
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -77,16 +84,12 @@ const Profile: React.FC = () => {
                              <img src={formData.avatarUrl || `https://i.pravatar.cc/150?u=${user.id}`} alt="User Avatar" className="h-24 w-24 rounded-full border-4 border-brand-secondary object-cover" />
                              <div className="flex-1">
                                 <h2 className="text-2xl font-bold text-white">{user.name}</h2>
-                                <p className="text-gray-400">Уровень {user.level} | ID: {user.id}</p>
+                                <p className="text-sm font-semibold text-brand-accent">{user.rank}</p>
                                 <div className="mt-2">
-                                     <InputField
-                                        id="avatarUrl"
-                                        label="URL аватара"
-                                        value={formData.avatarUrl}
-                                        onChange={handleInputChange}
-                                        placeholder="https://example.com/avatar.png"
-                                        icon={<LinkIcon className="h-4 w-4" />}
-                                    />
+                                     <div className="w-full bg-dark-700 rounded-full h-1.5">
+                                         <div className="bg-brand-primary h-1.5 rounded-full" style={{ width: `${reputationProgress}%` }}></div>
+                                     </div>
+                                      <p className="text-xs text-gray-400 mt-1">Репутация: {user.reputation} / {nextRankThreshold} RP</p>
                                 </div>
                             </div>
                         </div>
@@ -161,7 +164,7 @@ const Profile: React.FC = () => {
                 </Card>
 
                 <Card className="animate-slide-in-up" style={{ animationDelay: '200ms' }}>
-                     <h3 className="text-lg font-semibold text-white mb-4">Мои достижения</h3>
+                     <h3 className="text-lg font-semibold text-white mb-4">Зал Славы</h3>
                       <div className="space-y-3">
                         {unlockedAchievements.map(ach => (
                             <div key={ach.id} className="flex items-center gap-3">
@@ -170,21 +173,12 @@ const Profile: React.FC = () => {
                                 </div>
                                 <div>
                                     <p className="font-semibold text-white text-sm">{ach.title}</p>
-                                    <p className="text-xs text-gray-400">{ach.description}</p>
                                 </div>
                             </div>
                         ))}
                     </div>
-                     {nextAchievement?.progress && (
-                        <div className="mt-4 pt-4 border-t border-dark-700">
-                             <p className="text-xs text-gray-400 mb-1">Следующая цель: {nextAchievement.title}</p>
-                             <div className="w-full bg-dark-700 rounded-full h-1.5">
-                                 <div className="bg-brand-primary h-1.5 rounded-full" style={{ width: `${(nextAchievement.progress.current / nextAchievement.progress.target) * 100}%` }}></div>
-                             </div>
-                        </div>
-                    )}
-                    <Button onClick={() => setActiveView('network', { subView: 'achievements' })} variant="secondary" className="w-full mt-4 text-xs">
-                        <Trophy className="h-4 w-4 mr-2"/> Все достижения
+                    <Button onClick={() => setActiveView('achievements')} variant="secondary" className="w-full mt-4 text-xs">
+                        <Award className="h-4 w-4 mr-2"/> Все достижения
                     </Button>
                 </Card>
 

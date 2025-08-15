@@ -1,9 +1,6 @@
 
-
-
-
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, Briefcase, BotMessageSquare, Trophy, HelpCircle, BookOpen, Wallet, Users, Link, Megaphone, MessageSquare, Zap, ChevronDown, ListChecks, PieChart, GraduationCap, Newspaper, MoreHorizontal, Award } from 'lucide-react';
+import { LayoutDashboard, Briefcase, BotMessageSquare, Award, HelpCircle, BookOpen, Wallet, Users, Link, Megaphone, MessageSquare, Zap, ChevronDown, ListChecks, PieChart, GraduationCap, Newspaper, MoreHorizontal, Trophy, Shield } from 'lucide-react';
 import type { View } from './types.ts';
 import { AppProvider, useAppContext } from './contexts/AppContext.tsx';
 import AssistantWidget from './components/AssistantWidget.tsx';
@@ -29,6 +26,7 @@ import LandingPage from './components/LandingPage.tsx';
 import TasksView from './components/TasksView.tsx';
 import ProjectView from './components/ProjectView.tsx';
 import TheBoardroomView from './components/TheBoardroomView.tsx';
+import NetworkAchievementsView from './components/NetworkAchievementsView.tsx';
 
 
 export type NavItem = {
@@ -47,10 +45,10 @@ export type NavGroup = {
 
 const navConfig: (NavItem | NavGroup)[] = [
     { type: 'item', id: 'dashboard', label: 'Дашборд', icon: LayoutDashboard },
-    { type: 'item', id: 'market', label: 'Рынок Проектов', icon: PieChart },
-    { type: 'item', id: 'network', label: 'Моя Бизнес-сеть', icon: Users },
+    { type: 'item', id: 'project', label: 'Мой Проект', icon: Briefcase },
+    { type: 'item', id: 'network', label: 'Бизнес-сеть', icon: Users },
     { type: 'item', id: 'tasks', label: 'Центр Миссий', icon: ListChecks },
-    { type: 'item', id: 'assets', label: 'Управление Активами', icon: Wallet },
+    { type: 'item', id: 'assets', label: 'Активы', icon: Wallet },
     { 
         type: 'group',
         title: 'Инструменты', 
@@ -68,6 +66,7 @@ const navConfig: (NavItem | NavGroup)[] = [
             { id: 'chat', label: 'Общий чат', icon: MessageSquare },
             { id: 'leaderboard', label: 'Лидеры', icon: Trophy },
             { id: 'boardroom', label: 'Совет Директоров', icon: Award },
+            { id: 'achievements', label: 'Зал Славы', icon: Shield },
             { id: 'livefeed', label: 'Лента сделок', icon: Zap },
             { id: 'reviews', label: 'Отзывы', icon: MessageSquare },
         ]
@@ -97,15 +96,14 @@ const useMediaQuery = (query: string) => {
 };
 
 const AppContent: React.FC = () => {
-    const { activeView, subView, setActiveView } = useAppContext();
+    const { activeView, setActiveView, RankUpModal } = useAppContext();
     const isDesktop = useMediaQuery('(min-width: 1024px)');
 
     const renderView = () => {
         switch (activeView) {
             case 'dashboard': return <DashboardView />;
-            case 'market': return <ProjectView />;
             case 'project': return <ProjectView />;
-            case 'network': return <NetworkView initialTab={subView} />;
+            case 'network': return <NetworkView />;
             case 'tasks': return <TasksView />;
             case 'assets': return <AssetManagementView />;
             case 'profile': return <Profile />;
@@ -114,6 +112,7 @@ const AppContent: React.FC = () => {
             case 'promo': return <Promo />;
             case 'leaderboard': return <Leaderboard />;
             case 'boardroom': return <TheBoardroomView />;
+            case 'achievements': return <NetworkAchievementsView achievementStats={{unlockedCount: 0, totalCount: 0, progress: 0}} isHallOfFame={true}/>;
             case 'livefeed': return <LiveFeedView />;
             case 'chat': return <Chat />;
             case 'reviews': return <Reviews />;
@@ -137,6 +136,7 @@ const AppContent: React.FC = () => {
               {renderView()}
            </LayoutComponent>
            <AssistantWidget />
+           <RankUpModal />
         </div>
     );
 };

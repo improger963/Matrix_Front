@@ -1,17 +1,16 @@
 
 
-
 import React, { createContext, useState, useContext, ReactNode, useCallback } from 'react';
-import type { Partner, DailyTask, View, Toast, AcademyArticle, Project } from '../types.ts';
-import { MOCK_PARTNER, MOCK_ALL_TASKS, MOCK_ACADEMY_ARTICLES, MOCK_PORTFOLIO } from '../constants.ts';
+import type { Partner, View, Toast, AcademyArticle, Project, Mission } from '../types.ts';
+import { MOCK_PARTNER, MOCK_MISSIONS, MOCK_ACADEMY_ARTICLES, MOCK_PROJECTS } from '../constants.ts';
 import ToastContainer from '../components/ui/ToastContainer.tsx';
 
 interface AppContextType {
     user: Partner;
     setUser: React.Dispatch<React.SetStateAction<Partner>>;
-    tasks: DailyTask[];
-    handleCompleteTask: (taskId: string, showToast?: boolean) => void;
-    handleTaskAction: (task: DailyTask) => void;
+    missions: Mission[];
+    handleCompleteMission: (missionId: string, showToast?: boolean) => void;
+    handleMissionAction: (mission: Mission) => void;
     academyArticles: AcademyArticle[];
     completeAcademyArticle: (articleId: string) => void;
     activeView: View;
@@ -21,13 +20,14 @@ interface AppContextType {
     addToast: (message: string, type?: Toast['type']) => void;
     portfolio: Project[];
     activateFirstProject: () => void;
+    RankUpModal: () => React.ReactNode;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<Partner>(MOCK_PARTNER);
-    const [tasks, setTasks] = useState<DailyTask[]>(MOCK_ALL_TASKS);
+    const [missions, setMissions] = useState<Mission[]>(MOCK_MISSIONS);
     const [academyArticles, setAcademyArticles] = useState<AcademyArticle[]>(MOCK_ACADEMY_ARTICLES);
     const [activeView, setActiveView] = useState<View>('dashboard');
     const [subView, setSubView] = useState<string | null>(null);
@@ -49,33 +49,33 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }, []);
 
     const activateFirstProject = useCallback(() => {
-        setPortfolio([MOCK_PORTFOLIO[0]]);
+        setPortfolio([MOCK_PROJECTS[0]]);
         addToast('Проект "Pre-seed" успешно запущен! Пора продавать Доли.', 'success');
     }, [addToast]);
 
-    const handleCompleteTask = useCallback((taskId: string, showToast: boolean = true) => {
-        let taskTitle = '';
-        let taskRewardXP = 0;
-        let taskRewardCAP = 0;
-        setTasks(prevTasks =>
-            prevTasks.map(task => {
-                if (task.id === taskId && !task.isCompleted) {
-                    taskTitle = task.title;
-                    taskRewardXP = task.reward;
-                    taskRewardCAP = task.rewardCAP || 0;
-                    return { ...task, isCompleted: true };
+    const handleCompleteMission = useCallback((missionId: string, showToast: boolean = true) => {
+        let missionTitle = '';
+        let missionRewardRP = 0;
+        let missionRewardCAP = 0;
+        setMissions(prevMissions =>
+            prevMissions.map(mission => {
+                if (mission.id === missionId && mission.status !== 'completed' && mission.status !== 'claimed') {
+                    missionTitle = mission.title;
+                    missionRewardRP = mission.rewardRP;
+                    missionRewardCAP = mission.rewardCAP || 0;
+                    return { ...mission, status: 'completed' };
                 }
-                return task;
+                return mission;
             })
         );
-        if (taskTitle) {
-            setUser(prevUser => ({ ...prevUser, xp: prevUser.xp + taskRewardXP, capital: prevUser.capital + taskRewardCAP }));
+        if (missionTitle) {
+            setUser(prevUser => ({ ...prevUser, reputation: prevUser.reputation + missionRewardRP, capital: prevUser.capital + missionRewardCAP }));
             if (showToast) {
-                 let rewardString = `+${taskRewardXP} XP`;
-                 if (taskRewardCAP > 0) {
-                     rewardString += `, +$${taskRewardCAP} CAP`;
+                 let rewardString = `+${missionRewardRP} RP`;
+                 if (missionRewardCAP > 0) {
+                     rewardString += `, +$${missionRewardCAP} CAP`;
                  }
-                 addToast(`Миссия "${taskTitle}" выполнена! ${rewardString}`, 'success');
+                 addToast(`Миссия "${missionTitle}" выполнена! ${rewardString}`, 'success');
             }
         }
     }, [addToast]);
@@ -87,47 +87,49 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
             prevArticles.map(article => {
                 if(article.id === articleId && !article.isCompleted) {
                     articleTitle = article.title;
-                    articleReward = article.xpReward;
+                    articleReward = article.rewardRP;
                     return { ...article, isCompleted: true };
                 }
                 return article;
             })
         );
         if (articleTitle) {
-            setUser(prevUser => ({ ...prevUser, xp: prevUser.xp + articleReward }));
-            addToast(`Урок "${articleTitle}" пройден! +${articleReward} XP`, 'success');
+            setUser(prevUser => ({ ...prevUser, reputation: prevUser.reputation + articleReward }));
+            addToast(`Урок "${articleTitle}" пройден! +${articleReward} RP`, 'success');
         }
     }, [addToast]);
 
-    const handleTaskAction = useCallback((task: DailyTask) => {
-        switch (task.actionType) {
+    const handleMissionAction = useCallback((mission: Mission) => {
+        switch (mission.actionType) {
             case 'navigate':
-                if (task.target && typeof task.target === 'string' && !task.target.startsWith('http')) {
-                    handleSetActiveView(task.target as View);
+                if (mission.target && typeof mission.target === 'string' && !mission.target.startsWith('http')) {
+                    handleSetActiveView(mission.target as View);
                 }
                 break;
             case 'copy':
                 navigator.clipboard.writeText(user.referralLink);
                 addToast('Реферальная ссылка скопирована!', 'success');
-                handleCompleteTask(task.id);
+                handleCompleteMission(mission.id);
                 break;
             case 'external_link':
-                 if (task.target) {
-                    window.open(task.target, '_blank');
-                    handleCompleteTask(task.id);
+                 if (mission.target) {
+                    window.open(mission.target, '_blank');
+                    handleCompleteMission(mission.id);
                  }
                 break;
             default:
                 break;
         }
-    }, [user.referralLink, handleCompleteTask, addToast, handleSetActiveView]);
+    }, [user.referralLink, handleCompleteMission, addToast, handleSetActiveView]);
+
+    const RankUpModal = () => null;
 
     const value = {
         user,
         setUser,
-        tasks,
-        handleCompleteTask,
-        handleTaskAction,
+        missions,
+        handleCompleteMission,
+        handleMissionAction,
         academyArticles,
         completeAcademyArticle,
         activeView,
@@ -136,7 +138,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         toasts,
         addToast,
         portfolio,
-        activateFirstProject: activateFirstProject,
+        activateFirstProject,
+        RankUpModal,
     };
 
     return (

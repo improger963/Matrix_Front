@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect } from 'react';
 import Card from './ui/Card.tsx';
 import Button from './ui/Button.tsx';
@@ -245,7 +244,7 @@ const AssetManagementView: React.FC = () => {
             profit: { text: 'Прибыль от Проекта', icon: <DollarSign className="h-5 w-5 text-yellow-500" /> },
             investment: { text: 'Запуск Проекта', icon: <TrendingUp className="h-5 w-5 text-blue-500" /> },
             upgrade: { text: 'Масштабирование', icon: <TrendingUp className="h-5 w-5 text-purple-400" /> },
-            syndicate_profit: { text: 'Бонус Бизнес-сети', icon: <Users className="h-5 w-5 text-cyan-400" /> },
+            network_profit: { text: 'Бонус Бизнес-сети', icon: <Users className="h-5 w-5 text-cyan-400" /> },
         };
     
         const statusMap = {
@@ -304,14 +303,10 @@ const AssetManagementView: React.FC = () => {
                 />
             </div>
             <h3 className="text-lg font-semibold text-white text-center">Способ покупки</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <button type="button" onClick={() => setPaymentMethod('crypto')} className={`p-4 rounded-lg border-2 transition-all flex flex-col items-center justify-center gap-2 ${paymentMethod === 'crypto' ? 'border-brand-primary bg-dark-700' : 'border-dark-600 bg-dark-800'}`}>
+            <div className="grid grid-cols-1 gap-4">
+                <button type="button" onClick={() => setPaymentMethod('crypto')} className={`p-4 rounded-lg border-2 transition-all flex items-center justify-center gap-2 ${paymentMethod === 'crypto' ? 'border-brand-primary bg-dark-700' : 'border-dark-600 bg-dark-800'}`}>
                     <Bitcoin className="h-8 w-8 text-yellow-400" />
                     <span className="font-semibold">USDT (TRC-20)</span>
-                </button>
-                <button type="button" onClick={() => setPaymentMethod('card')} className={`p-4 rounded-lg border-2 transition-all flex flex-col items-center justify-center gap-2 ${paymentMethod === 'card' ? 'border-brand-primary bg-dark-700' : 'border-dark-600 bg-dark-800'}`}>
-                    <CreditCard className="h-8 w-8 text-gray-300" />
-                    <span className="font-semibold">Банковская карта</span>
                 </button>
             </div>
             {error && <p className="text-red-500 text-center text-sm">{error}</p>}

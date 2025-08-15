@@ -1,7 +1,4 @@
 
-
-
-
 import React, { useState, useMemo } from 'react';
 import Card from './ui/Card.tsx';
 import Button from './ui/Button.tsx';
@@ -46,13 +43,13 @@ const ArticleModal: React.FC<{ article: AcademyArticle; onClose: () => void; onC
 
                 <footer className="p-4 bg-dark-900/50 rounded-b-2xl border-t border-dark-700 flex-shrink-0 flex items-center justify-between">
                      <div className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent-gold to-yellow-300 flex items-center gap-1.5">
-                       <Zap className="w-5 h-5" /> +{article.xpReward} XP
+                       <Zap className="w-5 h-5" /> +{article.rewardRP} RP
                     </div>
                     <Button onClick={() => onComplete(article.id)} disabled={article.isCompleted}>
                         {article.isCompleted ? (
                              <><CheckCircle className="h-5 w-5 mr-2" /> Урок пройден</>
                         ) : (
-                            'Завершить и получить XP'
+                            'Завершить и получить RP'
                         )}
                     </Button>
                 </footer>
@@ -111,7 +108,7 @@ const ArticleCard: React.FC<{ article: AcademyArticle; onSelect: (article: Acade
                     </div>
                     <div className="flex items-center gap-1 font-semibold text-yellow-400">
                         <Zap className="h-4 w-4" />
-                        <span>{article.xpReward} XP</span>
+                        <span>{article.rewardRP} RP</span>
                     </div>
                 </div>
             </div>

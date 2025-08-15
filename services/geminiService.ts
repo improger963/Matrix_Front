@@ -1,5 +1,4 @@
 
-
 import type { Partner, AcademyArticle } from '../types.ts';
 import { MOCK_ACADEMY_ARTICLES } from '../constants.ts';
 
@@ -7,7 +6,7 @@ import { MOCK_ACADEMY_ARTICLES } from '../constants.ts';
 // This function now simulates a call to a backend endpoint.
 // The backend would be responsible for securely calling the Gemini API.
 export const generateMarketingContentStream = async (prompt: string, onChunk: (text: string) => void) => {
-    const systemInstruction = `Вы — эксперт по маркетингу и копирайтингу для бизнес-платформ. Ваша задача — создавать убедительные, мотивирующие и понятные тексты для привлечения новых партнеров. Используйте позитивный и энергичный тон. Тексты должны быть на русском языке.`;
+    const systemInstruction = `Вы — N.C.A., персональный AI-ассистент для бизнес-платформы 'Nexus Capital'. Ваша задача — создавать убедительные, мотивирующие и понятные тексты для привлечения новых Партнеров. Используйте профессиональный, позитивный и энергичный тон. Тексты должны быть на русском языке.`;
 
     try {
         // As per README.md, all AI calls should go through a secure backend endpoint.
@@ -106,7 +105,7 @@ export const getAITeamAnalysisStream = async (
     const activeCount = teamData.filter(m => m.status === 'active').length;
     const inactiveCount = totalMembers - activeCount;
     const activityRate = totalMembers > 0 ? (activeCount / totalMembers) * 100 : 0;
-    const topPerformer = [...teamData].sort((a, b) => b.investors - a.investors)[0];
+    const topPerformer = [...teamData].sort((a, b) => b.partners - a.partners)[0];
     const newMembers = teamData.filter(m => new Date(m.joinDate) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000));
     const totalLevel = teamData.reduce((sum, m) => sum + m.level, 0);
     const averageLevel = totalMembers > 0 ? (totalLevel / totalMembers) : 0;
@@ -116,7 +115,7 @@ export const getAITeamAnalysisStream = async (
     analysisText += `**✅ Ключевые моменты:**\n`;
     analysisText += `*   **Активность:** ${activityRate.toFixed(0)}% ваших партнеров активны (${activeCount} из ${totalMembers}). Это хороший показатель!\n`;
     if (topPerformer) {
-        analysisText += `*   **Лидер:** ${topPerformer.name} — ваш лучший рекрутер с ${topPerformer.investors} партнерами. Отличная работа!\n`;
+        analysisText += `*   **Лидер:** ${topPerformer.name} — ваш лучший рекрутер с ${topPerformer.partners} партнерами. Отличная работа!\n`;
     }
     if (newMembers.length > 0) {
         analysisText += `*   **Рост:** Вы привлекли ${newMembers.length} новых партнеров за последнюю неделю. Прекрасный темп!\n\n`;
@@ -143,9 +142,9 @@ export const getAITeamAnalysisStream = async (
 
     analysisText += `\n**🚀 Рекомендации к действию:**\n`;
     if (inactiveCount > 1) {
-        analysisText += `1.  **Реактивация:** Создайте в AI-Копирайтере мотивирующее сообщение для неактивных партнеров и сделайте рассылку.\n`;
+        analysisText += `1.  **Реактивация:** Создайте в AI-Ассистенте мотивирующее сообщение для неактивных партнеров и сделайте рассылку.\n`;
     }
-    if (topPerformer.investors > 2) {
+    if (topPerformer.partners > 2) {
         analysisText += `2.  **Признание:** Публично похвалите ${topPerformer.name} в общем чате. Это мотивирует и его, и остальных.\n`;
     }
 

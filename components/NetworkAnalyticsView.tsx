@@ -1,15 +1,14 @@
 
-
-
-
 import React from 'react';
 import Card from './ui/Card.tsx';
 import Button from './ui/Button.tsx';
 import type { Partner, NetworkGoal } from '../types.ts';
-import { MOCK_SYNDICATE_GOAL as MOCK_NETWORK_GOAL } from '../constants.ts';
+import { MOCK_NETWORK_GOAL } from '../constants.ts';
 import { BrainCircuit, Activity, UserPlus, BarChart3, Target, Edit } from 'lucide-react';
+import { useAppContext } from '../contexts/AppContext.tsx';
 
 const NetworkGoals: React.FC<{ goal: NetworkGoal }> = ({ goal }) => {
+    const { setActiveView } = useAppContext();
     const progressPercentage = (goal.progress / goal.target) * 100;
     const daysLeft = Math.round((new Date(goal.deadline).getTime() - new Date().getTime()) / (1000 * 3600 * 24));
 
@@ -21,7 +20,7 @@ const NetworkGoals: React.FC<{ goal: NetworkGoal }> = ({ goal }) => {
                     <p className="text-2xl font-semibold text-white mt-2">{goal.title}</p>
                     <p className="text-sm text-gray-400 mt-1">{goal.description}</p>
                  </div>
-                 <Button variant="secondary" className="!text-xs !px-3 !py-1.5"><Edit className="w-4 h-4 mr-1.5"/>Установить цель</Button>
+                 <Button variant="secondary" className="!text-xs !px-3 !py-1.5" onClick={() => setActiveView('tasks')}><Edit className="w-4 h-4 mr-1.5"/>Управлять целями</Button>
             </div>
            
             <div className="mt-4">
@@ -160,7 +159,7 @@ const NetworkAnalyticsView: React.FC<TeamAnalyticsViewProps> = ({ teamAnalytics 
                                 <div className="flex items-center gap-3"><span className="font-bold text-lg w-5">{index + 1}.</span><img src={member.avatarUrl} alt={member.name} className="h-10 w-10 rounded-full" />
                                     <div><p className="font-semibold text-white">{member.name}</p><p className="text-xs text-gray-400">Уровень {member.level}</p></div>
                                 </div>
-                                <div className="text-right"><p className="font-bold text-brand-accent text-lg">{member.investors}</p><p className="text-xs text-gray-500">партнеров</p></div>
+                                <div className="text-right"><p className="font-bold text-brand-accent text-lg">{member.partners}</p><p className="text-xs text-gray-500">партнеров</p></div>
                             </div>
                         ))}
                     </div>

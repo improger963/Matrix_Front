@@ -1,5 +1,4 @@
 
-
 import React from 'react';
 import Card from './ui/Card.tsx';
 import type { LiveFeedEvent } from '../types.ts';
@@ -28,7 +27,7 @@ const EventIcon: React.FC<{ type: LiveFeedEvent['type'] }> = ({ type }) => {
         new_level: <ChevronsUp className="h-5 w-5 text-yellow-400" />,
         withdrawal: <ArrowDownCircle className="h-5 w-5 text-red-400" />,
         deposit: <ArrowUpCircle className="h-5 w-5 text-green-400" />,
-        startup_exit: <ShieldCheck className="h-5 w-5 text-purple-400" />,
+        funding_completed: <ShieldCheck className="h-5 w-5 text-purple-400" />,
         upgrade: <TrendingUp className="h-5 w-5 text-cyan-400" />,
     };
     return <div className="w-10 h-10 bg-dark-700 rounded-full flex items-center justify-center flex-shrink-0">{iconMap[type]}</div>;
@@ -43,7 +42,7 @@ const EventMessage: React.FC<{ event: LiveFeedEvent }> = ({ event }) => {
         case 'new_level': return <>{userName} достиг(ла) {level} уровня!</>;
         case 'withdrawal': return <>{userName} продал(а) <span className="font-semibold text-red-400">${amount?.toFixed(2)} CAP</span>.</>;
         case 'deposit': return <>{userName} купил(а) <span className="font-semibold text-green-400">${amount?.toFixed(2)} CAP</span>.</>;
-        case 'startup_exit': return <>{userName} получил(а) Полное Финансирование и заработал(а) <span className="font-semibold text-purple-400">${amount?.toFixed(2)}</span>.</>;
+        case 'funding_completed': return <>{userName} получил(а) Полное Финансирование и заработал(а) <span className="font-semibold text-purple-400">${amount?.toFixed(2)}</span>.</>;
         case 'upgrade': return <>{userName} улучшил(а) Проект до Раунда B.</>;
         default: return null;
     }

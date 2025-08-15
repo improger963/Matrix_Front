@@ -1,5 +1,4 @@
 
-
 import React from 'react';
 import Card from './ui/Card.tsx';
 import { Rocket, Users, Gift, TrendingUp, Building } from 'lucide-react';
@@ -33,7 +32,7 @@ const HowItWorks: React.FC = () => {
                      <StepCard 
                         icon={<Users className="h-6 w-6 text-white"/>}
                         title="Шаг 2: Формирование Бизнес-сети"
-                        description="Продайте две Доли в своем Проекте, пригласив двух партнеров в свою Бизнес-сеть."
+                        description="Продайте Доли в своем Проекте, пригласив партнеров в свою Бизнес-сеть."
                     />
                      <StepCard 
                         icon={<Gift className="h-6 w-6 text-white"/>}
@@ -43,7 +42,7 @@ const HowItWorks: React.FC = () => {
                     <StepCard 
                         icon={<Building className="h-6 w-6 text-white"/>}
                         title="Шаг 4: Масштабирование"
-                        description="Инвестируйте в более поздние раунды (A, B) и создавайте 'Филиалы' для экспоненциального роста вашего Капитала."
+                        description="Инвестируйте в более дорогие Проекты ('Series A', 'IPO') для экспоненциального роста вашего Капитала."
                     />
                 </div>
             </Card>

@@ -1,14 +1,11 @@
 
-
-
-
 import React, { useState, useMemo } from 'react';
 import Card from './ui/Card.tsx';
 import type { Partner } from '../types.ts';
-import { MOCK_SYNDICATE_MEMBERS as MOCK_NETWORK_MEMBERS } from '../constants.ts';
+import { MOCK_NETWORK_MEMBERS } from '../constants.ts';
 import { MoreVertical, Search as SearchIcon, ChevronUp, ChevronDown } from 'lucide-react';
 
-type SortKey = 'name' | 'joinDate' | 'level' | 'investors';
+type SortKey = 'name' | 'joinDate' | 'level' | 'partners';
 type SortOrder = 'asc' | 'desc';
 type StatusFilter = 'all' | 'active' | 'inactive';
 
@@ -27,7 +24,7 @@ const MemberCard: React.FC<{ member: Partner }> = ({ member }) => {
             </div>
             <div className="grid grid-cols-3 gap-2 mt-3 text-center">
                 <div className="bg-dark-700 p-2 rounded-lg"><p className="text-xs text-gray-400">Уровень</p><p className="font-bold text-white">{member.level}</p></div>
-                <div className="bg-dark-700 p-2 rounded-lg"><p className="text-xs text-gray-400">Партнеры</p><p className="font-bold text-white">{member.investors}</p></div>
+                <div className="bg-dark-700 p-2 rounded-lg"><p className="text-xs text-gray-400">Партнеры</p><p className="font-bold text-white">{member.partners}</p></div>
                  <div className="bg-dark-700 p-2 rounded-lg flex flex-col justify-center items-center">
                     <p className="text-xs text-gray-400">Статус</p>
                     <span className={`px-2 py-0.5 mt-1 text-xs font-semibold rounded-full ${member.status === 'active' ? 'bg-green-500/20 text-green-400' : 'bg-gray-500/20 text-gray-400'}`}>
@@ -106,7 +103,7 @@ const NetworkListView: React.FC = () => {
                             <SortableHeader sortKeyName="name">Партнер</SortableHeader>
                             <SortableHeader sortKeyName="joinDate">Дата присоединения</SortableHeader>
                             <SortableHeader sortKeyName="level" className="text-center">Уровень</SortableHeader>
-                            <SortableHeader sortKeyName="investors" className="text-center">Их партнеры</SortableHeader>
+                            <SortableHeader sortKeyName="partners" className="text-center">Их партнеры</SortableHeader>
                             <th className="p-4 text-sm font-semibold text-gray-400">Статус</th>
                             <th className="p-4 text-sm font-semibold text-gray-400 text-right">Действия</th>
                         </tr>
@@ -122,7 +119,7 @@ const NetworkListView: React.FC = () => {
                                 </td>
                                 <td className="p-4 text-gray-400">{new Date(member.joinDate).toLocaleDateString('ru-RU')}</td>
                                 <td className="p-4 font-medium text-white text-center">{member.level}</td>
-                                <td className="p-4 font-medium text-white text-center">{member.investors}</td>
+                                <td className="p-4 font-medium text-white text-center">{member.partners}</td>
                                 <td className="p-4">
                                     <span className={`px-2 py-1 text-xs font-semibold rounded-full flex items-center gap-1.5 w-fit ${member.status === 'active' ? 'bg-green-500/10 text-green-400' : 'bg-gray-500/10 text-gray-400'}`}>
                                         <span className={`h-2 w-2 rounded-full ${member.status === 'active' ? 'bg-green-400' : 'bg-gray-400'}`}></span>

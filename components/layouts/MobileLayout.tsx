@@ -3,9 +3,8 @@ import React, { useState, useMemo } from 'react';
 import type { View } from '../../types.ts';
 import type { NavItem, NavGroup } from '../../App.tsx';
 import MoreMenu from '../MoreMenu.tsx';
-import { LayoutDashboard, Users, Wallet, PieChart, MoreHorizontal, Briefcase } from 'lucide-react';
+import { LayoutDashboard, Users, Wallet, Briefcase, MoreHorizontal } from 'lucide-react';
 import { useAppContext } from '../../contexts/AppContext.tsx';
-import { AnimatedBalance } from '../ui/Stat.tsx';
 
 interface MobileLayoutProps {
     children: React.ReactNode;
@@ -25,7 +24,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children, navConfig, active
     
     const mainMobileNavItems = [
         { id: 'dashboard', label: 'Дашборд', icon: LayoutDashboard },
-        { id: 'market', label: 'Проекты', icon: PieChart },
+        { id: 'project', label: 'Проект', icon: Briefcase },
         { id: 'network', label: 'Сеть', icon: Users },
         { id: 'assets', label: 'Активы', icon: Wallet },
     ];
