@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 
 interface StatProps {
@@ -19,8 +20,6 @@ const Stat: React.FC<StatProps> = ({ icon, label, value }) => {
         </div>
     );
 };
-
-export default Stat;
 
 
 interface AnimatedBalanceProps {
@@ -82,3 +81,5 @@ export const AnimatedBalance: React.FC<AnimatedBalanceProps> = ({ value, classNa
         </span>
     );
 };
+
+export default Stat;
