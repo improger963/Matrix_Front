@@ -1,8 +1,7 @@
 
 import React from 'react';
-import type { View } from '../types.ts';
+import type { View, NavItem, NavGroup } from '../types.ts';
 import { X } from 'lucide-react';
-import type { NavItem, NavGroup } from '../App.tsx';
 
 interface MoreMenuProps {
     isOpen: boolean;

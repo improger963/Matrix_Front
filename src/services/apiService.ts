@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 import type { 
     Partner, 
@@ -9,7 +8,7 @@ import type {
     Mission, 
     ChatMessage, 
     LiveFeedEvent
-} from '../types.ts';
+} from '../../types.ts';
 import {
     MOCK_PARTNER,
     MOCK_PROJECTS,
@@ -21,7 +20,7 @@ import {
     MOCK_NETWORK_MEMBERS,
     MOCK_USERS_DB,
     MOCK_LIVE_FEED_EVENTS,
-} from '../constants.ts';
+} from '../../constants.ts';
 
 // --- 1. Архитектура и Настройка ---
 
@@ -73,7 +72,13 @@ export const getPublicPartnerData = async (id: string): Promise<Partial<Partner>
     await delay(SIMULATED_DELAY);
     const user = MOCK_USERS_DB[id] || MOCK_NETWORK_MEMBERS.find(m => m.id === id);
     if (user) {
-        const { name, avatarUrl, level, rank, partners, fundingCompleted } = user;
+        // The previous implementation used an unsafe cast `as Partner`, which could
+        // lead to runtime issues if the user object from MOCK_USERS_DB (which is not a full Partner)
+        // was returned. This new implementation is type-safe.
+        const { name, avatarUrl, level, rank } = user;
+        const partners = ('partners' in user && typeof user.partners === 'number') ? user.partners : undefined;
+        const fundingCompleted = ('fundingCompleted' in user && typeof user.fundingCompleted === 'number') ? user.fundingCompleted : undefined;
+        
         return Promise.resolve({ name, avatarUrl, level, rank, partners, fundingCompleted });
     }
     return Promise.reject(new Error("Partner not found"));
@@ -232,7 +237,7 @@ type WebSocketCallback = (data: any) => void;
 
 export const WebSocketService = {
     _isConnected: false,
-    _intervalId: null as NodeJS.Timeout | null,
+    _intervalId: null as ReturnType<typeof setInterval> | null,
     _subscribers: {} as Record<string, WebSocketCallback[]>,
 
     connect(token: string): void {

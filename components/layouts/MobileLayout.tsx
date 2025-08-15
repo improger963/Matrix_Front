@@ -1,7 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
-import type { View } from '../../types.ts';
-import type { NavItem, NavGroup } from '../../App.tsx';
+import type { View, NavItem, NavGroup } from '../../types.ts';
 import MoreMenu from '../MoreMenu.tsx';
 import { LayoutDashboard, Users, Wallet, Briefcase, MoreHorizontal } from 'lucide-react';
 import { useAppContext } from '../../contexts/AppContext.tsx';

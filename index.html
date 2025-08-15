@@ -29,7 +29,9 @@
             },
             animation: {
               'fade-in': 'fadeIn 0.5s ease-in-out',
-              'slide-in-up': 'slideInUp 0.5s ease-out',
+              'slide-in-up': 'slideInUp 0.7s ease-out',
+              'slide-in-left': 'slideInLeft 0.7s ease-out',
+              'slide-in-right': 'slideInRight 0.7s ease-out',
               'pop-in': 'popIn 0.3s ease-out',
               'gradient-animation': 'gradient-animation 15s ease infinite',
               'flow-line': 'flow-line 5s linear infinite',
@@ -45,6 +47,8 @@
               'slide-in-up-modal': 'slideInUpModal 0.4s ease-out forwards',
               'gauge-fill': 'gaugeFill 1.5s 0.5s ease-out forwards',
               'donut-fill': 'donutFill 1.5s 0.5s ease-out forwards',
+              'aurora': 'aurora 20s ease infinite',
+              'subtle-float': 'subtle-float 4s ease-in-out infinite',
             },
             keyframes: {
               fadeIn: {
@@ -52,8 +56,16 @@
                 '100%': { opacity: '1' },
               },
               slideInUp: {
-                '0%': { transform: 'translateY(20px)', opacity: '0' },
+                '0%': { transform: 'translateY(40px)', opacity: '0' },
                 '100%': { transform: 'translateY(0)', opacity: '1' },
+              },
+               slideInLeft: {
+                '0%': { transform: 'translateX(-40px)', opacity: '0' },
+                '100%': { transform: 'translateX(0)', opacity: '1' },
+              },
+              slideInRight: {
+                '0%': { transform: 'translateX(40px)', opacity: '0' },
+                '100%': { transform: 'translateX(0)', opacity: '1' },
               },
               popIn: {
                 '0%': { transform: 'scale(0.95)', opacity: '0' },
@@ -69,8 +81,8 @@
                 'to': { 'stroke-dashoffset': '100' },
               },
               glow: {
-                'from': { 'box-shadow': '0 0 5px -5px #38bdf8' },
-                'to': { 'box-shadow': '0 0 20px 5px #38bdf8' },
+                'from': { 'box-shadow': '0 0 10px -5px #38bdf8' },
+                'to': { 'box-shadow': '0 0 30px 5px #38bdf8' },
               },
               cardGlow: {
                 'from': { 'border-color': 'rgba(14, 165, 233, 0.3)', 'box-shadow': '0 0 5px rgba(14, 165, 233, 0.2)' },
@@ -113,6 +125,14 @@
               donutFill: {
                   'from': { 'stroke-dashoffset': '283' },
               },
+              aurora: {
+                'from': { 'background-position': '0% 50%' },
+                'to': { 'background-position': '300% 50%' },
+              },
+              'subtle-float': {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-10px)' },
+              }
             }
           }
         }
@@ -127,6 +147,7 @@
     "react-dom": "https://esm.sh/react-dom@18.3.1",
     "react-dom/": "https://esm.sh/react-dom@18.3.1/",
     "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+    "react-router-dom": "https://esm.sh/react-router-dom@6.25.1?deps=react@18.3.1",
     "lucide-react": "https://esm.sh/lucide-react@0.539.0?deps=react@18.3.1",
     "html-to-image": "https://esm.sh/html-to-image@1.11.11",
     "react-qr-code": "https://esm.sh/react-qr-code@2.0.12?deps=react@18.3.1",
@@ -137,18 +158,37 @@
 </script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     font-family: 'Inter', sans-serif;
   }
   .text-gradient {
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+  .animated-grid {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-image:
+      linear-gradient(to right, rgba(55, 65, 81, 0.3) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(55, 65, 81, 0.3) 1px, transparent 1px);
+    background-size: 4rem 4rem;
+    animation: pan-grid 20s linear infinite;
+  }
+
+  @keyframes pan-grid {
+    0% { background-position: 0 0; }
+    100% { background-position: 4rem 4rem; }
+  }
 </style>
-<link rel="stylesheet" href="/index.css">
 </head>
 <body class="bg-dark-900 text-gray-200">
     <div id="root"></div>
-<script type="module" src="/index.tsx"></script>
 </body>
 </html>

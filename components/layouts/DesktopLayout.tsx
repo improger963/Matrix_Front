@@ -1,8 +1,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { Briefcase, ChevronDown, UserCircle, LifeBuoy, LogOut, Wallet, Award, Zap } from 'lucide-react';
-import type { View } from '../../types.ts';
-import type { NavItem, NavGroup } from '../../App.tsx';
+import type { View, NavItem, NavGroup } from '../../types.ts';
 import { useAppContext } from '../../contexts/AppContext.tsx';
 import { AnimatedBalance } from '../ui/Stat.tsx';
 import { RANK_THRESHOLDS } from '../../constants.ts';

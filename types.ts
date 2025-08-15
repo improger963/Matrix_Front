@@ -239,3 +239,18 @@ export interface BoardroomVote {
     endsAt: string;
     userVote?: string; // option id
 }
+
+// Navigation type definitions
+export interface NavItem {
+    type: 'item';
+    id: View;
+    label: string;
+    icon: React.ElementType;
+}
+
+export interface NavGroup {
+    type: 'group';
+    title: string;
+    icon: React.ElementType;
+    items: NavItem[];
+}
