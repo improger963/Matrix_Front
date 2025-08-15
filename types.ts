@@ -7,6 +7,7 @@ export interface User {
   avatarUrl: string;
   level: number;
   balance: number;
+  xp: number;
   referrals: number;
   matrixCompletions: number;
   teamEarnings?: number;
@@ -139,13 +140,17 @@ export interface AcademyArticle {
   duration?: string; // for video
   coverUrl: string;
   isLocked: boolean;
+  content: string;
+  xpReward: number;
+  isCompleted: boolean;
 }
 
 export interface DailyTask {
   id: string;
   title: string;
+  subtitle?: string;
   description: string;
-  reward: string;
+  reward: number; // XP points
   icon: React.ElementType;
   isCompleted: boolean;
   actionText: string;
@@ -181,4 +186,22 @@ export interface ChatMessage {
   };
   text: string;
   timestamp: string; // ISO 8601 format
+  reactions?: { [emoji: string]: string[] }; // emoji -> array of user IDs
+  replyTo?: {
+    messageId: string;
+    userName: string;
+    text: string;
+  };
+  attachment?: {
+    type: 'image';
+    url: string;
+  };
+}
+
+export interface OnlineUser {
+  id: string;
+  name: string;
+  avatarUrl: string;
+  level: number;
+  referrals?: number;
 }

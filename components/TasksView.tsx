@@ -1,71 +1,135 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import Card from './ui/Card.tsx';
 import Button from './ui/Button.tsx';
 import { useAppContext } from '../contexts/AppContext.tsx';
 import type { DailyTask } from '../types.ts';
-import { ListChecks, Check, Trophy } from 'lucide-react';
+import { ListChecks, Check, Trophy, Zap, Gift } from 'lucide-react';
 
-const TaskItem: React.FC<{ task: DailyTask, onAction: (task: DailyTask) => void }> = ({ task, onAction }) => {
+const TaskCard: React.FC<{ task: DailyTask, onAction: (task: DailyTask) => void }> = ({ task, onAction }) => {
     const progressPercentage = task.progress ? (task.progress.current / task.progress.target) * 100 : 0;
+
+    const categoryStyles = {
+        onboarding: {
+            bg: 'from-brand-primary/20 to-dark-800/10',
+            border: 'border-brand-primary/50',
+            iconBg: 'bg-brand-primary/20',
+            iconColor: 'text-brand-primary',
+            buttonVariant: 'secondary' as 'secondary'
+        },
+        daily: {
+            bg: 'from-accent-cyan/20 to-dark-800/10',
+            border: 'border-accent-cyan/50',
+            iconBg: 'bg-accent-cyan/20',
+            iconColor: 'text-accent-cyan',
+            buttonVariant: 'secondary' as 'secondary'
+        },
+        special: {
+            bg: 'from-accent-gold/20 to-dark-800/10',
+            border: 'border-accent-gold/50 animate-card-glow',
+            iconBg: 'bg-accent-gold/20',
+            iconColor: 'text-accent-gold',
+            buttonVariant: 'primary' as 'primary'
+        }
+    };
+
+    const styles = categoryStyles[task.category];
+
     return (
-        <Card className={`!p-4 transition-all duration-300 ${task.isCompleted ? 'bg-dark-800/60 opacity-70' : 'bg-dark-800 hover:bg-dark-700'}`}>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                <div className={`flex-shrink-0 w-16 h-16 rounded-lg flex items-center justify-center ${task.isCompleted ? 'bg-green-500/20' : 'bg-dark-900'}`}>
-                    <task.icon className={`h-8 w-8 ${task.isCompleted ? 'text-green-400' : 'text-brand-accent'}`} />
+        <div className={`
+            relative rounded-xl border p-5 transition-all duration-300 overflow-hidden
+            bg-gradient-to-br ${styles.bg} ${styles.border}
+            ${task.isCompleted ? 'opacity-50 saturate-50' : 'hover:border-brand-accent/70 hover:shadow-2xl hover:shadow-brand-primary/20 hover:-translate-y-1'}
+        `}>
+            <div className="flex flex-col h-full">
+                <div className="flex items-start gap-4">
+                    <div className={`flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center ${styles.iconBg}`}>
+                        <task.icon className={`h-6 w-6 ${styles.iconColor}`} />
+                    </div>
+                    <div className="flex-1">
+                        {task.subtitle && <p className="text-xs font-bold uppercase tracking-wider text-brand-accent">{task.subtitle}</p>}
+                        <h4 className="font-bold text-white mt-1">{task.title}</h4>
+                        <p className="text-sm text-gray-400 mt-1 text-balance">{task.description}</p>
+                    </div>
                 </div>
-                <div className="flex-1">
-                    <div className="flex justify-between items-start">
-                        <h4 className="font-bold text-white">{task.title}</h4>
-                         <div className="text-xs font-bold text-yellow-400 bg-yellow-400/10 px-2 py-1 rounded-full whitespace-nowrap">
-                            {task.reward}
+                
+                {task.progress && !task.isCompleted && (
+                    <div className="mt-4">
+                        <div className="flex justify-between text-xs text-gray-400 mb-1">
+                            <span>Прогресс</span>
+                            <span>{task.progress.current}/{task.progress.target}</span>
+                        </div>
+                        <div className="w-full bg-dark-900 rounded-full h-1.5">
+                            <div className="bg-brand-primary h-1.5 rounded-full animate-progress-fill" style={{ width: `${progressPercentage}%`, animationDelay: '0.5s' }}></div>
                         </div>
                     </div>
-                    <p className="text-sm text-gray-400 mt-1">{task.description}</p>
-                    {task.progress && !task.isCompleted && (
-                        <div className="mt-2">
-                            <div className="flex justify-between text-xs text-gray-400 mb-1">
-                                <span>Прогресс</span>
-                                <span>{task.progress.current}/{task.progress.target}</span>
+                )}
+
+                <div className="mt-auto pt-4 flex items-center justify-between">
+                    <div className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent-gold to-yellow-300 flex items-center gap-1.5">
+                       <Zap className="w-4 h-4" /> +{task.reward} XP
+                    </div>
+                    <div>
+                        {task.isCompleted ? (
+                            <div className="flex items-center justify-center gap-2 text-green-400 font-semibold p-2 rounded-lg bg-green-500/10 w-full sm:w-36 animate-check-in">
+                                <Check className="h-5 w-5" />
+                                <span>Выполнено</span>
                             </div>
-                            <div className="w-full bg-dark-900 rounded-full h-1.5">
-                                <div className="bg-brand-primary h-1.5 rounded-full" style={{ width: `${progressPercentage}%` }}></div>
-                            </div>
-                        </div>
-                    )}
-                </div>
-                <div className="w-full sm:w-auto flex-shrink-0">
-                    {task.isCompleted ? (
-                         <div className="flex items-center justify-center gap-2 text-green-400 font-semibold p-2 rounded-lg bg-green-500/10 w-full sm:w-36">
-                            <Check className="h-5 w-5" />
-                            <span>Выполнено</span>
-                        </div>
-                    ) : (
-                        <Button
-                            onClick={() => onAction(task)}
-                            className="w-full sm:w-36"
-                            variant={task.category === 'special' ? 'primary' : 'secondary'}
-                        >
-                            {task.actionText}
-                        </Button>
-                    )}
+                        ) : (
+                            <Button
+                                onClick={() => onAction(task)}
+                                className="w-full sm:w-36"
+                                variant={styles.buttonVariant}
+                            >
+                                {task.actionText}
+                            </Button>
+                        )}
+                    </div>
                 </div>
             </div>
-        </Card>
+        </div>
     );
 };
 
+const WeeklyPrizeCard: React.FC = () => {
+    const weeklyTasksCompleted = 5;
+    const weeklyTasksTotal = 7;
+    const progress = (weeklyTasksCompleted / weeklyTasksTotal) * 100;
+  
+    return (
+      <Card className="lg:col-span-1 !bg-gradient-to-br from-dark-800 to-dark-700">
+        <div className="flex items-center gap-3">
+          <Gift className="w-8 h-8 text-accent-gold" />
+          <div>
+            <h3 className="text-xl font-bold text-white">Главный приз недели</h3>
+            <p className="text-sm text-gray-400">Выполняйте задания и забирайте награду!</p>
+          </div>
+        </div>
+        <div className="text-center my-6">
+          <p className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-emerald-400 animate-text-glow">$50</p>
+          <p className="text-sm text-gray-400">на ваш баланс</p>
+        </div>
+        <div>
+          <div className="flex justify-between items-center mb-1">
+            <p className="text-sm font-medium text-gray-300">Прогресс</p>
+            <p className="text-sm font-bold text-accent-gold">{weeklyTasksCompleted} / {weeklyTasksTotal} заданий</p>
+          </div>
+          <div className="w-full bg-dark-900 rounded-full h-2.5">
+            <div className="bg-gradient-to-r from-yellow-500 to-accent-gold h-2.5 rounded-full animate-progress-fill" style={{ width: `${progress}%`, animationDelay: '0.3s' }}></div>
+          </div>
+        </div>
+      </Card>
+    );
+  };
+
+
 const TasksView: React.FC = () => {
     const { tasks, handleTaskAction } = useAppContext();
-
-    const completedTasksCount = useMemo(() => tasks.filter(t => t.isCompleted).length, [tasks]);
-    const totalTasksCount = tasks.length;
-    const overallProgress = totalTasksCount > 0 ? (completedTasksCount / totalTasksCount) * 100 : 0;
 
     const categorizedTasks = useMemo(() => {
         const categories: { [key in DailyTask['category']]: DailyTask[] } = {
             onboarding: [],
             daily: [],
-            special: [],
+            special: []
         };
         tasks.forEach(task => {
             if (categories[task.category]) {
@@ -76,47 +140,50 @@ const TasksView: React.FC = () => {
     }, [tasks]);
 
     const categoryTitles: { [key in DailyTask['category']]: string } = {
-        onboarding: 'Задания для новичков',
-        daily: 'Ежедневные задания',
-        special: 'Специальные задания'
+        onboarding: '🚀 Путь новичка',
+        daily: 'Ежедневные ритуалы',
+        special: '💎 Особые контракты'
     };
     
     return (
-        <div className="space-y-6">
-            <Card>
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <div className="flex items-center gap-3">
-                        <ListChecks className="h-8 w-8 text-brand-primary" />
-                        <div>
-                            <h2 className="text-2xl font-bold text-white">Центр Заданий</h2>
-                            <p className="text-gray-400">Выполняйте задания, получайте награды и ускоряйте свой прогресс.</p>
-                        </div>
-                    </div>
-                </div>
-                 <div className="mt-6">
-                    <div className="flex justify-between items-center mb-1">
-                        <p className="text-sm font-medium text-gray-300">Общий прогресс</p>
-                        <p className="text-sm font-bold text-brand-accent">{completedTasksCount} / {totalTasksCount} заданий</p>
-                    </div>
-                    <div className="w-full bg-dark-700 rounded-full h-2.5">
-                        <div className="bg-gradient-to-r from-brand-secondary to-brand-primary h-2.5 rounded-full transition-all duration-500" style={{ width: `${overallProgress}%` }}></div>
+        <div className="space-y-8">
+            <Card className="!bg-transparent !p-0 !border-0">
+                <div className="flex items-center gap-3 mb-2">
+                    <ListChecks className="h-8 w-8 text-brand-primary" />
+                    <div>
+                        <h2 className="text-3xl font-bold text-white">Центр Заданий</h2>
+                        <p className="text-gray-400">Выполняйте квесты, получайте XP и ускоряйте свой прогресс.</p>
                     </div>
                 </div>
             </Card>
 
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                 <WeeklyPrizeCard />
+
+                 <div className="lg:col-span-2">
+                     <Card>
+                         <h3 className="text-xl font-bold text-white mb-4">{categoryTitles.onboarding}</h3>
+                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                             {categorizedTasks.onboarding.map(task => (
+                                 <TaskCard key={task.id} task={task} onAction={handleTaskAction} />
+                             ))}
+                         </div>
+                     </Card>
+                 </div>
+            </div>
+
             {Object.entries(categorizedTasks).map(([category, tasksInCategory]) => {
-                if (tasksInCategory.length === 0) return null;
+                if (category === 'onboarding' || tasksInCategory.length === 0) return null;
                 return (
                     <div key={category}>
-                        <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                             <Trophy className="h-5 w-5 text-brand-accent"/>
+                        <h3 className="text-2xl font-bold text-white mb-4 ml-2">
                              {categoryTitles[category as DailyTask['category']]}
                         </h3>
-                        <div className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {tasksInCategory
-                                .sort((a, b) => (a.isCompleted ? 1 : -1) - (b.isCompleted ? 1 : -1) || 0) // sort completed to bottom
+                                .sort((a, b) => (a.isCompleted ? 1 : -1) - (b.isCompleted ? 1 : -1) || 0)
                                 .map(task => (
-                                    <TaskItem key={task.id} task={task} onAction={handleTaskAction} />
+                                    <TaskCard key={task.id} task={task} onAction={handleTaskAction} />
                             ))}
                         </div>
                     </div>

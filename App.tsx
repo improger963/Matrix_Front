@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Header from './components/Header.tsx';
-import { ShieldCheck, LayoutGrid, BotMessageSquare, Trophy, HelpCircle, BookOpen, Wallet as WalletIcon, UserCircle, TrendingUp, MoreHorizontal, Zap, MessageSquareQuote, LifeBuoy, Newspaper, GraduationCap, Megaphone, MessageSquare, Link, Users, ChevronDown, ListChecks } from 'lucide-react';
+import { ShieldCheck, LayoutGrid, BotMessageSquare, Trophy, HelpCircle, BookOpen, Wallet as WalletIcon, UserCircle, TrendingUp, MoreHorizontal, Zap, MessageSquareQuote, LifeBuoy, Newspaper, GraduationCap, Megaphone, MessageSquare, Link, Users, ChevronDown, ListChecks, BarChart3 } from 'lucide-react';
 import type { View } from './types.ts';
 import MoreMenu from './components/MoreMenu.tsx';
 import { AppProvider, useAppContext } from './contexts/AppContext.tsx';
@@ -44,7 +44,7 @@ export type NavGroup = {
 const navConfig: (NavItem | NavGroup)[] = [
     { type: 'item', id: 'dashboard', label: 'Главная', icon: LayoutGrid },
     { type: 'item', id: 'matrix', label: 'Матрица', icon: ShieldCheck },
-    { type: 'item', id: 'team', label: 'Команда', icon: TrendingUp },
+    { type: 'item', id: 'team', label: 'Аналитика', icon: BarChart3 },
     { type: 'item', id: 'tasks', label: 'Задания', icon: ListChecks },
     { type: 'item', id: 'wallet', label: 'Финансы', icon: WalletIcon },
     { 
@@ -134,7 +134,7 @@ const AppContent: React.FC = () => {
     const mainMobileNavItems = [
         { id: 'dashboard', label: 'Главная', icon: LayoutGrid },
         { id: 'matrix', label: 'Матрица', icon: ShieldCheck },
-        { id: 'team', label: 'Команда', icon: TrendingUp },
+        { id: 'team', label: 'Аналитика', icon: BarChart3 },
         { id: 'wallet', label: 'Финансы', icon: WalletIcon },
     ];
     
@@ -151,6 +151,8 @@ const AppContent: React.FC = () => {
         return filteredItems.length > 0 ? { ...el, items: filteredItems } : null;
       })
       .filter((el): el is NavItem | NavGroup => el !== null), []);
+      
+    const isChatView = activeView === 'chat';
 
     return (
         <div className="min-h-screen flex bg-dark-900 font-sans">
@@ -217,10 +219,15 @@ const AppContent: React.FC = () => {
                     })}
                 </nav>
             </aside>
-            <div className="flex-1 flex flex-col relative z-10 min-w-0">
+
+            <div className="flex-1 flex flex-col relative z-10 min-w-0 overflow-hidden">
                 <Header onLogout={handleLogout} />
-                <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto pb-24 lg:pb-8 relative">
-                    <div key={activeView} className="mt-8 animate-fade-in">
+                <main className={`flex-1 ${isChatView ? 'flex flex-col min-h-0' : 'overflow-y-auto'}`}>
+                    <div key={activeView} className={`animate-fade-in w-full h-full ${
+                        isChatView 
+                            ? 'flex flex-col p-4 sm:p-6 lg:p-8'
+                            : 'p-4 sm:p-6 lg:p-8 mt-8 pb-24 lg:pb-8'
+                    }`}>
                         {renderView()}
                     </div>
                 </main>

@@ -24,6 +24,7 @@
               'dark-700': '#334155',
               'dark-600': '#475569',
               'accent-cyan': '#22d3ee',
+              'accent-gold': '#facc15',
               'accent-glow': '#7c3aed',
             },
             animation: {
@@ -33,7 +34,17 @@
               'gradient-animation': 'gradient-animation 15s ease infinite',
               'flow-line': 'flow-line 5s linear infinite',
               'glow': 'glow 2s ease-in-out infinite alternate',
+              'card-glow': 'cardGlow 1.5s ease-in-out infinite alternate',
               'text-glow': 'textGlow 2.5s ease-in-out infinite alternate',
+              'message-in': 'messageIn 0.3s ease-out forwards',
+              'typing-bubble': 'typing-bubble 1.2s infinite ease-in-out',
+              'progress-fill': 'progressFill 1s ease-out forwards',
+              'check-in': 'checkIn 0.5s ease-out forwards',
+              'draw-line': 'drawLine 2s ease-out forwards',
+              'fade-in-backdrop': 'fadeInBackdrop 0.3s ease-out forwards',
+              'slide-in-up-modal': 'slideInUpModal 0.4s ease-out forwards',
+              'gauge-fill': 'gaugeFill 1.5s 0.5s ease-out forwards',
+              'donut-fill': 'donutFill 1.5s 0.5s ease-out forwards',
             },
             keyframes: {
               fadeIn: {
@@ -61,10 +72,47 @@
                 'from': { 'box-shadow': '0 0 5px -5px #a78bfa' },
                 'to': { 'box-shadow': '0 0 20px 5px #a78bfa' },
               },
+              cardGlow: {
+                'from': { 'border-color': 'rgba(124, 58, 237, 0.3)', 'box-shadow': '0 0 5px rgba(124, 58, 237, 0.2)' },
+                'to': { 'border-color': 'rgba(124, 58, 237, 0.7)', 'box-shadow': '0 0 20px rgba(124, 58, 237, 0.5)' },
+              },
               textGlow: {
                 'from': { 'text-shadow': '0 0 10px rgba(74, 222, 128, 0.4), 0 0 20px rgba(74, 222, 128, 0.2)' },
                 'to': { 'text-shadow': '0 0 20px rgba(74, 222, 128, 0.6), 0 0 30px rgba(74, 222, 128, 0.4)' },
-              }
+              },
+              messageIn: {
+                 '0%': { opacity: '0', transform: 'translateY(10px) scale(0.95)' },
+                 '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+              },
+              'typing-bubble': {
+                '0%, 80%, 100%': { transform: 'scale(0)' },
+                '40%': { transform: 'scale(1.0)' },
+              },
+              progressFill: {
+                '0%': { width: '0%' },
+              },
+              checkIn: {
+                '0%': { transform: 'scale(0.5)', opacity: '0' },
+                '100%': { transform: 'scale(1)', opacity: '1' },
+              },
+              drawLine: {
+                'from': { 'stroke-dashoffset': '1000' },
+                'to': { 'stroke-dashoffset': '0' },
+              },
+              fadeInBackdrop: {
+                'from': { opacity: '0' },
+                'to': { opacity: '1' },
+              },
+              slideInUpModal: {
+                'from': { transform: 'translateY(50px) scale(0.95)', opacity: '0' },
+                'to': { transform: 'translateY(0) scale(1)', opacity: '1' },
+              },
+              gaugeFill: {
+                'from': { 'stroke-dashoffset': '126' },
+              },
+              donutFill: {
+                  'from': { 'stroke-dashoffset': '283' },
+              },
             }
           }
         }
@@ -89,6 +137,10 @@
 <style>
   body {
     font-family: 'Inter', sans-serif;
+  }
+  .text-gradient {
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 </style>
 <link rel="stylesheet" href="/index.css">

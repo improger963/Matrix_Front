@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode, useCallback } from 'react';
-import type { User, DailyTask, View, Toast } from '../types.ts';
-import { MOCK_USER, MOCK_ALL_TASKS } from '../constants.ts';
+import type { User, DailyTask, View, Toast, AcademyArticle } from '../types.ts';
+import { MOCK_USER, MOCK_ALL_TASKS, MOCK_ACADEMY_ARTICLES } from '../constants.ts';
 import ToastContainer from '../components/ui/ToastContainer.tsx';
 
 interface AppContextType {
@@ -9,6 +9,8 @@ interface AppContextType {
     tasks: DailyTask[];
     handleCompleteTask: (taskId: string, showToast?: boolean) => void;
     handleTaskAction: (task: DailyTask) => void;
+    academyArticles: AcademyArticle[];
+    completeAcademyArticle: (articleId: string) => void;
     activeView: View;
     setActiveView: (view: View) => void;
     toasts: Toast[];
@@ -20,6 +22,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User>(MOCK_USER);
     const [tasks, setTasks] = useState<DailyTask[]>(MOCK_ALL_TASKS);
+    const [academyArticles, setAcademyArticles] = useState<AcademyArticle[]>(MOCK_ACADEMY_ARTICLES);
     const [activeView, setActiveView] = useState<View>('dashboard');
     const [toasts, setToasts] = useState<Toast[]>([]);
 
@@ -34,17 +37,41 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
     const handleCompleteTask = useCallback((taskId: string, showToast: boolean = true) => {
         let taskTitle = '';
+        let taskReward = 0;
         setTasks(prevTasks =>
             prevTasks.map(task => {
                 if (task.id === taskId && !task.isCompleted) {
                     taskTitle = task.title;
+                    taskReward = task.reward;
                     return { ...task, isCompleted: true };
                 }
                 return task;
             })
         );
-        if (taskTitle && showToast) {
-            addToast(`Задание "${taskTitle}" выполнено!`, 'success');
+        if (taskTitle) {
+            setUser(prevUser => ({ ...prevUser, xp: prevUser.xp + taskReward }));
+            if (showToast) {
+                 addToast(`Задание "${taskTitle}" выполнено! +${taskReward} XP`, 'success');
+            }
+        }
+    }, [addToast]);
+    
+    const completeAcademyArticle = useCallback((articleId: string) => {
+        let articleTitle = '';
+        let articleReward = 0;
+        setAcademyArticles(prevArticles => 
+            prevArticles.map(article => {
+                if(article.id === articleId && !article.isCompleted) {
+                    articleTitle = article.title;
+                    articleReward = article.xpReward;
+                    return { ...article, isCompleted: true };
+                }
+                return article;
+            })
+        );
+        if (articleTitle) {
+            setUser(prevUser => ({ ...prevUser, xp: prevUser.xp + articleReward }));
+            addToast(`Урок "${articleTitle}" пройден! +${articleReward} XP`, 'success');
         }
     }, [addToast]);
 
@@ -77,6 +104,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         tasks,
         handleCompleteTask,
         handleTaskAction,
+        academyArticles,
+        completeAcademyArticle,
         activeView,
         setActiveView,
         toasts,

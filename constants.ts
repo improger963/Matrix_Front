@@ -1,5 +1,5 @@
 
-import type { User, MatrixNode, Leader, Transaction, ProjectStats, TeamMember, Achievement, Notification, LiveFeedEvent, Review, NewsArticle, AcademyArticle, DailyTask, PromoMaterial, ChatMessage } from './types.ts';
+import type { User, MatrixNode, Leader, Transaction, ProjectStats, TeamMember, Achievement, Notification, LiveFeedEvent, Review, NewsArticle, AcademyArticle, DailyTask, PromoMaterial, ChatMessage, OnlineUser } from './types.ts';
 import { Award, CheckCircle, Gift, Network, Rocket, ShieldCheck, Target, Users, UserPlus, DollarSign, Share2, GraduationCap, Megaphone, ListTodo, BotMessageSquare, Video, BookText, Edit3, MessageSquare, Star } from 'lucide-react';
 
 export const MOCK_USERS_DB: { [id: string]: { id: string; name: string; avatarUrl: string; level: number; } } = {
@@ -49,6 +49,7 @@ export const MOCK_USER: User = {
     avatarUrl: 'https://i.pravatar.cc/150?u=U12345',
     level: 5,
     balance: CALCULATED_BALANCE,
+    xp: 125,
     referrals: 14,
     matrixCompletions: 3,
     teamEarnings: 1250.75,
@@ -69,6 +70,16 @@ export const MOCK_PROJECT_STATS: ProjectStats = {
     usersToday: 128,
     activeMatrices: 3452,
 };
+
+export const MOCK_EARNINGS_7_DAYS: { day: string; earnings: number }[] = [
+    { day: 'Пн', earnings: 75 },
+    { day: 'Вт', earnings: 50 },
+    { day: 'Ср', earnings: 125 },
+    { day: 'Чт', earnings: 90 },
+    { day: 'Пт', earnings: 250 },
+    { day: 'Сб', earnings: 180 },
+    { day: 'Сегодня', earnings: 300 },
+];
 
 // --- Утилиты для обработки данных матрицы ---
 
@@ -346,30 +357,31 @@ export const MOCK_NEWS: NewsArticle[] = [
 ];
 
 export const MOCK_ACADEMY_ARTICLES: AcademyArticle[] = [
-    { id: 'A001', title: 'Как пригласить первого партнера за 24 часа', category: 'Для новичков', type: 'video', duration: '12:35', coverUrl: 'https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60', isLocked: false },
-    { id: 'A002', title: 'Психология продаж в MLM', category: 'Продвижение', type: 'article', coverUrl: 'https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60', isLocked: false },
-    { id: 'A003', title: 'Разбор маркетинг-плана: все о "клонах" и "переливах"', category: 'Маркетинг-план', type: 'video', duration: '25:10', coverUrl: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60', isLocked: false },
-    { id: 'A004', title: 'Эффективная работа с соцсетями', category: 'Продвижение', type: 'article', coverUrl: 'https://images.unsplash.com/photo-1611162617213-6d22e4ca1c78?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60', isLocked: true },
-    { id: 'A005', title: 'Как создать личный бренд', category: 'Продвижение', type: 'video', duration: '18:05', coverUrl: 'https://images.unsplash.com/photo-1588196749597-9ff075a6b54a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60', isLocked: true },
-    { id: 'A006', title: 'Финансовая грамотность для участника', category: 'Для новичков', type: 'article', coverUrl: 'https://images.unsplash.com/photo-1642792962358-83132a2e475c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60', isLocked: true },
+    { id: 'A001', title: 'Как пригласить первого партнера за 24 часа', category: 'Для новичков', type: 'video', duration: '12:35', coverUrl: 'https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60', isLocked: false, xpReward: 50, isCompleted: true, content: 'В этом видео мы подробно разбираем три самых эффективных способа найти первого партнера в вашу команду уже в первые сутки после регистрации. Пошаговая инструкция, готовые скрипты и полезные советы.' },
+    { id: 'A002', title: 'Психология продаж в MLM', category: 'Продвижение', type: 'article', coverUrl: 'https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60', isLocked: false, xpReward: 75, isCompleted: false, content: 'Понимание психологии — ключ к успешным приглашениям. В этой статье мы рассмотрим:\n\n1.  **Триггеры доверия:** Как вызвать доверие у потенциального партнера.\n2.  **Работа с возражениями:** Превращаем "нет" в "да".\n3.  **Эмоциональные продажи:** Почему люди присоединяются к людям, а не к компаниям.' },
+    { id: 'A003', title: 'Разбор маркетинг-плана: "клоны" и "переливы"', category: 'Маркетинг-план', type: 'video', duration: '25:10', coverUrl: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60', isLocked: false, xpReward: 100, isCompleted: false, content: 'Глубокое погружение в самые интересные механики нашего маркетинга. Вы узнаете, как "клоны" помогают вам зарабатывать снова и снова, а "переливы" от вышестоящих партнеров ускоряют закрытие ваших матриц.' },
+    { id: 'A004', title: 'Эффективная работа с соцсетями', category: 'Продвижение', type: 'article', coverUrl: 'https://images.unsplash.com/photo-1611162617213-6d22e4ca1c78?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60', isLocked: true, xpReward: 120, isCompleted: false, content: 'Этот урок доступен после достижения 5-го уровня. В нем мы раскроем секреты ведения Telegram-канала, ВКонтакте и других платформ для максимального эффекта.' },
+    { id: 'A005', title: 'Как создать личный бренд', category: 'Продвижение', type: 'video', duration: '18:05', coverUrl: 'https://images.unsplash.com/photo-1588196749597-9ff075a6b54a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60', isLocked: true, xpReward: 150, isCompleted: false, content: 'Доступно на 5-м уровне. Узнайте, как стать человеком, к которому хотят присоединиться. Мы поговорим о позиционировании, контенте и вовлечении аудитории.' },
+    { id: 'A006', title: 'Финансовая грамотность для участника', category: 'Для новичков', type: 'article', coverUrl: 'https://images.unsplash.com/photo-1642792962358-83132a2e475c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60', isLocked: false, xpReward: 60, isCompleted: false, content: 'Заработать деньги — это полдела. Важно правильно ими распоряжаться. В этой статье вы узнаете об основах финансовой безопасности, реинвестировании и планировании своего бюджета для достижения максимальных результатов в проекте.' },
 ];
+
 
 export const MARKETING_GENIUS_TASK_ID = 'D02';
 
 export const MOCK_ALL_TASKS: DailyTask[] = [
     // Onboarding Tasks
-    { id: 'O01', category: 'onboarding', title: 'Заполнить профиль', description: 'Добавьте информацию о себе и аватар.', reward: '+50 очков', icon: Edit3, isCompleted: true, actionText: 'В профиль', actionType: 'navigate', target: 'profile' },
-    { id: 'O02', category: 'onboarding', title: 'Изучить "Как это работает"', description: 'Поймите основы маркетинга проекта.', reward: '+25 очков', icon: GraduationCap, isCompleted: true, actionText: 'Читать', actionType: 'navigate', target: 'howitworks' },
-    { id: 'O03', category: 'onboarding', title: 'Первое сообщение в чате', description: 'Поприветствуйте других участников в общем чате.', reward: '+15 очков', icon: MessageSquare, isCompleted: false, actionText: 'Перейти в чат', actionType: 'navigate', target: 'chat' },
+    { id: 'O01', category: 'onboarding', title: 'Завершить регистрацию', subtitle: 'Путь новичка: Шаг 1', description: 'Заполните свой профиль, добавив аватар и информацию о себе. Это повысит доверие к вам.', reward: 50, icon: Edit3, isCompleted: true, actionText: 'В профиль', actionType: 'navigate', target: 'profile' },
+    { id: 'O02', category: 'onboarding', title: 'Изучить основы', subtitle: 'Путь новичка: Шаг 2', description: 'Прочтите раздел "Как это работает", чтобы понять ключевые механики проекта.', reward: 25, icon: GraduationCap, isCompleted: true, actionText: 'Читать', actionType: 'navigate', target: 'howitworks' },
+    { id: 'O03', category: 'onboarding', title: 'Поздороваться с командой', subtitle: 'Путь новичка: Шаг 3', description: 'Напишите приветственное сообщение в общем чате. Будьте активны!', reward: 15, icon: MessageSquare, isCompleted: false, actionText: 'Перейти в чат', actionType: 'navigate', target: 'chat' },
 
     // Daily Tasks
-    { id: 'D01', category: 'daily', title: 'Войти в аккаунт', description: 'Ежедневный вход для поддержания активности.', reward: '+5 очков', icon: ListTodo, isCompleted: true, actionText: 'Выполнено', actionType: 'none' },
-    { id: MARKETING_GENIUS_TASK_ID, category: 'daily', title: 'Сгенерировать пост', description: 'Используйте AI-Копирайтер для создания контента.', reward: '+15 очков', icon: BotMessageSquare, isCompleted: false, actionText: 'К AI-Копирайтеру', actionType: 'navigate', target: 'marketing' },
-    { id: 'D03', category: 'daily', title: 'Поделиться ссылкой', description: 'Поделитесь реферальной ссылкой в любой соцсети.', reward: '+25 очков', icon: Share2, isCompleted: false, actionText: 'Скопировать ссылку', actionType: 'copy' },
+    { id: 'D01', category: 'daily', title: 'Ежедневный вход', description: 'Заходите каждый день, чтобы получить бонус и быть в курсе событий.', reward: 10, icon: ListTodo, isCompleted: true, actionText: 'Выполнено', actionType: 'none' },
+    { id: MARKETING_GENIUS_TASK_ID, category: 'daily', title: 'Магия AI-Копирайтера', description: 'Создайте уникальный пост для своих социальных сетей с помощью нашего AI-помощника.', reward: 15, icon: BotMessageSquare, isCompleted: false, actionText: 'Создать', actionType: 'navigate', target: 'marketing' },
+    { id: 'D03', category: 'daily', title: 'Рассказать о себе', description: 'Поделитесь своей реферальной ссылкой в любой социальной сети или мессенджере.', reward: 25, icon: Share2, isCompleted: false, actionText: 'Поделиться', actionType: 'copy' },
     
     // Special Tasks
-    { id: 'S01', category: 'special', title: 'Марафон "Новичок"', description: 'Пригласите 3-х партнеров за первую неделю.', reward: '+$50 на баланс', icon: Rocket, isCompleted: false, actionText: 'Подробнее', actionType: 'none', progress: { current: 1, target: 3 } },
-    { id: 'S02', category: 'special', title: 'Оставить отзыв', description: 'Поделитесь своим мнением о проекте и получите бонус.', reward: '+100 очков', icon: Star, isCompleted: false, actionText: 'Оставить отзыв', actionType: 'navigate', target: 'reviews' },
+    { id: 'S01', category: 'special', title: 'Контракт "Лидер"', subtitle: 'Ограничено по времени', description: 'Пригласите 3-х активных партнеров за первую неделю и получите эксклюзивный бонус на баланс.', reward: 150, icon: Rocket, isCompleted: false, actionText: 'Подробнее', actionType: 'none', progress: { current: 1, target: 3 } },
+    { id: 'S02', category: 'special', title: 'Контракт "Обратная связь"', description: 'Ваше мнение помогает нам стать лучше. Оставьте честный отзыв о проекте и получите награду.', reward: 100, icon: Star, isCompleted: false, actionText: 'Оставить отзыв', actionType: 'navigate', target: 'reviews' },
 ];
 
 
@@ -390,12 +402,20 @@ export const MOCK_PROMO_MATERIALS: PromoMaterial[] = [
     { id: 'P04', type: 'text', title: 'Короткое сообщение для WhatsApp', content: `Привет! 👋 Я сейчас развиваю очень интересный онлайн-проект с отличным доходом. Подумал(а), тебе тоже может быть интересно. Если ищешь новые возможности, дай знать, расскажу подробнее!` },
 ];
 
+export const PINNED_CHAT_MESSAGE: ChatMessage = {
+    id: 'MSG_PINNED',
+    user: MOCK_USERS_DB['L1'],
+    text: '🚀 Внимание, команда! В эту субботу в 18:00 МСК состоится вебинар по новым стратегиям продвижения. Явка обязательна для всех, кто хочет удвоить свой доход! Ссылка будет здесь за час до начала.',
+    timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+};
+
 export const MOCK_CHAT_MESSAGES: ChatMessage[] = [
     {
         id: 'MSG001',
         user: MOCK_USERS_DB['L1'],
         text: 'Всем привет! Отличный день для закрытия матриц!',
         timestamp: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
+        reactions: { '🚀': ['U67890', 'UABCDE'] }
     },
     {
         id: 'MSG002',
@@ -412,13 +432,49 @@ export const MOCK_CHAT_MESSAGES: ChatMessage[] = [
     {
         id: 'MSG004',
         user: MOCK_USERS_DB['U12345'], // This is our main user
-        text: 'Да, я тестировал. Очень крутая штука, экономит кучу времени. Сделал себе пару баннеров для сторис.',
+        text: 'Да, @Мария, я тестировал. Очень крутая штука, экономит кучу времени. Сделал себе пару баннеров для сторис. https://matrixflow.app/promo',
         timestamp: new Date(Date.now() - 7 * 60 * 1000).toISOString(),
+        reactions: { '👍': ['L2', 'UABCDE', 'U67890'] }
     },
     {
         id: 'MSG005',
         user: MOCK_USERS_DB['UABCDE'],
         text: 'О, надо будет тоже заценить. Спасибо за наводку!',
         timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+        replyTo: {
+            messageId: 'MSG004',
+            userName: 'Алексей Волков',
+            text: 'Да, @Мария, я тестировал. Очень крутая штука...'
+        }
     },
+    {
+        id: 'MSG006',
+        user: MOCK_USERS_DB['L2'],
+        text: 'Показываю скрин своего вчерашнего дохода, чтобы всех замотивировать! 💪',
+        timestamp: new Date(Date.now() - 3 * 60 * 1000).toISOString(),
+        attachment: {
+            type: 'image',
+            url: 'https://images.unsplash.com/photo-1639322537228-f710d846310a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60'
+        },
+        reactions: { '🔥': ['U12345', 'U67890', 'L1', 'UABCDE'] }
+    },
+];
+
+export const MOCK_ONLINE_USERS: OnlineUser[] = [
+    { id: MOCK_USER.id, name: MOCK_USER.name, avatarUrl: MOCK_USER.avatarUrl, level: MOCK_USER.level, referrals: MOCK_USER.referrals },
+    ...Object.values(MOCK_USERS_DB),
+    ...MOCK_LEADERS,
+    ...MOCK_TEAM_MEMBERS
+].reduce((acc: OnlineUser[], current) => {
+    if (!acc.some(item => item.id === current.id)) {
+        acc.push({ id: current.id, name: current.name, avatarUrl: current.avatarUrl, level: current.level, referrals: (current as TeamMember).referrals || 0 });
+    }
+    return acc;
+}, []).slice(0, 15);
+
+export const CHAT_RULES = [
+    { title: 'Будьте вежливы', content: 'Относитесь ко всем участникам с уважением. Оскорбления, троллинг и разжигание конфликтов строго запрещены.' },
+    { title: 'Без спама и флуда', content: 'Не отправляйте повторяющиеся сообщения. Реклама сторонних проектов, товаров или услуг запрещена.' },
+    { title: 'По теме проекта', content: 'Придерживайтесь тематики проекта MatrixFlow. Делитесь успехами, задавайте вопросы, помогайте новичкам.' },
+    { title: 'Конфиденциальность', content: 'Не делитесь личной информацией (телефонами, адресами, паролями) в общем чате.' },
 ];

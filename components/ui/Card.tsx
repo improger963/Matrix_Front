@@ -1,9 +1,7 @@
 import React from 'react';
 
-interface CardProps {
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
     children: React.ReactNode;
-    className?: string;
-    style?: React.CSSProperties;
 }
 
 const Card: React.FC<CardProps> = ({ children, className = '', ...props }) => {
