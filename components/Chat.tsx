@@ -1,4 +1,5 @@
 
+
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { Send, Smile, Paperclip, X, MessageSquareReply, Pin, User, Users, Search, BookOpen, ChevronDown, MoreHorizontal } from 'lucide-react';
 import { useAppContext } from '../contexts/AppContext.tsx';
@@ -286,6 +287,7 @@ const Chat: React.FC = () => {
 
         const messageToSend: ChatMessage = {
             id: `MSG_${Date.now()}`,
+            type: 'user',
             user: { id: user.id, name: user.name, avatarUrl: user.avatarUrl, level: user.level },
             text: newMessage.trim(),
             timestamp: new Date().toISOString(),

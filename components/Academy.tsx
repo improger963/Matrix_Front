@@ -161,7 +161,7 @@ const Academy: React.FC = () => {
                     <div className="flex items-center gap-3">
                         <GraduationCap className="h-8 w-8 text-brand-primary" />
                         <div>
-                            <h2 className="text-2xl font-bold text-white">Академия Nexus Capital</h2>
+                            <h2 className="text-2xl font-bold text-white">Nexus Institute</h2>
                             <p className="text-gray-400">Ваш путь к успеху начинается здесь. Изучайте и применяйте!</p>
                         </div>
                     </div>

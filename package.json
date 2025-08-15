@@ -13,7 +13,8 @@
     "react-dom": "18.3.1",
     "lucide-react": "0.539.0",
     "html-to-image": "1.11.11",
-    "react-qr-code": "2.0.12"
+    "react-qr-code": "2.0.12",
+    "recharts": "2.12.7"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

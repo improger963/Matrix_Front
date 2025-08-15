@@ -1,6 +1,6 @@
 
 
-import type { Partner, StartupNode, Leader, Transaction, MarketStats, SyndicateMember, Achievement, Notification, LiveFeedEvent, Review, NewsArticle, AcademyArticle, DailyTask, PromoMaterial, ChatMessage, OnlineUser } from './types.ts';
+import type { Partner, StartupNode, Leader, Transaction, MarketStats, SyndicateMember, Achievement, Notification, LiveFeedEvent, Review, NewsArticle, AcademyArticle, DailyTask, PromoMaterial, ChatMessage, OnlineUser, SyndicateGoal, BoardroomMember, BoardroomVote } from './types.ts';
 import { Award, CheckCircle, Gift, Network, Rocket, ShieldCheck, Target, Users, UserPlus, DollarSign, Share2, GraduationCap, Megaphone, ListTodo, BotMessageSquare, Video, BookText, Edit3, MessageSquare, Star, Briefcase, TrendingUp } from 'lucide-react';
 
 export const MOCK_USERS_DB: { [id: string]: { id: string; name: string; avatarUrl: string; level: number; } } = {
@@ -275,6 +275,7 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
         description: 'Пользователь "Иван Петров" присоединился по вашей ссылке.',
         timestamp: '5 минут назад',
         isRead: false,
+        type: 'standard',
     },
     {
         id: 'N002',
@@ -283,6 +284,7 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
         description: 'Вы успешно закрыли раунд "Pre-seed" и получили прибыль.',
         timestamp: '2 часа назад',
         isRead: false,
+        type: 'standard',
     },
     {
         id: 'N003',
@@ -291,6 +293,7 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
         description: 'Ваш запрос на продажу $50.00 CAP был успешно обработан.',
         timestamp: '1 день назад',
         isRead: true,
+        type: 'standard',
     },
     {
         id: 'N004',
@@ -299,6 +302,7 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
         description: 'Вы разблокировали достижение "Ядро Синдиката".',
         timestamp: '2 дня назад',
         isRead: true,
+        type: 'standard',
     },
 ];
 
@@ -308,6 +312,7 @@ export const MOCK_LIVE_FEED_EVENTS: LiveFeedEvent[] = [
     { id: 'EVT003', type: 'new_level', user: { name: 'Виктория Б.', avatarUrl: 'https://i.pravatar.cc/150?u=L3' }, level: 10, timestamp: new Date(Date.now() - 5 * 60 * 1000) },
     { id: 'EVT004', type: 'startup_exit', user: { name: 'Ирина К.', avatarUrl: 'https://i.pravatar.cc/150?u=L5' }, amount: 75.00, timestamp: new Date(Date.now() - 10 * 60 * 1000) },
     { id: 'EVT005', type: 'deposit', user: { name: 'Андрей С.', avatarUrl: 'https://i.pravatar.cc/150?u=L6' }, amount: 200.00, timestamp: new Date(Date.now() - 25 * 60 * 1000) },
+    { id: 'EVT006', type: 'upgrade', user: { name: 'Алексей Волков', avatarUrl: 'https://i.pravatar.cc/150?u=U12345' }, level: 6, timestamp: new Date(Date.now() - 30 * 60 * 1000) },
 ];
 
 export const MOCK_REVIEWS: Review[] = [
@@ -359,7 +364,7 @@ export const MOCK_ALL_TASKS: DailyTask[] = [
 
     // Daily Tasks
     { id: 'D01', category: 'daily', title: 'Ежедневный вход', description: 'Заходите каждый день, чтобы получить бонус и быть в курсе событий.', reward: 10, icon: ListTodo, isCompleted: true, actionText: 'Выполнено', actionType: 'none' },
-    { id: MARKETING_GENIUS_TASK_ID, category: 'daily', title: 'Магия AI-Копирайтера', description: 'Создайте уникальный пост для своих социальных сетей с помощью нашего AI-помощника.', reward: 15, icon: BotMessageSquare, isCompleted: false, actionText: 'Создать', actionType: 'navigate', target: 'marketing' },
+    { id: MARKETING_GENIUS_TASK_ID, category: 'daily', title: 'Магия AI-Копирайтера', description: 'Создайте уникальный пост для своих социальных сетей с помощью нашего AI-помощника.', reward: 15, icon: BotMessageSquare, isCompleted: false, actionText: 'Создать', actionType: 'navigate', target: 'promo' },
     { id: 'D03', category: 'daily', title: 'Рассказать о себе', description: 'Поделитесь своей ссылкой для инвесторов в любой социальной сети или мессенджере.', reward: 25, icon: Share2, isCompleted: false, actionText: 'Поделиться', actionType: 'copy' },
 ];
 
@@ -381,6 +386,7 @@ export const MOCK_PROMO_MATERIALS: PromoMaterial[] = [
 
 export const PINNED_CHAT_MESSAGE: ChatMessage = {
     id: 'MSG_PINNED',
+    type: 'announcement',
     user: MOCK_USERS_DB['L1'],
     text: '🚀 Внимание, Партнеры! В эту субботу в 18:00 МСК состоится вебинар по новым инвестиционным стратегиям. Явка обязательна для всех, кто хочет удвоить свой капитал! Ссылка будет здесь за час до начала.',
     timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
@@ -389,6 +395,7 @@ export const PINNED_CHAT_MESSAGE: ChatMessage = {
 export const MOCK_CHAT_MESSAGES: ChatMessage[] = [
     {
         id: 'MSG001',
+        type: 'user',
         user: MOCK_USERS_DB['L1'],
         text: 'Всем привет! Отличный день для закрытия раундов!',
         timestamp: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
@@ -415,7 +422,62 @@ export const CHAT_RULES = [
     { title: 'Конфиденциальность', content: 'Не делитесь личной информацией (телефонами, адресами, паролями) в общем чате.' },
 ];
 
+export const MOCK_SYNDICATE_GOAL: SyndicateGoal = {
+    id: 'GOAL1',
+    title: 'Привлечь 50 новых инвесторов в этом месяце',
+    description: 'Общая цель для всего синдиката для получения командного бонуса.',
+    progress: 35,
+    target: 50,
+    deadline: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString(),
+    reward: '+10% к доходу от Exits для всех',
+};
+
 // --- MOCK DATA FOR DASHBOARD ---
+export const MOCK_CAPITAL_HISTORY_30_DAYS = Array.from({ length: 30 }, (_, i) => {
+    const date = new Date();
+    date.setDate(date.getDate() - (29 - i));
+    const balance = 500 + i * 15 + Math.sin(i / 3) * 50 + Math.random() * 60;
+    return {
+        date: date.toLocaleDateString('ru-RU', { day: '2-digit', month: 'short' }),
+        balance: parseFloat(balance.toFixed(2)),
+    };
+});
+
+export const MOCK_PORTFOLIO = [
+    { id: 'S01', name: 'Fintech Innovations', stage: { name: 'Pre-seed', color: '#3b82f6' }, progress: [100, 75, 0], nextMilestone: 'Привлечь 2 инвесторов' },
+    { id: 'S02', name: 'AI Health Solutions', stage: { name: 'Round A', color: '#2dd4bf' }, progress: [100, 100, 40], nextMilestone: 'Закрыть раунд B' },
+];
+
+export const MOCK_MARKET_PULSE = [
+    { id: 'fintech', name: 'Fintech', avgROI: 250, avgExitTime: 14, isTrending: true },
+    { id: 'ai', name: 'AI & ML', avgROI: 180, avgExitTime: 21, isTrending: false },
+    { id: 'greentech', name: 'GreenTech', avgROI: 150, avgExitTime: 25, isTrending: false },
+];
+
+export const MOCK_BOARDROOM_DATA: {
+    members: BoardroomMember[];
+    globalBonusPool: number;
+    activeVote: BoardroomVote | null;
+} = {
+    members: MOCK_LEADERS.slice(0, 5).map((leader, index) => ({
+        ...leader,
+        influence: 100 - (index * 10),
+    })) as BoardroomMember[],
+    globalBonusPool: 75340,
+    activeVote: {
+        id: 'VOTE001',
+        title: 'Увеличить комиссию на вывод до 3% для финансирования маркетинговой кампании?',
+        description: 'Это позволит нам запустить масштабную рекламную кампанию и ускорить рост платформы, что в долгосрочной перспективе выгодно всем. Однако, это временно увеличит расходы партнеров при выводе средств.',
+        options: [
+            { id: 'opt1', text: 'Да, увеличить комиссию', votes: 450 },
+            { id: 'opt2', text: 'Нет, оставить 2%', votes: 280 },
+        ],
+        totalVotes: 730,
+        endsAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
+        userVote: undefined,
+    }
+};
+
 export const MOCK_MARKET_DATA = {
     syndicates: [
         { id: 'G1', name: 'Alpha Investors' },

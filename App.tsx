@@ -1,14 +1,14 @@
 
 import React, { useState, useMemo } from 'react';
 import Header from './components/Header.tsx';
-import { LayoutDashboard, Briefcase, BotMessageSquare, Trophy, HelpCircle, BookOpen, Wallet, Users, Link, Megaphone, MessageSquare, Zap, ChevronDown, ListChecks, PieChart, GraduationCap, Newspaper, MoreHorizontal } from 'lucide-react';
+import { LayoutDashboard, Briefcase, BotMessageSquare, Trophy, HelpCircle, BookOpen, Wallet, Users, Link, Megaphone, MessageSquare, Zap, ChevronDown, ListChecks, PieChart, GraduationCap, Newspaper, MoreHorizontal, Award } from 'lucide-react';
 import type { View } from './types.ts';
 import MoreMenu from './components/MoreMenu.tsx';
 import { AppProvider, useAppContext } from './contexts/AppContext.tsx';
+import AssistantWidget from './components/AssistantWidget.tsx';
 
 // Statically import components
 import DashboardView from './components/DashboardView.tsx';
-import MarketingGenius from './components/MarketingGenius.tsx';
 import Leaderboard from './components/Leaderboard.tsx';
 import HowItWorks from './components/HowItWorks.tsx';
 import FAQ from './components/FAQ.tsx';
@@ -25,6 +25,8 @@ import Chat from './components/Chat.tsx';
 import LandingPage from './components/LandingPage.tsx';
 import TasksView from './components/TasksView.tsx';
 import StartupView from './components/StartupView.tsx';
+import TheBoardroomView from './components/TheBoardroomView.tsx';
+
 
 export type NavItem = {
   type: 'item';
@@ -44,14 +46,13 @@ const navConfig: (NavItem | NavGroup)[] = [
     { type: 'item', id: 'dashboard', label: 'Дашборд', icon: LayoutDashboard },
     { type: 'item', id: 'market', label: 'Рынок Стартапов', icon: PieChart },
     { type: 'item', id: 'syndicate', label: 'Мой Синдикат', icon: Users },
-    { type: 'item', id: 'tasks', label: 'Задания', icon: ListChecks },
-    { type: 'item', id: 'capital', label: 'Капитал', icon: Wallet },
+    { type: 'item', id: 'tasks', label: 'Миссии', icon: ListChecks },
+    { type: 'item', id: 'capital', label: 'Казначейство', icon: Wallet },
     { 
         type: 'group',
         title: 'Инструменты', 
         icon: Zap,
         items: [
-            { id: 'marketing', label: 'AI-Копирайтер', icon: BotMessageSquare },
             { id: 'promo', label: 'Промо-материалы', icon: Megaphone },
             { id: 'landingPage', label: 'Моя страница', icon: Link },
         ]
@@ -63,6 +64,7 @@ const navConfig: (NavItem | NavGroup)[] = [
         items: [
             { id: 'chat', label: 'Общий чат', icon: MessageSquare },
             { id: 'leaderboard', label: 'Лидеры', icon: Trophy },
+            { id: 'boardroom', label: 'Совет Директоров', icon: Award },
             { id: 'livefeed', label: 'Лента сделок', icon: Zap },
             { id: 'reviews', label: 'Отзывы', icon: MessageSquare },
         ]
@@ -72,7 +74,7 @@ const navConfig: (NavItem | NavGroup)[] = [
         title: 'Информация',
         icon: BookOpen,
         items: [
-            { id: 'academy', label: 'Академия', icon: GraduationCap },
+            { id: 'academy', label: 'Nexus Institute', icon: GraduationCap },
             { id: 'news', label: 'Новости', icon: Newspaper },
             { id: 'howitworks', label: 'Как это работает', icon: HelpCircle },
             { id: 'faq', label: 'FAQ', icon: HelpCircle },
@@ -111,10 +113,10 @@ const AppContent: React.FC = () => {
             case 'capital': return <CapitalView />;
             case 'profile': return <Profile />;
             case 'landingPage': return <LandingPage />;
-            case 'marketing': return <MarketingGenius />;
             case 'academy': return <Academy />;
             case 'promo': return <Promo />;
             case 'leaderboard': return <Leaderboard />;
+            case 'boardroom': return <TheBoardroomView />;
             case 'livefeed': return <LiveFeedView />;
             case 'chat': return <Chat />;
             case 'reviews': return <Reviews />;
@@ -270,6 +272,7 @@ const AppContent: React.FC = () => {
                 activeView={activeView}
                 onViewChange={handleViewChange}
             />
+            <AssistantWidget />
         </div>
     );
 };

@@ -1,9 +1,10 @@
 
+
 import React from 'react';
 import Card from './ui/Card.tsx';
 import type { LiveFeedEvent } from '../types.ts';
 import { MOCK_LIVE_FEED_EVENTS } from '../constants.ts';
-import { Zap, UserPlus, ChevronsUp, ArrowDownCircle, ArrowUpCircle, ShieldCheck } from 'lucide-react';
+import { Zap, UserPlus, ChevronsUp, ArrowDownCircle, ArrowUpCircle, ShieldCheck, TrendingUp } from 'lucide-react';
 
 const formatTimeAgo = (date: Date): string => {
     const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
@@ -28,6 +29,7 @@ const EventIcon: React.FC<{ type: LiveFeedEvent['type'] }> = ({ type }) => {
         withdrawal: <ArrowDownCircle className="h-5 w-5 text-red-400" />,
         deposit: <ArrowUpCircle className="h-5 w-5 text-green-400" />,
         startup_exit: <ShieldCheck className="h-5 w-5 text-purple-400" />,
+        upgrade: <TrendingUp className="h-5 w-5 text-cyan-400" />,
     };
     return <div className="w-10 h-10 bg-dark-700 rounded-full flex items-center justify-center flex-shrink-0">{iconMap[type]}</div>;
 };
@@ -42,6 +44,7 @@ const EventMessage: React.FC<{ event: LiveFeedEvent }> = ({ event }) => {
         case 'withdrawal': return <>{userName} вывел(а) <span className="font-semibold text-red-400">${amount?.toFixed(2)}</span>.</>;
         case 'deposit': return <>{userName} пополнил(а) баланс на <span className="font-semibold text-green-400">${amount?.toFixed(2)}</span>.</>;
         case 'startup_exit': return <>{userName} закрыл(а) раунд и получил(а) <span className="font-semibold text-purple-400">${amount?.toFixed(2)}</span>.</>;
+        case 'upgrade': return <>{userName} улучшил(а) стартап до Раунда B.</>;
         default: return null;
     }
 };

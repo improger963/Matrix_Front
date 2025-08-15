@@ -1,13 +1,15 @@
 
+
 import React, { useState } from 'react';
 import Card from './ui/Card.tsx';
 import Button from './ui/Button.tsx';
 import { MOCK_TRANSACTIONS, MOCK_USERS_DB } from '../constants.ts';
 import type { Transaction, Partner } from '../types.ts';
-import { DollarSign, ArrowUpCircle, ArrowDownCircle, History, CreditCard, Bitcoin, Wallet, CheckCircle, ArrowLeft, Copy, Check, Send, UserSearch, LoaderCircle, TrendingUp } from 'lucide-react';
+import { DollarSign, ArrowUpCircle, ArrowDownCircle, History, CreditCard, Bitcoin, Wallet, CheckCircle, ArrowLeft, Copy, Check, Send, UserSearch, LoaderCircle, TrendingUp, Shield, KeyRound, PieChart, Users } from 'lucide-react';
 import QRCode from "react-qr-code";
 import { useAppContext } from '../contexts/AppContext.tsx';
 import { AnimatedBalance } from './ui/Stat.tsx';
+import { ResponsiveContainer, PieChart as RechartsPieChart, Pie, Cell, Tooltip } from 'recharts';
 
 type Tab = 'deposit' | 'withdraw' | 'transfer' | 'history';
 type Step = 'form' | 'crypto_details' | 'confirm_withdrawal' | 'success' | 'transfer_confirm';
@@ -19,6 +21,65 @@ interface TransactionDetails {
     method?: 'card' | 'crypto';
     recipient?: Pick<Partner, 'id' | 'name' | 'avatarUrl'>;
 }
+
+const SecurityCenter: React.FC = () => (
+    <Card className="h-full">
+        <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2"><Shield className="w-5 h-5 text-brand-accent"/>Центр Безопасности</h3>
+        <div className="space-y-4">
+            <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-300">Сменить пароль</span>
+                <Button variant="secondary" className="!text-xs !px-3 !py-1"><KeyRound className="w-4 h-4 mr-1.5"/>Изменить</Button>
+            </div>
+            <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-300">2FA Аутентификация</span>
+                 <label className="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" value="" className="sr-only peer" />
+                    <div className="w-11 h-6 bg-dark-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-primary"></div>
+                </label>
+            </div>
+            <p className="text-xs text-gray-500 pt-2 border-t border-dark-700">Последняя сессия: 15 минут назад (IP: 192.168.1.1)</p>
+        </div>
+    </Card>
+);
+
+const TransactionAnalytics: React.FC = () => {
+    const data = [
+        { name: 'Прибыль от Exits', value: 400, color: '#10b981' },
+        { name: 'Прибыль от Синдиката', value: 300, color: '#2dd4bf' },
+        { name: 'Покупки Стартапов', value: -200, color: '#f87171' },
+        { name: 'Апгрейды', value: -100, color: '#f43f5e' },
+    ];
+    const income = data.filter(d => d.value > 0).reduce((acc, d) => acc + d.value, 0);
+    const expenses = data.filter(d => d.value < 0).reduce((acc, d) => acc + d.value, 0);
+
+    return (
+        <Card className="h-full">
+             <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2"><PieChart className="w-5 h-5 text-brand-accent"/>Аналитика Транзакций (30д)</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                <div className="w-full h-40">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <RechartsPieChart>
+                            <Pie data={data.filter(d => d.value > 0)} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={60} fill="#8884d8">
+                                {data.filter(d => d.value > 0).map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
+                            </Pie>
+                             <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px' }} />
+                        </RechartsPieChart>
+                    </ResponsiveContainer>
+                </div>
+                 <div>
+                    <div className="mb-2">
+                        <p className="text-sm text-gray-400">Всего доходов:</p>
+                        <p className="text-xl font-bold text-green-400">${income.toFixed(2)}</p>
+                    </div>
+                     <div>
+                        <p className="text-sm text-gray-400">Всего расходов:</p>
+                        <p className="text-xl font-bold text-red-400">${expenses.toFixed(2)}</p>
+                    </div>
+                </div>
+            </div>
+        </Card>
+    );
+};
 
 const CapitalView: React.FC = () => {
     const { user } = useAppContext();
@@ -159,6 +220,7 @@ const CapitalView: React.FC = () => {
             profit: { text: 'Прибыль от Exit', icon: <DollarSign className="h-5 w-5 text-yellow-500" /> },
             investment: { text: 'Инвестиция в раунд', icon: <TrendingUp className="h-5 w-5 text-blue-500" /> },
             upgrade: { text: 'Масштабирование', icon: <TrendingUp className="h-5 w-5 text-purple-400" /> },
+            syndicate_profit: { text: 'Бонус синдиката', icon: <Users className="h-5 w-5 text-cyan-400" /> },
         };
     
         const statusMap = {
@@ -452,7 +514,7 @@ const CapitalView: React.FC = () => {
                     `Ваша заявка на ${transactionDetails?.type === 'deposit' ? 'покупку' : 'продажу'} на сумму $${transactionDetails?.amount.toFixed(2)} CAP была успешно создана.`
                 }
             </p>
-            <Button onClick={resetFlow} className="w-full !py-3">Вернуться в Капитал</Button>
+            <Button onClick={resetFlow} className="w-full !py-3">Вернуться в Казначейство</Button>
         </div>
     );
 
@@ -460,20 +522,26 @@ const CapitalView: React.FC = () => {
     const renderContent = () => {
         if (activeTab === 'history') {
             return (
-                 <div className="overflow-x-auto">
-                    <table className="w-full text-left">
-                        <thead className="border-b border-dark-700">
-                            <tr>
-                                <th className="p-4 text-sm font-semibold text-gray-400">Тип</th>
-                                <th className="p-4 text-sm font-semibold text-gray-400">Сумма</th>
-                                <th className="p-4 text-sm font-semibold text-gray-400 hidden sm:table-cell">Дата</th>
-                                <th className="p-4 text-sm font-semibold text-gray-400">Статус</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {MOCK_TRANSACTIONS.map(getTransactionRow)}
-                        </tbody>
-                    </table>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div className="lg:col-span-2 overflow-x-auto">
+                        <table className="w-full text-left">
+                            <thead className="border-b border-dark-700">
+                                <tr>
+                                    <th className="p-4 text-sm font-semibold text-gray-400">Тип</th>
+                                    <th className="p-4 text-sm font-semibold text-gray-400">Сумма</th>
+                                    <th className="p-4 text-sm font-semibold text-gray-400 hidden sm:table-cell">Дата</th>
+                                    <th className="p-4 text-sm font-semibold text-gray-400">Статус</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {MOCK_TRANSACTIONS.map(getTransactionRow)}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="lg:col-span-1 space-y-6">
+                        <TransactionAnalytics />
+                        <SecurityCenter />
+                    </div>
                 </div>
             );
         }
@@ -513,7 +581,7 @@ const CapitalView: React.FC = () => {
             <Card>
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-center md:text-left">
                     <div>
-                        <h2 className="text-2xl font-bold text-white">Управление Капиталом</h2>
+                        <h2 className="text-2xl font-bold text-white">Казначейство</h2>
                         <p className="text-gray-400">Все ваши финансовые операции в одном месте.</p>
                     </div>
                     <div className="bg-dark-700/50 p-4 rounded-lg">

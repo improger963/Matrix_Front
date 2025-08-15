@@ -1,3 +1,5 @@
+
+
 import React, { useMemo, useState } from 'react';
 import Card from './ui/Card.tsx';
 import Button from './ui/Button.tsx';
@@ -29,6 +31,13 @@ const TaskCard: React.FC<{ task: DailyTask, onAction: (task: DailyTask) => void 
             iconBg: 'bg-accent-gold/20',
             iconColor: 'text-accent-gold',
             buttonVariant: 'primary' as 'primary'
+        },
+        mission: {
+             bg: 'from-purple-500/20 to-dark-800/10',
+            border: 'border-purple-500/50',
+            iconBg: 'bg-purple-500/20',
+            iconColor: 'text-purple-400',
+            buttonVariant: 'secondary' as 'secondary'
         }
     };
 
@@ -48,7 +57,7 @@ const TaskCard: React.FC<{ task: DailyTask, onAction: (task: DailyTask) => void 
                     <div className="flex-1">
                         {task.subtitle && <p className="text-xs font-bold uppercase tracking-wider text-brand-accent">{task.subtitle}</p>}
                         <h4 className="font-bold text-white mt-1">{task.title}</h4>
-                        <p className="text-sm text-gray-400 mt-1 text-balance">{task.description}</p>
+                        <p className="text-sm text-gray-400 mt-1 text-balance" dangerouslySetInnerHTML={{ __html: task.description }}></p>
                     </div>
                 </div>
                 
@@ -101,7 +110,7 @@ const WeeklyPrizeCard: React.FC = () => {
           <Gift className="w-8 h-8 text-accent-gold" />
           <div>
             <h3 className="text-xl font-bold text-white">Главный приз недели</h3>
-            <p className="text-sm text-gray-400">Выполняйте задания и забирайте награду!</p>
+            <p className="text-sm text-gray-400">Выполняйте миссии и забирайте награду!</p>
           </div>
         </div>
         <div className="text-center my-6">
@@ -111,7 +120,7 @@ const WeeklyPrizeCard: React.FC = () => {
         <div>
           <div className="flex justify-between items-center mb-1">
             <p className="text-sm font-medium text-gray-300">Прогресс</p>
-            <p className="text-sm font-bold text-accent-gold">{weeklyTasksCompleted} / {weeklyTasksTotal} заданий</p>
+            <p className="text-sm font-bold text-accent-gold">{weeklyTasksCompleted} / {weeklyTasksTotal} миссий</p>
           </div>
           <div className="w-full bg-dark-900 rounded-full h-2.5">
             <div className="bg-gradient-to-r from-yellow-500 to-accent-gold h-2.5 rounded-full animate-progress-fill" style={{ width: `${progress}%`, animationDelay: '0.3s' }}></div>
@@ -126,23 +135,23 @@ const TasksView: React.FC = () => {
     const { tasks, handleTaskAction } = useAppContext();
 
     const categorizedTasks = useMemo(() => {
-        const categories: { [key in DailyTask['category']]: DailyTask[] } = {
-            onboarding: [],
-            daily: [],
-            special: []
-        };
+        const categories: { [key in DailyTask['category']]?: DailyTask[] } = {};
         tasks.forEach(task => {
-            if (categories[task.category]) {
-                categories[task.category].push(task);
+            if (!categories[task.category]) {
+                categories[task.category] = [];
             }
+            categories[task.category]!.push(task);
         });
         return categories;
     }, [tasks]);
 
+    const categoryOrder: DailyTask['category'][] = ['onboarding', 'mission', 'daily', 'special'];
+
     const categoryTitles: { [key in DailyTask['category']]: string } = {
         onboarding: '🚀 Путь новичка',
         daily: 'Ежедневные ритуалы',
-        special: '💎 Особые контракты'
+        special: '💎 Особые контракты',
+        mission: 'Практические миссии'
     };
     
     return (
@@ -151,8 +160,8 @@ const TasksView: React.FC = () => {
                 <div className="flex items-center gap-3 mb-2">
                     <ListChecks className="h-8 w-8 text-brand-primary" />
                     <div>
-                        <h2 className="text-3xl font-bold text-white">Центр Заданий</h2>
-                        <p className="text-gray-400">Выполняйте квесты, получайте XP и ускоряйте свой прогресс.</p>
+                        <h2 className="text-3xl font-bold text-white">Центр Миссий</h2>
+                        <p className="text-gray-400">Выполняйте задания, получайте XP и ускоряйте свой прогресс.</p>
                     </div>
                 </div>
             </Card>
@@ -164,7 +173,7 @@ const TasksView: React.FC = () => {
                      <Card>
                          <h3 className="text-xl font-bold text-white mb-4">{categoryTitles.onboarding}</h3>
                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                             {categorizedTasks.onboarding.map(task => (
+                             {(categorizedTasks.onboarding || []).map(task => (
                                  <TaskCard key={task.id} task={task} onAction={handleTaskAction} />
                              ))}
                          </div>
@@ -172,7 +181,8 @@ const TasksView: React.FC = () => {
                  </div>
             </div>
 
-            {Object.entries(categorizedTasks).map(([category, tasksInCategory]) => {
+            {categoryOrder.map(category => {
+                const tasksInCategory = categorizedTasks[category] || [];
                 if (category === 'onboarding' || tasksInCategory.length === 0) return null;
                 return (
                     <div key={category}>

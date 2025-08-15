@@ -1,11 +1,42 @@
 
+
 import React, { useMemo, useState } from 'react';
 import Card from './ui/Card.tsx';
 import Button from './ui/Button.tsx';
-import type { SyndicateMember, AcademyArticle } from '../types.ts';
-import { MOCK_SYNDICATE_MEMBERS, MOCK_ACADEMY_ARTICLES } from '../constants.ts';
+import type { SyndicateMember, SyndicateGoal } from '../types.ts';
+import { MOCK_SYNDICATE_GOAL } from '../constants.ts';
 import { getAITeamAnalysisStream } from '../services/geminiService.ts';
-import { BrainCircuit, LoaderCircle, Activity, UserPlus, BarChart3 } from 'lucide-react';
+import { BrainCircuit, LoaderCircle, Activity, UserPlus, BarChart3, Target, Edit } from 'lucide-react';
+
+const SyndicateGoals: React.FC<{ goal: SyndicateGoal }> = ({ goal }) => {
+    const progressPercentage = (goal.progress / goal.target) * 100;
+    const daysLeft = Math.round((new Date(goal.deadline).getTime() - new Date().getTime()) / (1000 * 3600 * 24));
+
+    return (
+        <Card className="lg:col-span-3 !bg-gradient-to-br from-brand-primary/20 to-dark-800/10 border-brand-primary/50">
+            <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+                 <div>
+                    <h3 className="text-xl font-bold text-white flex items-center gap-2"><Target className="w-6 h-6 text-brand-accent" /> Цель Синдиката</h3>
+                    <p className="text-2xl font-semibold text-white mt-2">{goal.title}</p>
+                    <p className="text-sm text-gray-400 mt-1">{goal.description}</p>
+                 </div>
+                 <Button variant="secondary" className="!text-xs !px-3 !py-1.5"><Edit className="w-4 h-4 mr-1.5"/>Установить цель</Button>
+            </div>
+           
+            <div className="mt-4">
+                <div className="flex justify-between text-sm mb-1">
+                    <span className="font-semibold text-white">Прогресс: {goal.progress} / {goal.target}</span>
+                    <span className="text-gray-400">Осталось: {daysLeft} дней</span>
+                </div>
+                <div className="w-full bg-dark-900/50 rounded-full h-3">
+                    <div className="bg-gradient-to-r from-brand-secondary to-brand-primary h-3 rounded-full" style={{ width: `${progressPercentage}%` }}></div>
+                </div>
+                 <p className="text-xs text-center text-gray-400 mt-2">Награда за выполнение: <span className="font-bold text-accent-gold">{goal.reward}</span></p>
+            </div>
+        </Card>
+    );
+};
+
 
 const AnalyticsStatCard: React.FC<{ icon: React.ReactNode; label: string; value: string; note: string; }> = ({ icon, label, value, note }) => (
     <Card className="!bg-dark-800/50 h-full">
@@ -74,75 +105,6 @@ const DonutChart: React.FC<{ active: number; inactive: number }> = ({ active, in
     );
 };
 
-const AIAnalyst: React.FC<{ teamData: SyndicateMember[] }> = ({ teamData }) => {
-    const [insight, setInsight] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [isGenerated, setIsGenerated] = useState(false);
-
-    const handleGetAnalysis = async () => {
-        setIsLoading(true);
-        setError(null);
-        setInsight('');
-        setIsGenerated(false);
-        try {
-            await getAITeamAnalysisStream(teamData, (chunk) => {
-                setInsight(prev => prev + chunk);
-            });
-            setIsGenerated(true);
-        } catch (e: any) {
-            setError(e.message || 'Произошла ошибка при анализе.');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-    
-    const formattedInsight = useMemo(() => {
-        return insight.split('\n').map((line, i) => {
-            if (line.startsWith('**')) {
-                return <p key={i} className="font-bold text-white mt-2 mb-1">{line.replace(/\*\*/g, '')}</p>;
-            }
-            if (line.trim().startsWith('*')) {
-                return <p key={i} className="flex items-start"><span className="mr-2 mt-1">∙</span><span>{line.substring(1).trim()}</span></p>;
-            }
-             if (line.trim().startsWith('1.') || line.trim().startsWith('2.') || line.trim().startsWith('3.')) {
-                return <p key={i} className="flex items-start"><span className="mr-2 mt-1 font-semibold">{line.substring(0, 2)}</span><span>{line.substring(2).trim()}</span></p>;
-            }
-            return <p key={i}>{line}</p>;
-        });
-    }, [insight]);
-
-    return (
-        <Card className="lg:col-span-3 !bg-gradient-to-br from-dark-800 to-dark-700 border-dark-600 animate-slide-in-up">
-            <div className="flex flex-col md:flex-row items-center gap-4">
-                <div className="w-full md:w-1/3 text-center">
-                    <BrainCircuit className="h-20 w-20 text-brand-primary mx-auto animate-glow" />
-                    <h3 className="text-xl font-bold text-white mt-4">AI-Аналитик Команды</h3>
-                    <p className="text-sm text-gray-400 mt-1">Получите персональные советы по росту вашей структуры.</p>
-                    <Button onClick={handleGetAnalysis} disabled={isLoading} className="mt-4 w-full">
-                        {isLoading ? (
-                             <span className="flex items-center justify-center">
-                                <LoaderCircle className="animate-spin h-5 w-5 mr-2" />
-                                Анализ...
-                            </span>
-                        ) : (
-                            isGenerated ? 'Запросить снова' : 'Получить AI-анализ'
-                        )}
-                    </Button>
-                </div>
-                <div className="w-full md:w-2/3 min-h-[220px] bg-dark-900/50 p-4 rounded-lg border border-dark-700 flex items-center justify-center">
-                    {isLoading && <p className="text-gray-400">Анализирую данные вашей команды...</p>}
-                    {error && <p className="text-red-500">{error}</p>}
-                    {!isLoading && !error && (
-                         <div className="text-sm text-gray-300 space-y-1 w-full">
-                           {insight ? formattedInsight : <p className="text-center text-gray-500">Нажмите кнопку, чтобы получить рекомендации</p>}
-                        </div>
-                    )}
-                </div>
-            </div>
-        </Card>
-    );
-};
 
 interface TeamAnalyticsViewProps {
   teamAnalytics: {
@@ -161,7 +123,7 @@ const TeamAnalyticsView: React.FC<TeamAnalyticsViewProps> = ({ teamAnalytics }) 
     const { performanceScore, activityRate, newLast7Days, averageLevel, activeCount, inactiveCount, topReferrers, insights } = teamAnalytics;
     return (
         <div className="space-y-6">
-            <AIAnalyst teamData={MOCK_SYNDICATE_MEMBERS} />
+             <SyndicateGoals goal={MOCK_SYNDICATE_GOAL} />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <Card className="lg:col-span-1 flex flex-col items-center justify-center text-center p-6 animate-slide-in-up">
                     <h3 className="text-lg font-bold text-white mb-4">Эффективность команды</h3>
@@ -203,18 +165,12 @@ const TeamAnalyticsView: React.FC<TeamAnalyticsViewProps> = ({ teamAnalytics }) 
                     </div>
                 </Card>
                 <Card className="animate-slide-in-up" style={{ animationDelay: '600ms' }}>
-                    <h3 className="text-xl font-bold text-white mb-4">💡 Умные советы</h3>
-                    <div className="space-y-4">
-                        {insights.map((insight, index) => {
-                            const typeClasses = { warning: 'bg-red-500/10 text-red-400 border-red-500/50', success: 'bg-green-500/10 text-green-400 border-green-500/50', info: 'bg-blue-500/10 text-blue-400 border-blue-500/50' };
-                            return (
-                                <div key={index} className={`flex items-start gap-3 p-3 rounded-lg border-l-4 ${typeClasses[insight.type as keyof typeof typeClasses]}`}>
-                                    <insight.icon className="h-5 w-5 mt-0.5 flex-shrink-0" />
-                                    <p className="text-sm">{insight.text}</p>
-                                </div>
-                            )
-                        })}
-                    </div>
+                    <h3 className="text-xl font-bold text-white mb-4">💡 AI Советы от N.C.A.</h3>
+                     <p className="text-sm text-gray-400 mb-4">Подробный анализ и персональные рекомендации доступны в вашем AI-Ассистенте.</p>
+                     <Button variant="secondary" className="w-full">
+                        <BrainCircuit className="w-4 h-4 mr-2" />
+                        Открыть N.C.A.
+                     </Button>
                 </Card>
             </div>
         </div>

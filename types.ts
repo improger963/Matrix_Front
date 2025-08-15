@@ -1,6 +1,6 @@
 
 
-export type View = 'dashboard' | 'market' | 'startup' | 'marketing' | 'leaderboard' | 'howitworks' | 'faq' | 'capital' | 'profile' | 'syndicate' | 'livefeed' | 'reviews' | 'support' | 'news' | 'academy' | 'promo' | 'chat' | 'landingPage' | 'tasks';
+export type View = 'dashboard' | 'market' | 'startup' | 'leaderboard' | 'howitworks' | 'faq' | 'capital' | 'profile' | 'syndicate' | 'livefeed' | 'reviews' | 'support' | 'news' | 'academy' | 'promo' | 'chat' | 'landingPage' | 'tasks' | 'boardroom';
 
 export interface Partner {
   id: string;
@@ -54,7 +54,7 @@ export interface Leader {
 
 export interface Transaction {
     id:string;
-    type: 'deposit' | 'withdrawal' | 'profit' | 'investment' | 'transfer' | 'upgrade'; // 'profit': 'Прибыль'
+    type: 'deposit' | 'withdrawal' | 'profit' | 'investment' | 'transfer' | 'upgrade' | 'syndicate_profit'; // 'profit': 'Прибыль'
     amount: number;
     date: string;
     status: 'completed' | 'pending' | 'failed';
@@ -108,11 +108,12 @@ export interface Notification {
     description: string;
     timestamp: string;
     isRead: boolean;
+    type: 'proactive_tip' | 'standard';
 }
 
 export interface LiveFeedEvent {
   id: string;
-  type: 'registration' | 'new_level' | 'withdrawal' | 'deposit' | 'startup_exit';
+  type: 'registration' | 'new_level' | 'withdrawal' | 'deposit' | 'startup_exit' | 'upgrade';
   user: {
     name: string;
     avatarUrl: string;
@@ -151,6 +152,7 @@ export interface AcademyArticle {
   content: string;
   xpReward: number;
   isCompleted: boolean;
+  linkedMissionId?: string;
 }
 
 export interface DailyTask {
@@ -162,9 +164,9 @@ export interface DailyTask {
   icon: React.ElementType;
   isCompleted: boolean;
   actionText: string;
-  actionType: 'navigate' | 'copy' | 'external_link' | 'none';
+  actionType: 'navigate' | 'copy' | 'external_link' | 'none' | 'open_assistant';
   target?: View | string;
-  category: 'onboarding' | 'daily' | 'special';
+  category: 'onboarding' | 'daily' | 'special' | 'mission';
   progress?: { current: number; target: number };
 }
 
@@ -186,6 +188,7 @@ export interface Toast {
 
 export interface ChatMessage {
   id: string;
+  type: 'user' | 'announcement' | 'poll';
   user: {
     id: string;
     name: string;
@@ -204,6 +207,11 @@ export interface ChatMessage {
     type: 'image';
     url: string;
   };
+  pollOptions?: {
+      id: string;
+      text: string;
+      voters: string[];
+  }[];
 }
 
 export interface OnlineUser {
@@ -212,4 +220,32 @@ export interface OnlineUser {
   avatarUrl: string;
   level: number;
   investors?: number;
+}
+
+export interface SyndicateGoal {
+    id: string;
+    title: string;
+    description: string;
+    progress: number;
+    target: number;
+    deadline: string;
+    reward: string;
+}
+
+export interface BoardroomMember extends Leader {
+    influence: number; // e.g. voting power
+}
+
+export interface BoardroomVote {
+    id: string;
+    title: string;
+    description: string;
+    options: {
+        id: string;
+        text: string;
+        votes: number;
+    }[];
+    totalVotes: number;
+    endsAt: string;
+    userVote?: string; // option id
 }
