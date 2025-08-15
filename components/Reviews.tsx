@@ -79,8 +79,8 @@ const Reviews: React.FC = () => {
                 <div className="flex items-center gap-3">
                     <MessageSquareQuote className="h-8 w-8 text-brand-primary" />
                     <div>
-                        <h2 className="text-2xl font-bold text-white">Отзывы наших участников</h2>
-                        <p className="text-gray-400">Что говорят о нас те, кто уже зарабатывает с MatrixFlow.</p>
+                        <h2 className="text-2xl font-bold text-white">Отзывы наших Магнатов</h2>
+                        <p className="text-gray-400">Что говорят о нас те, кто уже строит свою империю.</p>
                     </div>
                 </div>
                  {!isFormOpen && (

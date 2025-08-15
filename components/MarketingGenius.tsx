@@ -55,7 +55,7 @@ const MarketingGenius: React.FC = () => {
         "Напиши короткий пост для Telegram о преимуществах нашего проекта",
         "Создай рекламный текст для ВКонтакте, нацеленный на студентов",
         "Придумай 3 варианта сообщений для рассылки в WhatsApp",
-        "Напиши сценарий для короткого видео (Reels) о том, как работает матрица"
+        "Напиши сценарий для короткого видео (Reels) о механике Проектов и апгрейдов"
     ];
 
     return (
@@ -72,7 +72,7 @@ const MarketingGenius: React.FC = () => {
                 <textarea
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="Например: 'Напиши приветственное сообщение для нового участника'"
+                    placeholder="Например: 'Напиши приветственное сообщение для нового инвестора'"
                     className="w-full p-3 bg-dark-900 border border-dark-700 rounded-lg focus:ring-2 focus:ring-brand-primary focus:outline-none transition-all"
                     rows={4}
                     disabled={isLoading}

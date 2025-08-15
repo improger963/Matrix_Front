@@ -11,7 +11,7 @@ const News: React.FC = () => {
                 <Newspaper className="h-8 w-8 text-brand-primary" />
                 <div>
                     <h2 className="text-2xl font-bold text-white">Новости проекта</h2>
-                    <p className="text-gray-400">Следите за последними обновлениями и событиями MatrixFlow.</p>
+                    <p className="text-gray-400">Следите за последними обновлениями и событиями Realty Guilds.</p>
                 </div>
             </div>
 

@@ -80,18 +80,18 @@ const Support: React.FC = () => {
                  <Card className="animate-slide-in-up" style={{ animationDelay: '200ms' }}>
                     <h3 className="text-lg font-bold text-white mb-4">Другие способы связи</h3>
                     <div className="space-y-3">
-                         <a href="mailto:support@matrixflow.app" className="flex items-center gap-3 p-3 bg-dark-700/50 hover:bg-dark-700 rounded-lg transition-colors">
+                         <a href="mailto:support@realty-guilds.app" className="flex items-center gap-3 p-3 bg-dark-700/50 hover:bg-dark-700 rounded-lg transition-colors">
                             <Mail className="h-6 w-6 text-brand-accent"/>
                             <div>
                                 <p className="font-semibold text-white">Email</p>
-                                <p className="text-xs text-gray-400">support@matrixflow.app</p>
+                                <p className="text-xs text-gray-400">support@realty-guilds.app</p>
                             </div>
                         </a>
-                        <a href="https://t.me/matrixflow_support" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 bg-dark-700/50 hover:bg-dark-700 rounded-lg transition-colors">
+                        <a href="https://t.me/realty_guilds_support" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 bg-dark-700/50 hover:bg-dark-700 rounded-lg transition-colors">
                             <MessageSquare className="h-6 w-6 text-brand-accent"/>
                              <div>
                                 <p className="font-semibold text-white">Telegram</p>
-                                <p className="text-xs text-gray-400">@matrixflow_support</p>
+                                <p className="text-xs text-gray-400">@realty_guilds_support</p>
                             </div>
                         </a>
                     </div>
