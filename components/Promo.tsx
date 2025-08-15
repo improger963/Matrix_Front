@@ -59,7 +59,7 @@ const AIBannerGenerator: React.FC = () => {
         if (!generatedImage) return;
         const link = document.createElement('a');
         link.href = generatedImage;
-        link.download = `matrixflow-ai-banner-${prompt.slice(0, 20).replace(/\s/g, '_')}.jpg`;
+        link.download = `nexus-capital-ai-banner-${prompt.slice(0, 20).replace(/\s/g, '_')}.jpg`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -188,7 +188,7 @@ const Promo: React.FC = () => {
                             <Card key={banner.id} className="!bg-dark-800/50">
                                 <h3 className="font-semibold text-white mb-2">{banner.title} <span className="text-sm text-gray-500">({banner.size})</span></h3>
                                 <img src={banner.content} alt={banner.title} className="w-full h-auto object-cover rounded-lg mb-4" />
-                                <a href={banner.content} download={`matrixflow_promo_${banner.id}.jpg`}>
+                                <a href={banner.content} download={`nexus-capital-promo_${banner.id}.jpg`}>
                                     <Button variant="secondary" className="w-full">
                                         <Download className="h-4 w-4 mr-2" />
                                         Скачать

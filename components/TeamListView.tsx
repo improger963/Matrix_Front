@@ -1,15 +1,15 @@
 
 import React, { useState, useMemo } from 'react';
 import Card from './ui/Card.tsx';
-import type { GuildMember } from '../types.ts';
-import { MOCK_GUILD_MEMBERS } from '../constants.ts';
+import type { SyndicateMember } from '../types.ts';
+import { MOCK_SYNDICATE_MEMBERS } from '../constants.ts';
 import { MoreVertical, Search as SearchIcon, ChevronUp, ChevronDown } from 'lucide-react';
 
 type SortKey = 'name' | 'joinDate' | 'level' | 'investors';
 type SortOrder = 'asc' | 'desc';
 type StatusFilter = 'all' | 'active' | 'inactive';
 
-const MemberCard: React.FC<{ member: GuildMember }> = ({ member }) => {
+const MemberCard: React.FC<{ member: SyndicateMember }> = ({ member }) => {
     return (
         <Card className="!p-3 !bg-dark-800/50">
             <div className="flex items-center justify-between">
@@ -43,7 +43,7 @@ const TeamListView: React.FC = () => {
     const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
 
     const filteredAndSortedTeamMembers = useMemo(() => {
-         const filtered = MOCK_GUILD_MEMBERS
+         const filtered = MOCK_SYNDICATE_MEMBERS
             .filter(member => statusFilter === 'all' || member.status === statusFilter)
             .filter(member => member.name.toLowerCase().includes(searchQuery.toLowerCase()));
 

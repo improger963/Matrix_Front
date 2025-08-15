@@ -1,12 +1,12 @@
 
 import React, { createContext, useState, useContext, ReactNode, useCallback } from 'react';
-import type { Tycoon, DailyTask, View, Toast, AcademyArticle } from '../types.ts';
-import { MOCK_TYCOON, MOCK_ALL_TASKS, MOCK_ACADEMY_ARTICLES } from '../constants.ts';
+import type { Partner, DailyTask, View, Toast, AcademyArticle } from '../types.ts';
+import { MOCK_PARTNER, MOCK_ALL_TASKS, MOCK_ACADEMY_ARTICLES } from '../constants.ts';
 import ToastContainer from '../components/ui/ToastContainer.tsx';
 
 interface AppContextType {
-    user: Tycoon;
-    setUser: React.Dispatch<React.SetStateAction<Tycoon>>;
+    user: Partner;
+    setUser: React.Dispatch<React.SetStateAction<Partner>>;
     tasks: DailyTask[];
     handleCompleteTask: (taskId: string, showToast?: boolean) => void;
     handleTaskAction: (task: DailyTask) => void;
@@ -22,7 +22,7 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [user, setUser] = useState<Tycoon>(MOCK_TYCOON);
+    const [user, setUser] = useState<Partner>(MOCK_PARTNER);
     const [tasks, setTasks] = useState<DailyTask[]>(MOCK_ALL_TASKS);
     const [academyArticles, setAcademyArticles] = useState<AcademyArticle[]>(MOCK_ACADEMY_ARTICLES);
     const [activeView, setActiveView] = useState<View>('dashboard');

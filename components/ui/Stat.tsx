@@ -73,7 +73,7 @@ export const AnimatedBalance: React.FC<AnimatedBalanceProps> = ({ value, classNa
         };
     }, [value]);
     
-    const currencySymbol = isCurrency ? '$' : '©';
+    const currencySymbol = isCurrency ? '$' : '';
     const formattedValue = displayValue.toLocaleString('ru-RU', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
@@ -81,7 +81,7 @@ export const AnimatedBalance: React.FC<AnimatedBalanceProps> = ({ value, classNa
 
     return (
         <span className={`font-mono font-bold tracking-tighter ${className}`}>
-            {currencySymbol}{formattedValue}
+            {currencySymbol}{formattedValue} CAP
         </span>
     );
 };

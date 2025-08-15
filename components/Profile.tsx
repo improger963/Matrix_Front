@@ -183,7 +183,7 @@ const Profile: React.FC = () => {
                              </div>
                         </div>
                     )}
-                    <Button onClick={() => setActiveView('guild', { subView: 'achievements' })} variant="secondary" className="w-full mt-4 text-xs">
+                    <Button onClick={() => setActiveView('syndicate', { subView: 'achievements' })} variant="secondary" className="w-full mt-4 text-xs">
                         <Trophy className="h-4 w-4 mr-2"/> Все достижения
                     </Button>
                 </Card>

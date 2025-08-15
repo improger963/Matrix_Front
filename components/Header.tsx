@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import type { Notification } from '../types.ts';
 import { MOCK_NOTIFICATIONS } from '../constants.ts';
 import NotificationsPanel from './NotificationsPanel.tsx';
-import { Bell, ChevronDown, LogOut, UserCircle, LifeBuoy, Landmark, Search, Building2 } from 'lucide-react';
+import { Bell, ChevronDown, LogOut, UserCircle, LifeBuoy, Wallet, Search, Briefcase } from 'lucide-react';
 import { useAppContext } from '../contexts/AppContext.tsx';
 import { AnimatedBalance } from './ui/Stat.tsx';
 
@@ -57,8 +57,8 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
         <header className="sticky top-0 z-20 flex justify-between items-center bg-dark-800/80 backdrop-blur-sm p-4 border-b border-dark-700 lg:mx-8 lg:mt-6 lg:rounded-xl lg:border">
             {/* Left side: Logo on mobile/tablet, Search on desktop */}
             <div className="flex items-center gap-2 lg:hidden">
-                <Building2 className="h-7 w-7 text-brand-primary" />
-                <h1 className="text-lg font-bold text-white">Realty Guilds</h1>
+                <Briefcase className="h-7 w-7 text-brand-primary" />
+                <h1 className="text-lg font-bold text-white">Nexus Capital</h1>
             </div>
 
             <div className="hidden lg:flex items-center gap-2 bg-dark-900/70 border border-dark-700 rounded-lg px-3 py-1.5 w-full max-w-xs transition-all focus-within:border-brand-primary focus-within:ring-1 focus-within:ring-brand-primary">
@@ -73,12 +73,12 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
             {/* Right side: Controls */}
             <div className="flex items-center gap-2 sm:gap-4">
                 <button 
-                    onClick={() => setActiveView('bank')} 
+                    onClick={() => setActiveView('capital')} 
                     className="hidden sm:flex items-center gap-2 bg-dark-700/50 hover:bg-dark-700 px-3 py-2 rounded-lg transition-colors"
-                    title="Перейти в банк"
+                    title="Перейти в Капитал"
                 >
-                    <Landmark className="h-5 w-5 text-green-400" />
-                    <AnimatedBalance value={user.cityCredits} isCurrency={false} className="text-white text-sm" />
+                    <Wallet className="h-5 w-5 text-accent-green" />
+                    <AnimatedBalance value={user.capital} isCurrency={true} className="text-white text-sm" />
                 </button>
                 <div className="relative" ref={notificationsRef}>
                     <button 

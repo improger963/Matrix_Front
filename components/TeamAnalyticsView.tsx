@@ -2,8 +2,8 @@
 import React, { useMemo, useState } from 'react';
 import Card from './ui/Card.tsx';
 import Button from './ui/Button.tsx';
-import type { GuildMember, AcademyArticle } from '../types.ts';
-import { MOCK_GUILD_MEMBERS, MOCK_ACADEMY_ARTICLES } from '../constants.ts';
+import type { SyndicateMember, AcademyArticle } from '../types.ts';
+import { MOCK_SYNDICATE_MEMBERS, MOCK_ACADEMY_ARTICLES } from '../constants.ts';
 import { getAITeamAnalysisStream } from '../services/geminiService.ts';
 import { BrainCircuit, LoaderCircle, Activity, UserPlus, BarChart3 } from 'lucide-react';
 
@@ -74,7 +74,7 @@ const DonutChart: React.FC<{ active: number; inactive: number }> = ({ active, in
     );
 };
 
-const AIAnalyst: React.FC<{ teamData: GuildMember[] }> = ({ teamData }) => {
+const AIAnalyst: React.FC<{ teamData: SyndicateMember[] }> = ({ teamData }) => {
     const [insight, setInsight] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -152,7 +152,7 @@ interface TeamAnalyticsViewProps {
     newLast7Days: number;
     averageLevel: number;
     performanceScore: number;
-    topReferrers: GuildMember[];
+    topReferrers: SyndicateMember[];
     insights: { icon: React.ElementType; text: string; type: string }[];
   };
 }
@@ -161,7 +161,7 @@ const TeamAnalyticsView: React.FC<TeamAnalyticsViewProps> = ({ teamAnalytics }) 
     const { performanceScore, activityRate, newLast7Days, averageLevel, activeCount, inactiveCount, topReferrers, insights } = teamAnalytics;
     return (
         <div className="space-y-6">
-            <AIAnalyst teamData={MOCK_GUILD_MEMBERS} />
+            <AIAnalyst teamData={MOCK_SYNDICATE_MEMBERS} />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <Card className="lg:col-span-1 flex flex-col items-center justify-center text-center p-6 animate-slide-in-up">
                     <h3 className="text-lg font-bold text-white mb-4">Эффективность команды</h3>

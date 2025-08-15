@@ -1,45 +1,45 @@
 
 
-export type View = 'dashboard' | 'cityMap' | 'project' | 'marketing' | 'leaderboard' | 'howitworks' | 'faq' | 'bank' | 'profile' | 'guild' | 'livefeed' | 'reviews' | 'support' | 'news' | 'academy' | 'promo' | 'chat' | 'landingPage' | 'tasks';
+export type View = 'dashboard' | 'market' | 'startup' | 'marketing' | 'leaderboard' | 'howitworks' | 'faq' | 'capital' | 'profile' | 'syndicate' | 'livefeed' | 'reviews' | 'support' | 'news' | 'academy' | 'promo' | 'chat' | 'landingPage' | 'tasks';
 
-export interface Tycoon {
+export interface Partner {
   id: string;
   name: string;
   avatarUrl: string;
   level: number;
-  cityCredits: number;
+  capital: number;
   xp: number;
-  investors: number; // Renamed from referrals
-  projectsCompleted: number; // Renamed from matrixCompletions
-  guildEarnings?: number; // Renamed from teamEarnings
+  investors: number;
+  exitsCompleted: number;
+  syndicateProfit?: number;
   referralLink: string;
   joinDate: string;
   welcomeMessage?: string;
   bio?: string;
   socials?: {
     telegram?: string;
-    vk?: string;
+    linkedin?: string;
     website?: string;
+    vk?: string;
   };
-  guildId?: string;
+  syndicateId?: string;
 }
 
-export interface ProjectNode {
+export interface StartupNode {
   id: string;
   name: string;
   avatarUrl: string;
   isFilled: boolean;
-  children?: ProjectNode[];
+  children?: StartupNode[];
   joinDate?: string;
   level?: number;
   investors?: number;
   downline?: number;
-  nodeType?: 'self' | 'spillover' | 'clone'; // self is 'Инвестор', spillover is 'Городской контракт', clone is 'Филиал'
+  nodeType?: 'self' | 'syndicate_deal' | 'spinoff'; // self: 'Инвестор', syndicate_deal: 'Сделка из синдиката', spinoff: 'Спин-офф'
   lastActivityDate?: string;
-  branchHealth?: 'healthy' | 'sleeping' | 'problematic';
-  // Game-specific properties
-  upgradeLevel: 1 | 2 | 3; // 1: Участок, 2: Дома, 3: Отель
-  district: string;
+  riskLevel?: 'low' | 'medium' | 'high';
+  fundingStage: 1 | 2 | 3; // 1: Pre-seed, 2: Round A, 3: Round B
+  industry: string;
 }
 
 
@@ -54,7 +54,7 @@ export interface Leader {
 
 export interface Transaction {
     id:string;
-    type: 'deposit' | 'withdrawal' | 'earning' | 'activation' | 'transfer' | 'upgrade'; // 'earning' is 'Арендная плата'
+    type: 'deposit' | 'withdrawal' | 'profit' | 'investment' | 'transfer' | 'upgrade'; // 'profit': 'Прибыль'
     amount: number;
     date: string;
     status: 'completed' | 'pending' | 'failed';
@@ -71,20 +71,20 @@ export interface Transaction {
     comment?: string;
 }
 
-export interface MetropolisStats {
-    totalTycoons: number;
-    totalEarned: number;
-    tycoonsToday: number;
-    activeProjects: number;
+export interface MarketStats {
+    totalPartners: number;
+    totalProfit: number;
+    newPartnersToday: number;
+    activeStartups: number;
 }
 
-export interface GuildMember {
+export interface SyndicateMember {
     id: string;
     name: string;
     avatarUrl: string;
     joinDate: string;
     level: number;
-    investors: number; // Renamed from referrals
+    investors: number;
     status: 'active' | 'inactive';
 }
 
@@ -94,7 +94,7 @@ export interface Achievement {
     description: string;
     icon: React.ElementType;
     unlocked: boolean;
-    category: 'Guild' | 'Financial' | 'Personal' | 'Milestone'; // Renamed Team to Guild
+    category: 'Syndicate' | 'Financial' | 'Personal' | 'Milestone';
     progress?: {
         current: number;
         target: number;
@@ -112,7 +112,7 @@ export interface Notification {
 
 export interface LiveFeedEvent {
   id: string;
-  type: 'registration' | 'new_level' | 'withdrawal' | 'deposit' | 'project_close'; // Renamed from matrix_close
+  type: 'registration' | 'new_level' | 'withdrawal' | 'deposit' | 'startup_exit';
   user: {
     name: string;
     avatarUrl: string;
@@ -143,7 +143,7 @@ export interface NewsArticle {
 export interface AcademyArticle {
   id: string;
   title: string;
-  category: 'Для новичков' | 'Продвижение' | 'Бизнес-план'; // Renamed
+  category: 'Для новичков' | 'Масштабирование' | 'Стратегия';
   type: 'video' | 'article';
   duration?: string; // for video
   coverUrl: string;
@@ -154,7 +154,7 @@ export interface AcademyArticle {
 }
 
 export interface DailyTask {
-  id: string;
+  id:string;
   title: string;
   subtitle?: string;
   description: string;

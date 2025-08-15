@@ -94,7 +94,7 @@ const ArticleCard: React.FC<{ article: AcademyArticle; onSelect: (article: Acade
                 
                 <span className={`absolute top-2 right-2 text-xs font-semibold px-2 py-1 rounded-full text-white ${
                     article.category === 'Для новичков' ? 'bg-blue-500/80' :
-                    article.category === 'Продвижение' ? 'bg-green-500/80' : 'bg-purple-500/80'
+                    article.category === 'Масштабирование' ? 'bg-green-500/80' : 'bg-purple-500/80'
                 }`}>
                     {article.category}
                 </span>
@@ -161,7 +161,7 @@ const Academy: React.FC = () => {
                     <div className="flex items-center gap-3">
                         <GraduationCap className="h-8 w-8 text-brand-primary" />
                         <div>
-                            <h2 className="text-2xl font-bold text-white">Академия MatrixFlow</h2>
+                            <h2 className="text-2xl font-bold text-white">Академия Nexus Capital</h2>
                             <p className="text-gray-400">Ваш путь к успеху начинается здесь. Изучайте и применяйте!</p>
                         </div>
                     </div>

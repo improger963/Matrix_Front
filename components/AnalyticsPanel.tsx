@@ -1,10 +1,10 @@
 
 import React, { useMemo, useEffect } from 'react';
-import type { ProjectNode } from '../types.ts';
+import type { StartupNode } from '../types.ts';
 import { X, BarChart3, Users, GitBranch, PieChart, Zap, HelpCircle } from 'lucide-react';
 
 interface AnalyticsPanelProps {
-    node: ProjectNode;
+    node: StartupNode;
     isOpen: boolean;
     onClose: () => void;
 }
@@ -16,28 +16,28 @@ interface NodeStats {
     rightLegCount: number;
     composition: {
         self: number;
-        spillover: number;
-        clone: number;
+        syndicate_deal: number;
+        spinoff: number;
     };
 }
 
-const getDepth = (node: ProjectNode | undefined): number => {
+const getDepth = (node: StartupNode | undefined): number => {
     if (!node || !node.children || node.children.length === 0) {
         return 0;
     }
     return 1 + Math.max(...node.children.map(getDepth));
 }
 
-const calculateStats = (node: ProjectNode): NodeStats => {
+const calculateStats = (node: StartupNode): NodeStats => {
     const stats: NodeStats = {
         totalSlots: 0,
         filledSlots: 0,
         leftLegCount: 0,
         rightLegCount: 0,
-        composition: { self: 0, spillover: 0, clone: 0 },
+        composition: { self: 0, syndicate_deal: 0, spinoff: 0 },
     };
 
-    const countFilledNodes = (n: ProjectNode | undefined): number => {
+    const countFilledNodes = (n: StartupNode | undefined): number => {
         if (!n || !n.isFilled) return 0;
         let count = 1;
         if (n.children) {
@@ -50,7 +50,7 @@ const calculateStats = (node: ProjectNode): NodeStats => {
     stats.leftLegCount = countFilledNodes(node.children?.[0]);
     stats.rightLegCount = countFilledNodes(node.children?.[1]);
     
-    const collectStats = (n: ProjectNode | undefined) => {
+    const collectStats = (n: StartupNode | undefined) => {
         if (!n || !n.isFilled) return;
 
         if (n.nodeType && stats.composition.hasOwnProperty(n.nodeType)) {
@@ -154,9 +154,9 @@ const AnalyticsPanel: React.FC<AnalyticsPanelProps> = ({ node, isOpen, onClose }
                         <div className="bg-dark-900/50 p-4 rounded-lg">
                             <h4 className="text-sm font-medium text-gray-400 mb-2 flex items-center gap-2"><PieChart className="w-4 h-4" />Состав структуры</h4>
                             <div className="space-y-2 text-xs">
-                               <div className="flex justify-between"><span><Users className="w-3 h-3 inline mr-1.5" />Лично приглашенные:</span> <span className="font-bold text-white">{stats.composition.self}</span></div>
-                               <div className="flex justify-between"><span><GitBranch className="w-3 h-3 inline mr-1.5 text-cyan-400" />Переливы:</span> <span className="font-bold text-white">{stats.composition.spillover}</span></div>
-                               <div className="flex justify-between"><span><Users className="w-3 h-3 inline mr-1.5 text-purple-400" />Филиалы:</span> <span className="font-bold text-white">{stats.composition.clone}</span></div>
+                               <div className="flex justify-between"><span><Users className="w-3 h-3 inline mr-1.5" />Инвесторы:</span> <span className="font-bold text-white">{stats.composition.self}</span></div>
+                               <div className="flex justify-between"><span><GitBranch className="w-3 h-3 inline mr-1.5 text-cyan-400" />Сделки из синдиката:</span> <span className="font-bold text-white">{stats.composition.syndicate_deal}</span></div>
+                               <div className="flex justify-between"><span><Users className="w-3 h-3 inline mr-1.5 text-purple-400" />Спин-оффы:</span> <span className="font-bold text-white">{stats.composition.spinoff}</span></div>
                             </div>
                         </div>
                          <div className="bg-dark-900/50 p-4 rounded-lg">

@@ -10,7 +10,7 @@ const AchievementCard: React.FC<{ achievement: Achievement }> = ({ achievement }
     const progressPercentage = progress ? (progress.current / progress.target) * 100 : 0;
 
     const categoryStyles: Record<Achievement['category'], { text: string, bg: string }> = {
-        Guild: { text: 'text-cyan-400', bg: 'bg-cyan-500/10' },
+        Syndicate: { text: 'text-cyan-400', bg: 'bg-cyan-500/10' },
         Financial: { text: 'text-green-400', bg: 'bg-green-500/10' },
         Personal: { text: 'text-purple-400', bg: 'bg-purple-500/10' },
         Milestone: { text: 'text-yellow-400', bg: 'bg-yellow-500/10' },

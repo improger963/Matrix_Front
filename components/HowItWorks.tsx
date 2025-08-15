@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import Card from './ui/Card.tsx';
 import { Rocket, Users, Gift, TrendingUp, Building } from 'lucide-react';
@@ -18,31 +19,31 @@ const HowItWorks: React.FC = () => {
     return (
         <div className="space-y-6 animate-slide-in-up">
             <Card>
-                <h2 className="text-3xl font-bold text-white text-center mb-2">Как работают "Гильдии Недвижимости"?</h2>
+                <h2 className="text-3xl font-bold text-white text-center mb-2">Как работает "Nexus Capital"?</h2>
                 <p className="text-gray-400 text-center max-w-2xl mx-auto mb-10">
-                    Наша игровая механика основана на простой и прозрачной бизнес-модели, которая позволяет каждому Магнату зарабатывать, строя свою финансовую империю.
+                    Наша игровая механика основана на простой и прозрачной бизнес-модели, которая позволяет каждому Партнеру зарабатывать, строя свою инвестиционную империю.
                 </p>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <StepCard 
                         icon={<Rocket className="h-6 w-6 text-white"/>}
-                        title="Шаг 1: Покупка Участка"
-                        description="Присоединяйтесь к игре, купив свой первый Участок под застройку. Это ваш билет в мир большой недвижимости."
+                        title="Шаг 1: Вход в стартап"
+                        description="Начните с активации своего места в первом стартапе. Это ваш билет в мир венчурных инвестиций."
                     />
                      <StepCard 
                         icon={<Users className="h-6 w-6 text-white"/>}
-                        title="Шаг 2: Привлечение Инвесторов"
-                        description="Пригласите двух Инвесторов, используя свою ссылку. Они помогут финансировать ваш Проект."
+                        title="Шаг 2: Создание синдиката"
+                        description="Пригласите двух партнеров в свой синдикат. Они станут инвесторами в вашем стартапе."
                     />
                      <StepCard 
                         icon={<Gift className="h-6 w-6 text-white"/>}
-                        title="Шаг 3: Арендная плата"
-                        description="Как только Проект заполняется, вы получаете 'Арендную плату' и сдаете его в эксплуатацию, переходя к более прибыльным."
+                        title="Шаг 3: Закрытие раунда (Exit)"
+                        description="Как только все инвесторы найдены, раунд финансирования закрывается (Exit), и вы получаете прибыль."
                     />
                     <StepCard 
                         icon={<Building className="h-6 w-6 text-white"/>}
-                        title="Шаг 4: Улучшение и Масштаб"
-                        description="Улучшайте свои Проекты до 'Домов' и 'Отелей', чтобы увеличить доход, и создавайте 'Филиалы' для ускорения роста."
+                        title="Шаг 4: Масштабирование"
+                        description="Инвестируйте в более поздние раунды (A, B) и создавайте 'Spin-off' для экспоненциального роста вашего капитала."
                     />
                 </div>
             </Card>

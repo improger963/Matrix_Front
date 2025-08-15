@@ -22,12 +22,12 @@ const formatTimeAgo = (date: Date): string => {
 };
 
 const EventIcon: React.FC<{ type: LiveFeedEvent['type'] }> = ({ type }) => {
-    const iconMap = {
+    const iconMap: Record<LiveFeedEvent['type'], React.ReactNode> = {
         registration: <UserPlus className="h-5 w-5 text-blue-400" />,
         new_level: <ChevronsUp className="h-5 w-5 text-yellow-400" />,
         withdrawal: <ArrowDownCircle className="h-5 w-5 text-red-400" />,
         deposit: <ArrowUpCircle className="h-5 w-5 text-green-400" />,
-        project_close: <ShieldCheck className="h-5 w-5 text-purple-400" />,
+        startup_exit: <ShieldCheck className="h-5 w-5 text-purple-400" />,
     };
     return <div className="w-10 h-10 bg-dark-700 rounded-full flex items-center justify-center flex-shrink-0">{iconMap[type]}</div>;
 };
@@ -41,7 +41,7 @@ const EventMessage: React.FC<{ event: LiveFeedEvent }> = ({ event }) => {
         case 'new_level': return <>{userName} достиг(ла) {level} уровня!</>;
         case 'withdrawal': return <>{userName} вывел(а) <span className="font-semibold text-red-400">${amount?.toFixed(2)}</span>.</>;
         case 'deposit': return <>{userName} пополнил(а) баланс на <span className="font-semibold text-green-400">${amount?.toFixed(2)}</span>.</>;
-        case 'project_close': return <>{userName} закрыл(а) проект и получил(а) <span className="font-semibold text-purple-400">©{amount?.toFixed(2)}</span>.</>;
+        case 'startup_exit': return <>{userName} закрыл(а) раунд и получил(а) <span className="font-semibold text-purple-400">${amount?.toFixed(2)}</span>.</>;
         default: return null;
     }
 };
