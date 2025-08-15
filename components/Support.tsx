@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
-import Card from './ui/Card';
-import Button from './ui/Button';
+import Card from './ui/Card.tsx';
+import Button from './ui/Button.tsx';
 import { LifeBuoy, Send, CheckCircle, Mail, MessageSquare } from 'lucide-react';
 
 const Support: React.FC = () => {

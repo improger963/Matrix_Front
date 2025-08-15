@@ -1,5 +1,6 @@
+
 import React, { useMemo, useEffect } from 'react';
-import type { MatrixNode } from '../types';
+import type { MatrixNode } from '../types.ts';
 import { X, BarChart3, Users, GitBranch, PieChart, Zap, HelpCircle } from 'lucide-react';
 
 interface AnalyticsPanelProps {

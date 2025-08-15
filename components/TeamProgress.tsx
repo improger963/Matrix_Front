@@ -1,11 +1,14 @@
+
 import React, { useState, useMemo } from 'react';
-import Card from './ui/Card';
-import type { User, TeamMember, Achievement } from '../types';
-import { MOCK_TEAM_MEMBERS, MOCK_ACHIEVEMENTS } from '../constants';
-import { Users, UserPlus, Activity, ChevronUp, ChevronDown, Trophy, Zap, Share2 } from 'lucide-react';
+import Card from './ui/Card.tsx';
+import type { TeamMember, Achievement } from '../types.ts';
+import { MOCK_TEAM_MEMBERS, MOCK_ACHIEVEMENTS } from '../constants.ts';
+import { Users, UserPlus, Activity, ChevronUp, ChevronDown, Trophy, Zap, Share2, BarChart3 } from 'lucide-react';
+import { useAppContext } from '../contexts/AppContext.tsx';
 
 type SortKey = 'name' | 'joinDate' | 'level' | 'referrals';
 type SortOrder = 'asc' | 'desc';
+type Tab = 'team' | 'achievements' | 'analytics';
 
 const TeamStat: React.FC<{ icon: React.ReactNode; label: string; value: string | number; }> = ({ icon, label, value }) => (
     <div className="bg-dark-800/50 p-4 rounded-lg flex items-center gap-4">
@@ -91,8 +94,9 @@ const TeamMemberCard: React.FC<{ member: TeamMember }> = ({ member }) => (
 );
 
 
-const TeamProgress: React.FC<{ user: User }> = () => {
-    const [activeTab, setActiveTab] = useState<'team' | 'achievements'>('team');
+const TeamProgress: React.FC = () => {
+    const { user } = useAppContext();
+    const [activeTab, setActiveTab] = useState<Tab>('team');
     const [sortKey, setSortKey] = useState<SortKey>('joinDate');
     const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
 
@@ -121,6 +125,19 @@ const TeamProgress: React.FC<{ user: User }> = () => {
         });
         return sorted;
     }, [sortKey, sortOrder]);
+    
+    const teamAnalytics = useMemo(() => {
+        const levelDistribution: { [level: number]: number } = {};
+        MOCK_TEAM_MEMBERS.forEach(member => {
+            levelDistribution[member.level] = (levelDistribution[member.level] || 0) + 1;
+        });
+        
+        const topReferrers = [...MOCK_TEAM_MEMBERS]
+            .sort((a, b) => b.referrals - a.referrals)
+            .slice(0, 5);
+
+        return { levelDistribution, topReferrers };
+    }, []);
 
     const handleSort = (key: SortKey) => {
         if (sortKey === key) {
@@ -219,6 +236,53 @@ const TeamProgress: React.FC<{ user: User }> = () => {
         </Card>
     );
 
+    const renderAnalyticsView = () => {
+         const maxCount = Math.max(...Object.values(teamAnalytics.levelDistribution));
+        
+        return (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card>
+                    <h3 className="text-xl font-bold text-white mb-4">Распределение по уровням</h3>
+                     <div className="space-y-3">
+                        {Object.entries(teamAnalytics.levelDistribution).map(([level, count]) => (
+                            <div key={level} className="flex items-center gap-3 text-sm">
+                                <span className="w-16 text-gray-400">Уровень {level}</span>
+                                <div className="flex-1 bg-dark-800 rounded-full h-6 flex items-center">
+                                    <div 
+                                        className="bg-gradient-to-r from-brand-secondary to-brand-primary h-full rounded-full flex items-center justify-end px-2" 
+                                        style={{ width: `${(count / maxCount) * 100}%` }}
+                                    >
+                                        <span className="font-bold text-white text-xs">{count}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </Card>
+                 <Card>
+                     <h3 className="text-xl font-bold text-white mb-4">Топ-5 рекрутеров</h3>
+                     <div className="space-y-3">
+                        {teamAnalytics.topReferrers.map(member => (
+                            <div key={member.id} className="flex items-center justify-between p-3 bg-dark-800/50 rounded-lg">
+                                <div className="flex items-center gap-3">
+                                    <img src={member.avatarUrl} alt={member.name} className="h-10 w-10 rounded-full" />
+                                    <div>
+                                        <p className="font-semibold text-white">{member.name}</p>
+                                        <p className="text-xs text-gray-400">Уровень {member.level}</p>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                     <p className="font-bold text-brand-accent text-lg">{member.referrals}</p>
+                                     <p className="text-xs text-gray-500">рефералов</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </Card>
+            </div>
+        );
+    };
+
     return (
         <div className="space-y-6">
             <div>
@@ -227,18 +291,21 @@ const TeamProgress: React.FC<{ user: User }> = () => {
             </div>
 
             <div className="border-b border-dark-700">
-                <nav className="-mb-px flex gap-4">
+                <nav className="-mb-px flex gap-2 sm:gap-4 overflow-x-auto">
                     <button onClick={() => setActiveTab('team')} className={`flex items-center gap-2 px-1 sm:px-4 py-3 font-semibold border-b-2 ${activeTab === 'team' ? 'text-brand-primary border-brand-primary' : 'text-gray-400 border-transparent hover:text-white hover:border-gray-500'}`}>
                         <Users className="h-5 w-5"/> Моя Команда
                     </button>
                     <button onClick={() => setActiveTab('achievements')} className={`flex items-center gap-2 px-1 sm:px-4 py-3 font-semibold border-b-2 ${activeTab === 'achievements' ? 'text-brand-primary border-brand-primary' : 'text-gray-400 border-transparent hover:text-white hover:border-gray-500'}`}>
                        <Zap className="h-5 w-5"/> Достижения
                     </button>
+                     <button onClick={() => setActiveTab('analytics')} className={`flex items-center gap-2 px-1 sm:px-4 py-3 font-semibold border-b-2 ${activeTab === 'analytics' ? 'text-brand-primary border-brand-primary' : 'text-gray-400 border-transparent hover:text-white hover:border-gray-500'}`}>
+                       <BarChart3 className="h-5 w-5"/> Аналитика
+                    </button>
                 </nav>
             </div>
             
             <div className="animate-fade-in">
-                {activeTab === 'team' ? renderTeamView() : renderAchievementsView()}
+                {activeTab === 'team' ? renderTeamView() : activeTab === 'achievements' ? renderAchievementsView() : renderAnalyticsView()}
             </div>
         </div>
     );

@@ -1,5 +1,6 @@
+
 import React from 'react';
-import LiveFeed from './LiveFeed';
+import LiveFeed from './LiveFeed.tsx';
 
 const LiveFeedView: React.FC = () => {
     return (

@@ -1,8 +1,10 @@
+
 import React from 'react';
-import Card from './ui/Card';
-import { MOCK_LEADERS } from '../constants';
-import { Leader, User } from '../types';
-import { Crown, Trophy, Award, DollarSign, BarChart2 } from 'lucide-react';
+import Card from './ui/Card.tsx';
+import { MOCK_LEADERS } from '../constants.ts';
+import type { Leader } from '../types.ts';
+import { Crown, Trophy, Award } from 'lucide-react';
+import { useAppContext } from '../contexts/AppContext.tsx';
 
 const PodiumPlace: React.FC<{ leader: Leader; place: 1 | 2 | 3 }> = ({ leader, place }) => {
     const styles = {
@@ -64,7 +66,8 @@ const LeaderRow: React.FC<{ leader: Leader; isCurrentUser: boolean }> = ({ leade
 };
 
 
-const Leaderboard: React.FC<{ user: User }> = ({ user }) => {
+const Leaderboard: React.FC = () => {
+    const { user } = useAppContext();
     const [top3, others] = [MOCK_LEADERS.slice(0, 3), MOCK_LEADERS.slice(3)];
     const podiumOrder = [top3[1], top3[0], top3[2]]; // 2nd, 1st, 3rd
 

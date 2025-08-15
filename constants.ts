@@ -1,5 +1,6 @@
-import type { User, MatrixNode, Leader, Transaction, ProjectStats, TeamMember, Achievement, Notification, LiveFeedEvent, Review, NewsArticle } from './types';
-import { Award, CheckCircle, Gift, Network, Rocket, ShieldCheck, Target, Users, UserPlus, DollarSign, Share2 } from 'lucide-react';
+
+import type { User, MatrixNode, Leader, Transaction, ProjectStats, TeamMember, Achievement, Notification, LiveFeedEvent, Review, NewsArticle, AcademyArticle, DailyTask, PromoMaterial } from './types.ts';
+import { Award, CheckCircle, Gift, Network, Rocket, ShieldCheck, Target, Users, UserPlus, DollarSign, Share2, GraduationCap, Megaphone, ListTodo, BotMessageSquare, Video, BookText } from 'lucide-react';
 
 export const MOCK_USERS_DB: { [id: string]: Pick<User, 'id' | 'name' | 'avatarUrl'> } = {
   'U12345': { id: 'U12345', name: 'Алексей Волков', avatarUrl: 'https://i.pravatar.cc/150?u=U12345' },
@@ -334,4 +335,38 @@ export const MOCK_NEWS: NewsArticle[] = [
         content: 'Наш AI-помощник стал еще умнее! Мы обновили его алгоритмы для генерации более креативных и убедительных рекламных текстов. Попробуйте прямо сейчас в соответствующем разделе.',
         timestamp: '2024-07-20',
     }
+];
+
+export const MOCK_ACADEMY_ARTICLES: AcademyArticle[] = [
+    { id: 'A001', title: 'Как пригласить первого партнера за 24 часа', category: 'Для новичков', type: 'video', duration: '12:35', coverUrl: 'https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60', isLocked: false },
+    { id: 'A002', title: 'Психология продаж в MLM', category: 'Продвижение', type: 'article', coverUrl: 'https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60', isLocked: false },
+    { id: 'A003', title: 'Разбор маркетинг-плана: все о "клонах" и "переливах"', category: 'Маркетинг-план', type: 'video', duration: '25:10', coverUrl: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60', isLocked: false },
+    { id: 'A004', title: 'Эффективная работа с соцсетями', category: 'Продвижение', type: 'article', coverUrl: 'https://images.unsplash.com/photo-1611162617213-6d22e4ca1c78?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60', isLocked: true },
+    { id: 'A005', title: 'Как создать личный бренд', category: 'Продвижение', type: 'video', duration: '18:05', coverUrl: 'https://images.unsplash.com/photo-1588196749597-9ff075a6b54a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60', isLocked: true },
+    { id: 'A006', title: 'Финансовая грамотность для участника', category: 'Для новичков', type: 'article', coverUrl: 'https://images.unsplash.com/photo-1642792962358-83132a2e475c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60', isLocked: true },
+];
+
+export const MARKETING_GENIUS_TASK_ID = 'T02';
+
+export const MOCK_DAILY_TASKS: DailyTask[] = [
+    { id: 'T01', title: 'Войти в аккаунт', description: 'Ежедневный вход для поддержания активности.', reward: '+5 очков', icon: ListTodo, isCompleted: true, actionText: 'Выполнено', actionType: 'none' },
+    { id: MARKETING_GENIUS_TASK_ID, title: 'Сгенерировать пост', description: 'Используйте AI-Копирайтер для создания контента.', reward: '+15 очков', icon: BotMessageSquare, isCompleted: false, actionText: 'К AI-Копирайтеру', actionType: 'navigate', targetView: 'marketing' },
+    { id: 'T03', title: 'Поделиться ссылкой', description: 'Поделитесь реферальной ссылкой в любой соцсети.', reward: '+25 очков', icon: Share2, isCompleted: false, actionText: 'Скопировать ссылку', actionType: 'copy' },
+];
+
+export const MOCK_PROMO_MATERIALS: PromoMaterial[] = [
+    { id: 'P01', type: 'banner', title: 'Баннер для поста (Квадрат)', content: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&h=1200&q=80', size: '1200x1200' },
+    { id: 'P02', type: 'banner', title: 'Баннер для Stories', content: 'https://images.unsplash.com/photo-1604079628040-94301bb21b91?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1080&h=1920&q=80', size: '1080x1920' },
+    { id: 'P03', type: 'text', title: 'Текст для Telegram', content: `🔥 **Готов изменить свою жизнь?** 🔥
+
+Надоело работать "на дядю"? Ищешь способ зарабатывать онлайн, но не знаешь, с чего начать?
+
+У меня есть решение! **MatrixFlow** — это не просто проект, это твой шанс построить собственный бизнес с минимальными вложениями.
+
+✅ Прозрачный маркетинг
+✅ Мощная команда и поддержка 24/7
+✅ Автоматизированная система "клонов" и "переливов"
+
+Не упусти свой шанс! Напиши мне "ХОЧУ В КОМАНДУ", и я расскажу все подробности. 👇`},
+    { id: 'P04', type: 'text', title: 'Короткое сообщение для WhatsApp', content: `Привет! 👋 Я сейчас развиваю очень интересный онлайн-проект с отличным доходом. Подумал(а), тебе тоже может быть интересно. Если ищешь новые возможности, дай знать, расскажу подробнее!` },
 ];

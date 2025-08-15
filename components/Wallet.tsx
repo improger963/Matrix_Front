@@ -1,10 +1,13 @@
+
 import React, { useState } from 'react';
-import Card from './ui/Card';
-import Button from './ui/Button';
-import { MOCK_TRANSACTIONS, MOCK_USERS_DB } from '../constants';
-import type { Transaction, User } from '../types';
+import Card from './ui/Card.tsx';
+import Button from './ui/Button.tsx';
+import { MOCK_TRANSACTIONS, MOCK_USERS_DB } from '../constants.ts';
+import type { Transaction, User } from '../types.ts';
 import { DollarSign, ArrowUpCircle, ArrowDownCircle, History, CreditCard, Bitcoin, Wallet as WalletIcon, CheckCircle, ArrowLeft, Copy, Check, Send, UserSearch, LoaderCircle } from 'lucide-react';
 import QRCode from "react-qr-code";
+import { useAppContext } from '../contexts/AppContext.tsx';
+import { AnimatedBalance } from './ui/Stat.tsx';
 
 type Tab = 'deposit' | 'withdraw' | 'transfer' | 'history';
 type Step = 'form' | 'crypto_details' | 'confirm_withdrawal' | 'success' | 'transfer_confirm';
@@ -17,11 +20,8 @@ interface TransactionDetails {
     recipient?: Pick<User, 'id' | 'name' | 'avatarUrl'>;
 }
 
-interface WalletProps {
-    user: User;
-}
-
-const Wallet: React.FC<WalletProps> = ({ user }) => {
+const Wallet: React.FC = () => {
+    const { user } = useAppContext();
     const [activeTab, setActiveTab] = useState<Tab>('deposit');
     const [step, setStep] = useState<Step>('form');
     const [amount, setAmount] = useState('');
@@ -516,8 +516,10 @@ const Wallet: React.FC<WalletProps> = ({ user }) => {
                         <p className="text-gray-400">Управляйте своими финансами</p>
                     </div>
                     <div className="bg-dark-700/50 p-4 rounded-lg">
-                        <p className="text-sm text-gray-400">Текущий баланс</p>
-                        <p className="text-3xl font-bold text-green-400">${user.balance.toLocaleString('ru-RU')}</p>
+                        <p className="text-sm text-gray-400 text-center">Текущий баланс</p>
+                        <div className="text-center text-4xl text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-emerald-400 to-teal-500 py-2 animate-text-glow">
+                            <AnimatedBalance value={user.balance} />
+                        </div>
                     </div>
                 </div>
             </Card>

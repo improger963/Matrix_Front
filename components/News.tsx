@@ -1,6 +1,7 @@
+
 import React from 'react';
-import Card from './ui/Card';
-import { MOCK_NEWS } from '../constants';
+import Card from './ui/Card.tsx';
+import { MOCK_NEWS } from '../constants.ts';
 import { Newspaper } from 'lucide-react';
 
 const News: React.FC = () => {

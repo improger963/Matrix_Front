@@ -1,5 +1,6 @@
+
 import React from 'react';
-import Card from './ui/Card';
+import Card from './ui/Card.tsx';
 import { Rocket, Users, Gift, TrendingUp } from 'lucide-react';
 
 const StepCard: React.FC<{ icon: React.ReactNode, title: string, description: string }> = ({ icon, title, description }) => (

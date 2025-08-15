@@ -1,36 +1,35 @@
 
-
 import React, { useState } from 'react';
-import type { User } from '../types';
-import { MOCK_PROJECT_STATS, MOCK_TRANSACTIONS } from '../constants';
-import Card from './ui/Card';
-import Button from './ui/Button';
-import Stat from './ui/Stat';
-import LiveFeed from './LiveFeed';
+import { MOCK_PROJECT_STATS, MOCK_TRANSACTIONS } from '../constants.ts';
+import Card from './ui/Card.tsx';
+import Button from './ui/Button.tsx';
+import Stat from './ui/Stat.tsx';
+import { AnimatedBalance } from './ui/Stat.tsx';
+import LiveFeed from './LiveFeed.tsx';
+import DailyTasks from './DailyTasks.tsx';
 import { DollarSign, Users, CheckSquare, Copy, Check, BarChart, UserPlus, Grid3X3, Globe, UserCheck, Award, CalendarDays, Gift, Wallet, Shield } from 'lucide-react';
+import { useAppContext } from '../contexts/AppContext.tsx';
 
-const PersonalStat: React.FC<{ icon: React.ReactNode; label: string; value: string | number; }> = ({ icon, label, value }) => (
+const PersonalStat: React.FC<{ icon: React.ReactNode; label: string; value: React.ReactNode; }> = ({ icon, label, value }) => (
     <div className="bg-dark-700/50 p-4 rounded-lg flex items-center gap-4 transition-all hover:bg-dark-700 hover:shadow-lg hover:scale-105">
         <div className="text-brand-accent p-2 bg-dark-800 rounded-lg">
             {icon}
         </div>
         <div>
             <p className="text-sm text-gray-400">{label}</p>
-            <p className="text-lg font-bold text-white">{value}</p>
+            <div className="text-lg font-bold text-white">{value}</div>
         </div>
     </div>
 );
 
 
-interface DashboardProps {
-    user: User;
-}
-
-const Dashboard: React.FC<DashboardProps> = ({ user }) => {
+const Dashboard: React.FC = () => {
+    const { user, dailyTasks, handleTaskAction, setActiveView, addToast } = useAppContext();
     const [copied, setCopied] = useState(false);
 
     const handleCopy = () => {
         navigator.clipboard.writeText(user.referralLink);
+        addToast("Реферальная ссылка скопирована!", "success");
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
@@ -54,7 +53,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         <PersonalStat icon={<Award className="h-6 w-6"/>} label="Текущий уровень" value={user.level} />
-                        <PersonalStat icon={<DollarSign className="h-6 w-6"/>} label="Общий баланс" value={`$${user.balance.toLocaleString('ru-RU')}`} />
+                        <PersonalStat icon={<DollarSign className="h-6 w-6"/>} label="Общий баланс" value={<AnimatedBalance value={user.balance} />} />
                         <PersonalStat icon={<Gift className="h-6 w-6"/>} label="Доход от матриц" value={`$${matrixEarnings.toLocaleString('ru-RU')}`} />
                         <PersonalStat icon={<Users className="h-6 w-6"/>} label="Личные рефералы" value={user.referrals} />
                         <PersonalStat icon={<CheckSquare className="h-6 w-6"/>} label="Закрыто матриц" value={user.matrixCompletions} />
@@ -93,15 +92,15 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                  <Card className="animate-slide-in-up" style={{ animationDelay: '300ms' }}>
                     <h3 className="text-xl font-bold text-white mb-4">Быстрые действия</h3>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                        <button className="flex flex-col items-center justify-center gap-2 p-4 bg-dark-700/50 hover:bg-dark-700 rounded-lg transition-all">
+                        <button onClick={() => setActiveView('wallet')} className="flex flex-col items-center justify-center gap-2 p-4 bg-dark-700/50 hover:bg-dark-700 rounded-lg transition-all">
                             <Wallet className="w-7 h-7 text-brand-accent"/>
                             <span className="font-semibold">Кошелек</span>
                         </button>
-                         <button className="flex flex-col items-center justify-center gap-2 p-4 bg-dark-700/50 hover:bg-dark-700 rounded-lg transition-all">
+                         <button onClick={() => setActiveView('matrix')} className="flex flex-col items-center justify-center gap-2 p-4 bg-dark-700/50 hover:bg-dark-700 rounded-lg transition-all">
                             <Shield className="w-7 h-7 text-brand-accent"/>
                             <span className="font-semibold">Матрица</span>
                         </button>
-                         <button className="flex flex-col items-center justify-center gap-2 p-4 bg-dark-700/50 hover:bg-dark-700 rounded-lg transition-all">
+                         <button onClick={() => setActiveView('team')} className="flex flex-col items-center justify-center gap-2 p-4 bg-dark-700/50 hover:bg-dark-700 rounded-lg transition-all">
                             <Users className="w-7 h-7 text-brand-accent"/>
                             <span className="font-semibold">Команда</span>
                         </button>
@@ -139,8 +138,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                         />
                     </div>
                 </Card>
-
+                
                 <div className="animate-slide-in-up" style={{ animationDelay: '500ms' }}>
+                    <DailyTasks tasks={dailyTasks} onTaskAction={handleTaskAction}/>
+                </div>
+
+                <div className="animate-slide-in-up" style={{ animationDelay: '600ms' }}>
                     <LiveFeed />
                 </div>
             </div>

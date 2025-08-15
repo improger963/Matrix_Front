@@ -1,10 +1,12 @@
+
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import Card from './ui/Card';
-import { MOCK_MATRIX_DATA } from '../constants';
-import type { MatrixNode as MatrixNodeType, User as UserType } from '../types';
+import Card from './ui/Card.tsx';
+import { MOCK_MATRIX_DATA } from '../constants.ts';
+import type { MatrixNode as MatrixNodeType } from '../types.ts';
 import * as htmlToImage from 'html-to-image';
 import { User, ShieldPlus, Link, Check, ChevronRight, Search, Maximize, Minimize, AlertCircle, Award, Users as UsersIcon, Network, Layers, Flame, Snowflake, ArrowDownFromLine, Copy as CopyIcon, Filter, Download, X, Home, BarChart3 } from 'lucide-react';
-import AnalyticsPanel from './AnalyticsPanel';
+import AnalyticsPanel from './AnalyticsPanel.tsx';
+import { useAppContext } from '../contexts/AppContext.tsx';
 
 interface MatrixNodeProps {
     node: MatrixNodeType;
@@ -164,7 +166,8 @@ const MemoizedMatrixNode: React.FC<MatrixNodeProps> = React.memo(({ node, depth,
     );
 });
 
-const MatrixView: React.FC<{ user: UserType }> = ({ user }) => {
+const MatrixView: React.FC = () => {
+    const { user } = useAppContext();
     const [history, setHistory] = useState<MatrixNodeType[]>([MOCK_MATRIX_DATA]);
     const [transform, setTransform] = useState({ x: 0, y: 0, scale: 1 });
     const [isDragging, setIsDragging] = useState(false);

@@ -33,6 +33,7 @@
               'gradient-animation': 'gradient-animation 15s ease infinite',
               'flow-line': 'flow-line 5s linear infinite',
               'glow': 'glow 2s ease-in-out infinite alternate',
+              'text-glow': 'textGlow 2.5s ease-in-out infinite alternate',
             },
             keyframes: {
               fadeIn: {
@@ -59,6 +60,10 @@
               glow: {
                 'from': { 'box-shadow': '0 0 5px -5px #a78bfa' },
                 'to': { 'box-shadow': '0 0 20px 5px #a78bfa' },
+              },
+              textGlow: {
+                'from': { 'text-shadow': '0 0 10px rgba(74, 222, 128, 0.4), 0 0 20px rgba(74, 222, 128, 0.2)' },
+                'to': { 'text-shadow': '0 0 20px rgba(74, 222, 128, 0.6), 0 0 30px rgba(74, 222, 128, 0.4)' },
               }
             }
           }
@@ -71,7 +76,6 @@
     "react": "https://esm.sh/react@^19.1.1",
     "react-dom/": "https://esm.sh/react-dom@^19.1.1/",
     "react/": "https://esm.sh/react@^19.1.1/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.14.0",
     "lucide-react": "https://esm.sh/lucide-react@^0.539.0",
     "html-to-image": "https://esm.sh/html-to-image@^1.11.11",
     "react-qr-code": "https://esm.sh/react-qr-code@^2.0.12"

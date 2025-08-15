@@ -1,30 +1,26 @@
+
 import React, { useState } from 'react';
-import Card from './ui/Card';
-import Button from './ui/Button';
-import type { User } from '../types';
-import { UserCircle, CheckCircle, Copy, Check } from 'lucide-react';
+import Card from './ui/Card.tsx';
+import Button from './ui/Button.tsx';
+import { UserCircle, Copy, Check } from 'lucide-react';
+import { useAppContext } from '../contexts/AppContext.tsx';
 
-interface ProfileProps {
-    user: User;
-    onUpdateUser: (user: User) => void;
-}
-
-const Profile: React.FC<ProfileProps> = ({ user, onUpdateUser }) => {
+const Profile: React.FC = () => {
+    const { user, setUser, addToast } = useAppContext();
     const [name, setName] = useState(user.name);
     const [avatarUrl, setAvatarUrl] = useState(user.avatarUrl);
-    const [message, setMessage] = useState('');
     const [copied, setCopied] = useState(false);
 
     const handleSave = (e: React.FormEvent) => {
         e.preventDefault();
-        onUpdateUser({ ...user, name, avatarUrl });
-        setMessage('Профиль успешно обновлен!');
-        setTimeout(() => setMessage(''), 3000);
+        setUser({ ...user, name, avatarUrl });
+        addToast('Профиль успешно обновлен!', 'success');
     };
     
     const handleCopy = () => {
         navigator.clipboard.writeText(user.referralLink);
         setCopied(true);
+        addToast('Реферальная ссылка скопирована!', 'success');
         setTimeout(() => setCopied(false), 2000);
     };
 
@@ -37,13 +33,6 @@ const Profile: React.FC<ProfileProps> = ({ user, onUpdateUser }) => {
                     <p className="text-gray-400">Здесь вы можете изменить свои данные.</p>
                 </div>
             </div>
-
-            {message && (
-                <div className="flex items-center gap-3 bg-green-500/10 text-green-400 p-4 rounded-lg mb-4 animate-fade-in">
-                    <CheckCircle className="h-5 w-5" />
-                    <p>{message}</p>
-                </div>
-            )}
             
             <form onSubmit={handleSave} className="space-y-6">
                 <div className="flex flex-col sm:flex-row items-center gap-6">

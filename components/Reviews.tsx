@@ -1,10 +1,11 @@
 
 import React, { useState } from 'react';
-import Card from './ui/Card';
-import Button from './ui/Button';
-import { MOCK_REVIEWS } from '../constants';
-import type { Review, User } from '../types';
+import Card from './ui/Card.tsx';
+import Button from './ui/Button.tsx';
+import { MOCK_REVIEWS } from '../constants.ts';
+import type { Review } from '../types.ts';
 import { Star, MessageSquareQuote, PlusCircle, X } from 'lucide-react';
+import { useAppContext } from '../contexts/AppContext.tsx';
 
 const StarRatingDisplay: React.FC<{ rating: number }> = ({ rating }) => {
     return (
@@ -41,7 +42,8 @@ const InteractiveStarRating: React.FC<{ rating: number, setRating: (rating: numb
 };
 
 
-const Reviews: React.FC<{ user: User }> = ({ user }) => {
+const Reviews: React.FC = () => {
+    const { user } = useAppContext();
     const [reviews, setReviews] = useState<Review[]>(MOCK_REVIEWS);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [newReviewText, setNewReviewText] = useState('');

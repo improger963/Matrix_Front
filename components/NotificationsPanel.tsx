@@ -1,5 +1,6 @@
+
 import React from 'react';
-import type { Notification } from '../types';
+import type { Notification } from '../types.ts';
 import { CheckCheck } from 'lucide-react';
 
 interface NotificationsPanelProps {

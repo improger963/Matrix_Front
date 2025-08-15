@@ -1,11 +1,11 @@
 
-
-
 import React, { useState, useEffect } from 'react';
-import Card from './ui/Card';
-import Button from './ui/Button';
-import { generateMarketingContentStream } from '../services/geminiService';
+import Card from './ui/Card.tsx';
+import Button from './ui/Button.tsx';
+import { generateMarketingContentStream } from '../services/geminiService.ts';
 import { Sparkles, LoaderCircle, Clipboard, X } from 'lucide-react';
+import { useAppContext } from '../contexts/AppContext.tsx';
+import { MARKETING_GENIUS_TASK_ID } from '../constants.ts';
 
 const BlinkingCursor: React.FC = () => {
     const [visible, setVisible] = useState(true);
@@ -16,8 +16,8 @@ const BlinkingCursor: React.FC = () => {
     return visible ? <span className="inline-block w-0.5 h-5 bg-brand-accent -mb-1 ml-0.5"></span> : <span className="inline-block w-0.5 h-5 -mb-1 ml-0.5"></span>;
 };
 
-
 const MarketingGenius: React.FC = () => {
+    const { handleCompleteTask } = useAppContext();
     const [prompt, setPrompt] = useState('');
     const [generatedContent, setGeneratedContent] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -32,6 +32,7 @@ const MarketingGenius: React.FC = () => {
         setIsLoading(true);
         setError(null);
         setGeneratedContent('');
+        handleCompleteTask(MARKETING_GENIUS_TASK_ID); // Notify context that the task is completed
 
         try {
             await generateMarketingContentStream(prompt, (chunk) => {

@@ -1,4 +1,5 @@
-export type View = 'dashboard' | 'matrix' | 'marketing' | 'leaderboard' | 'howitworks' | 'faq' | 'wallet' | 'profile' | 'team' | 'livefeed' | 'reviews' | 'support' | 'news';
+
+export type View = 'dashboard' | 'matrix' | 'marketing' | 'leaderboard' | 'howitworks' | 'faq' | 'wallet' | 'profile' | 'team' | 'livefeed' | 'reviews' | 'support' | 'news' | 'academy' | 'promo';
 
 export interface User {
   id: string;
@@ -120,4 +121,42 @@ export interface NewsArticle {
   title: string;
   content: string;
   timestamp: string;
+}
+
+export interface AcademyArticle {
+  id: string;
+  title: string;
+  category: 'Для новичков' | 'Продвижение' | 'Маркетинг-план';
+  type: 'video' | 'article';
+  duration?: string; // for video
+  coverUrl: string;
+  isLocked: boolean;
+}
+
+export interface DailyTask {
+  id: string;
+  title: string;
+  description: string;
+  reward: string;
+  icon: React.ElementType;
+  isCompleted: boolean;
+  actionText: string;
+  actionType: 'navigate' | 'copy' | 'none';
+  targetView?: View;
+}
+
+export interface PromoMaterial {
+  id: string;
+  type: 'banner' | 'text';
+  title: string;
+  content: string; // URL for banner, text content for text
+  size?: string; // for banner e.g., '1200x628'
+}
+
+export type ToastType = 'success' | 'error' | 'info';
+
+export interface Toast {
+  id: string;
+  type: ToastType;
+  message: string;
 }

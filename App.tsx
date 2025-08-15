@@ -1,28 +1,31 @@
 
 import React, { useState } from 'react';
-import Header from './components/Header';
-import Dashboard from './components/Dashboard';
-import MatrixView from './components/MatrixView';
-import MarketingGenius from './components/MarketingGenius';
-import Leaderboard from './components/Leaderboard';
-import HowItWorks from './components/HowItWorks';
-import FAQ from './components/FAQ';
-import Wallet from './components/Wallet';
-import Profile from './components/Profile';
-import TeamProgress from './components/TeamProgress';
-import LiveFeedView from './components/LiveFeedView';
-import Reviews from './components/Reviews';
-import Support from './components/Support';
-import News from './components/News';
-import { ShieldCheck, LayoutGrid, BotMessageSquare, Trophy, HelpCircle, BookOpen, Wallet as WalletIcon, UserCircle, TrendingUp, MoreHorizontal, Zap, MessageSquareQuote, LifeBuoy, Newspaper } from 'lucide-react';
-import type { View, User } from './types';
-import { MOCK_USER } from './constants';
-import MoreMenu from './components/MoreMenu';
+import Header from './components/Header.tsx';
+import { ShieldCheck, LayoutGrid, BotMessageSquare, Trophy, HelpCircle, BookOpen, Wallet as WalletIcon, UserCircle, TrendingUp, MoreHorizontal, Zap, MessageSquareQuote, LifeBuoy, Newspaper, GraduationCap, Megaphone } from 'lucide-react';
+import type { View } from './types.ts';
+import MoreMenu from './components/MoreMenu.tsx';
+import { AppProvider, useAppContext } from './contexts/AppContext.tsx';
+
+// Statically import components
+import Dashboard from './components/Dashboard.tsx';
+import MatrixView from './components/MatrixView.tsx';
+import MarketingGenius from './components/MarketingGenius.tsx';
+import Leaderboard from './components/Leaderboard.tsx';
+import HowItWorks from './components/HowItWorks.tsx';
+import FAQ from './components/FAQ.tsx';
+import Wallet from './components/Wallet.tsx';
+import Profile from './components/Profile.tsx';
+import TeamProgress from './components/TeamProgress.tsx';
+import LiveFeedView from './components/LiveFeedView.tsx';
+import Reviews from './components/Reviews.tsx';
+import Support from './components/Support.tsx';
+import News from './components/News.tsx';
+import Academy from './components/Academy.tsx';
+import Promo from './components/Promo.tsx';
 
 
-const App: React.FC = () => {
-    const [activeView, setActiveView] = useState<View>('dashboard');
-    const [user, setUser] = useState<User>(MOCK_USER);
+const AppContent: React.FC = () => {
+    const { activeView, setActiveView } = useAppContext();
     const [isMoreMenuOpen, setMoreMenuOpen] = useState(false);
 
     const handleLogout = () => {
@@ -34,34 +37,22 @@ const App: React.FC = () => {
 
     const renderView = () => {
         switch (activeView) {
-            case 'dashboard':
-                return <Dashboard user={user}/>;
-            case 'matrix':
-                return <MatrixView user={user} />;
-            case 'team':
-                return <TeamProgress user={user} />;
-            case 'wallet':
-                return <Wallet user={user} />;
-            case 'marketing':
-                return <MarketingGenius />;
-            case 'leaderboard':
-                return <Leaderboard user={user} />;
-            case 'livefeed':
-                return <LiveFeedView />;
-            case 'howitworks':
-                return <HowItWorks />;
-            case 'faq':
-                return <FAQ />;
-            case 'profile':
-                return <Profile user={user} onUpdateUser={setUser} />;
-            case 'reviews':
-                return <Reviews user={user} />;
-            case 'support':
-                return <Support />;
-            case 'news':
-                return <News />;
-            default:
-                return <Dashboard user={user} />;
+            case 'dashboard': return <Dashboard />;
+            case 'matrix': return <MatrixView />;
+            case 'team': return <TeamProgress />;
+            case 'wallet': return <Wallet />;
+            case 'marketing': return <MarketingGenius />;
+            case 'academy': return <Academy />;
+            case 'promo': return <Promo />;
+            case 'leaderboard': return <Leaderboard />;
+            case 'livefeed': return <LiveFeedView />;
+            case 'howitworks': return <HowItWorks />;
+            case 'faq': return <FAQ />;
+            case 'profile': return <Profile />;
+            case 'reviews': return <Reviews />;
+            case 'support': return <Support />;
+            case 'news': return <News />;
+            default: return <Dashboard />;
         }
     };
 
@@ -77,12 +68,14 @@ const App: React.FC = () => {
         { id: 'wallet', label: 'Кошелек', icon: WalletIcon },
         { id: 'profile', label: 'Профиль', icon: UserCircle },
         { id: 'marketing', label: 'AI-Копирайтер', icon: BotMessageSquare },
+        { id: 'academy', label: 'Академия', icon: GraduationCap },
+        { id: 'promo', label: 'Промо-материалы', icon: Megaphone },
         { id: 'leaderboard', label: 'Лидеры', icon: Trophy },
         { id: 'livefeed', label: 'Живая лента', icon: Zap },
-        { id: 'howitworks', label: 'Как это работает', icon: BookOpen },
-        { id: 'faq', label: 'FAQ', icon: HelpCircle },
         { id: 'reviews', label: 'Отзывы', icon: MessageSquareQuote },
         { id: 'news', label: 'Новости', icon: Newspaper },
+        { id: 'howitworks', label: 'Как это работает', icon: BookOpen },
+        { id: 'faq', label: 'FAQ', icon: HelpCircle },
         { id: 'support', label: 'Тех. Поддержка', icon: LifeBuoy },
     ];
     
@@ -96,7 +89,6 @@ const App: React.FC = () => {
     const mainMobileNavIdsSet = new Set(mainMobileNavItems.map(item => item.id));
     const moreNavItems = navItems.filter(item => !mainMobileNavIdsSet.has(item.id));
     const isMoreMenuActive = moreNavItems.some(item => item.id === activeView);
-
 
     return (
         <div className="min-h-screen flex bg-dark-900 font-sans">
@@ -123,8 +115,8 @@ const App: React.FC = () => {
                 </nav>
             </aside>
             <div className="flex-1 flex flex-col relative z-10 min-w-0">
-                <Header user={user} onViewChange={handleViewChange} onLogout={handleLogout} />
-                <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto pb-24 lg:pb-8">
+                <Header onLogout={handleLogout} />
+                <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto pb-24 lg:pb-8 relative">
                     <div key={activeView} className="mt-8 animate-fade-in">
                         {renderView()}
                     </div>
@@ -169,6 +161,15 @@ const App: React.FC = () => {
                 onViewChange={handleViewChange}
             />
         </div>
+    );
+};
+
+
+const App: React.FC = () => {
+    return (
+        <AppProvider>
+            <AppContent />
+        </AppProvider>
     );
 };
 

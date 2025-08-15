@@ -1,5 +1,6 @@
+
 import React from 'react';
-import type { View } from '../types';
+import type { View } from '../types.ts';
 import { X } from 'lucide-react';
 
 interface MoreMenuProps {

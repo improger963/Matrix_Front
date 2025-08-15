@@ -1,17 +1,17 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import type { User, Notification, View } from '../types';
-import { MOCK_NOTIFICATIONS } from '../constants';
-import NotificationsPanel from './NotificationsPanel';
+import type { Notification } from '../types.ts';
+import { MOCK_NOTIFICATIONS } from '../constants.ts';
+import NotificationsPanel from './NotificationsPanel.tsx';
 import { Bell, ChevronDown, LogOut, UserCircle } from 'lucide-react';
+import { useAppContext } from '../contexts/AppContext.tsx';
 
 interface HeaderProps {
-    user: User;
-    onViewChange: (view: View) => void;
     onLogout: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ user, onViewChange, onLogout }) => {
+const Header: React.FC<HeaderProps> = ({ onLogout }) => {
+    const { user, setActiveView } = useAppContext();
     const [isNotificationsOpen, setNotificationsOpen] = useState(false);
     const [isUserMenuOpen, setUserMenuOpen] = useState(false);
     const [notifications, setNotifications] = useState<Notification[]>(MOCK_NOTIFICATIONS);
@@ -102,7 +102,7 @@ const Header: React.FC<HeaderProps> = ({ user, onViewChange, onLogout }) => {
                                 <p className="text-sm text-gray-400">ID: {user.id}</p>
                             </div>
                             <div className="p-2">
-                                <button onClick={() => { onViewChange('profile'); setUserMenuOpen(false); }} className="w-full text-left flex items-center gap-3 px-3 py-2 rounded-md text-gray-300 hover:bg-dark-700 hover:text-white transition-colors">
+                                <button onClick={() => { setActiveView('profile'); setUserMenuOpen(false); }} className="w-full text-left flex items-center gap-3 px-3 py-2 rounded-md text-gray-300 hover:bg-dark-700 hover:text-white transition-colors">
                                     <UserCircle className="h-5 w-5" />
                                     <span>Мой профиль</span>
                                 </button>

@@ -1,7 +1,8 @@
+
 import React from 'react';
-import Card from './ui/Card';
-import type { LiveFeedEvent } from '../types';
-import { MOCK_LIVE_FEED_EVENTS } from '../constants';
+import Card from './ui/Card.tsx';
+import type { LiveFeedEvent } from '../types.ts';
+import { MOCK_LIVE_FEED_EVENTS } from '../constants.ts';
 import { Zap, UserPlus, ChevronsUp, ArrowDownCircle, ArrowUpCircle, ShieldCheck } from 'lucide-react';
 
 const formatTimeAgo = (date: Date): string => {
