@@ -87,6 +87,7 @@ export interface Achievement {
     description: string;
     icon: React.ElementType;
     unlocked: boolean;
+    category: 'Team' | 'Financial' | 'Personal' | 'Milestone';
     progress?: {
         current: number;
         target: number;
