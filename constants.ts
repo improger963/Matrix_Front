@@ -54,7 +54,13 @@ export const MOCK_USER: User = {
     teamEarnings: 1250.75,
     referralLink: 'https://matrixflow.app/join?ref=U12345',
     joinDate: '2024-06-01',
-    welcomeMessage: 'Привет! Меня зовут Алексей, и я помогу тебе стартовать в MatrixFlow. Присоединяйся к моей команде, и давай зарабатывать вместе!'
+    welcomeMessage: 'Привет! Меня зовут Алексей, и я помогу тебе стартовать в MatrixFlow. Присоединяйся к моей команде, и давай зарабатывать вместе!',
+    bio: 'Эксперт по построению больших команд. Помогу каждому партнеру выйти на доход от $1000 в первый месяц.',
+    socials: {
+        telegram: 'alex_volkov',
+        vk: 'avolkov',
+        website: 'alex-volkov.com'
+    }
 };
 
 export const MOCK_PROJECT_STATS: ProjectStats = {
@@ -221,7 +227,7 @@ export const MOCK_TEAM_MEMBERS: TeamMember[] = [
 export const MOCK_ACHIEVEMENTS: Achievement[] = [
     { id: 'ach01', title: 'Добро пожаловать!', description: 'Вы успешно зарегистрировались в проекте.', icon: Rocket, unlocked: true },
     { id: 'ach02', title: 'Первые шаги', description: 'Пригласите своего первого партнера.', icon: Users, unlocked: true },
-    { id: 'ach03', title: 'Командный игрок', description: 'Пригласите 10 личных партнеров.', icon: Target, unlocked: false, progress: { current: MOCK_USER.referrals, target: 10 } },
+    { id: 'ach03', title: 'Командный игрок', description: 'Пригласите 10 личных партнеров.', icon: Target, unlocked: true, progress: { current: MOCK_USER.referrals, target: 10 } },
     { id: 'ach04', title: 'Закрыватель матриц', description: 'Закройте свою первую матрицу.', icon: ShieldCheck, unlocked: true },
     { id: 'ach05', title: 'Мастер матриц', description: 'Закройте 5 матриц.', icon: Award, unlocked: false, progress: { current: MOCK_USER.matrixCompletions, target: 5 } },
     { id: 'ach06', title: 'Строитель сети', description: 'Ваша команда достигла 25 человек.', icon: Network, unlocked: false, progress: { current: 18, target: 25 } },

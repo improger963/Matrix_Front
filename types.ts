@@ -13,6 +13,12 @@ export interface User {
   referralLink: string;
   joinDate: string;
   welcomeMessage?: string;
+  bio?: string;
+  socials?: {
+    telegram?: string;
+    vk?: string;
+    website?: string;
+  };
 }
 
 export interface MatrixNode {
