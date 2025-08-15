@@ -1,5 +1,5 @@
 
-export type View = 'dashboard' | 'matrix' | 'marketing' | 'leaderboard' | 'howitworks' | 'faq' | 'wallet' | 'profile' | 'team' | 'livefeed' | 'reviews' | 'support' | 'news' | 'academy' | 'promo';
+export type View = 'dashboard' | 'matrix' | 'marketing' | 'leaderboard' | 'howitworks' | 'faq' | 'wallet' | 'profile' | 'team' | 'livefeed' | 'reviews' | 'support' | 'news' | 'academy' | 'promo' | 'chat' | 'landingPage';
 
 export interface User {
   id: string;
@@ -9,8 +9,10 @@ export interface User {
   balance: number;
   referrals: number;
   matrixCompletions: number;
+  teamEarnings?: number;
   referralLink: string;
   joinDate: string;
+  welcomeMessage?: string;
 }
 
 export interface MatrixNode {
@@ -159,4 +161,16 @@ export interface Toast {
   id: string;
   type: ToastType;
   message: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  user: {
+    id: string;
+    name: string;
+    avatarUrl: string;
+    level: number;
+  };
+  text: string;
+  timestamp: string; // ISO 8601 format
 }

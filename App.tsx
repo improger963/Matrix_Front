@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import Header from './components/Header.tsx';
-import { ShieldCheck, LayoutGrid, BotMessageSquare, Trophy, HelpCircle, BookOpen, Wallet as WalletIcon, UserCircle, TrendingUp, MoreHorizontal, Zap, MessageSquareQuote, LifeBuoy, Newspaper, GraduationCap, Megaphone } from 'lucide-react';
+import { ShieldCheck, LayoutGrid, BotMessageSquare, Trophy, HelpCircle, BookOpen, Wallet as WalletIcon, UserCircle, TrendingUp, MoreHorizontal, Zap, MessageSquareQuote, LifeBuoy, Newspaper, GraduationCap, Megaphone, MessageSquare, Link } from 'lucide-react';
 import type { View } from './types.ts';
 import MoreMenu from './components/MoreMenu.tsx';
 import { AppProvider, useAppContext } from './contexts/AppContext.tsx';
@@ -22,6 +22,8 @@ import Support from './components/Support.tsx';
 import News from './components/News.tsx';
 import Academy from './components/Academy.tsx';
 import Promo from './components/Promo.tsx';
+import Chat from './components/Chat.tsx';
+import LandingPage from './components/LandingPage.tsx';
 
 
 const AppContent: React.FC = () => {
@@ -41,17 +43,19 @@ const AppContent: React.FC = () => {
             case 'matrix': return <MatrixView />;
             case 'team': return <TeamProgress />;
             case 'wallet': return <Wallet />;
+            case 'profile': return <Profile />;
+            case 'landingPage': return <LandingPage />;
             case 'marketing': return <MarketingGenius />;
             case 'academy': return <Academy />;
             case 'promo': return <Promo />;
             case 'leaderboard': return <Leaderboard />;
             case 'livefeed': return <LiveFeedView />;
+            case 'chat': return <Chat />;
+            case 'reviews': return <Reviews />;
+            case 'news': return <News />;
             case 'howitworks': return <HowItWorks />;
             case 'faq': return <FAQ />;
-            case 'profile': return <Profile />;
-            case 'reviews': return <Reviews />;
             case 'support': return <Support />;
-            case 'news': return <News />;
             default: return <Dashboard />;
         }
     };
@@ -67,11 +71,13 @@ const AppContent: React.FC = () => {
         { id: 'team', label: 'Команда и Прогресс', icon: TrendingUp },
         { id: 'wallet', label: 'Кошелек', icon: WalletIcon },
         { id: 'profile', label: 'Профиль', icon: UserCircle },
+        { id: 'landingPage', label: 'Моя страница', icon: Link },
         { id: 'marketing', label: 'AI-Копирайтер', icon: BotMessageSquare },
         { id: 'academy', label: 'Академия', icon: GraduationCap },
         { id: 'promo', label: 'Промо-материалы', icon: Megaphone },
         { id: 'leaderboard', label: 'Лидеры', icon: Trophy },
         { id: 'livefeed', label: 'Живая лента', icon: Zap },
+        { id: 'chat', label: 'Общий чат', icon: MessageSquare },
         { id: 'reviews', label: 'Отзывы', icon: MessageSquareQuote },
         { id: 'news', label: 'Новости', icon: Newspaper },
         { id: 'howitworks', label: 'Как это работает', icon: BookOpen },

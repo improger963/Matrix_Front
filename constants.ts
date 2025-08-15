@@ -1,13 +1,13 @@
 
-import type { User, MatrixNode, Leader, Transaction, ProjectStats, TeamMember, Achievement, Notification, LiveFeedEvent, Review, NewsArticle, AcademyArticle, DailyTask, PromoMaterial } from './types.ts';
+import type { User, MatrixNode, Leader, Transaction, ProjectStats, TeamMember, Achievement, Notification, LiveFeedEvent, Review, NewsArticle, AcademyArticle, DailyTask, PromoMaterial, ChatMessage } from './types.ts';
 import { Award, CheckCircle, Gift, Network, Rocket, ShieldCheck, Target, Users, UserPlus, DollarSign, Share2, GraduationCap, Megaphone, ListTodo, BotMessageSquare, Video, BookText } from 'lucide-react';
 
-export const MOCK_USERS_DB: { [id: string]: Pick<User, 'id' | 'name' | 'avatarUrl'> } = {
-  'U12345': { id: 'U12345', name: 'Алексей Волков', avatarUrl: 'https://i.pravatar.cc/150?u=U12345' },
-  'U67890': { id: 'U67890', name: 'Мария Соколова', avatarUrl: 'https://i.pravatar.cc/150?u=U67890' },
-  'UABCDE': { id: 'UABCDE', name: 'Сергей Новиков', avatarUrl: 'https://i.pravatar.cc/150?u=UABCDE' },
-  'L1': { id: 'L1', name: 'Елена Максимова', avatarUrl: 'https://i.pravatar.cc/150?u=L1' },
-  'L2': { id: 'L2', name: 'Дмитрий Громов', avatarUrl: 'https://i.pravatar.cc/150?u=L2' },
+export const MOCK_USERS_DB: { [id: string]: { id: string; name: string; avatarUrl: string; level: number; } } = {
+  'U12345': { id: 'U12345', name: 'Алексей Волков', avatarUrl: 'https://i.pravatar.cc/150?u=U12345', level: 5 },
+  'U67890': { id: 'U67890', name: 'Мария Соколова', avatarUrl: 'https://i.pravatar.cc/150?u=U67890', level: 4 },
+  'UABCDE': { id: 'UABCDE', name: 'Сергей Новиков', avatarUrl: 'https://i.pravatar.cc/150?u=UABCDE', level: 3 },
+  'L1': { id: 'L1', name: 'Елена Максимова', avatarUrl: 'https://i.pravatar.cc/150?u=L1', level: 12 },
+  'L2': { id: 'L2', name: 'Дмитрий Громов', avatarUrl: 'https://i.pravatar.cc/150?u=L2', level: 10 },
 };
 
 
@@ -51,8 +51,10 @@ export const MOCK_USER: User = {
     balance: CALCULATED_BALANCE,
     referrals: 14,
     matrixCompletions: 3,
+    teamEarnings: 1250.75,
     referralLink: 'https://matrixflow.app/join?ref=U12345',
-    joinDate: '2024-06-01'
+    joinDate: '2024-06-01',
+    welcomeMessage: 'Привет! Меня зовут Алексей, и я помогу тебе стартовать в MatrixFlow. Присоединяйся к моей команде, и давай зарабатывать вместе!'
 };
 
 export const MOCK_PROJECT_STATS: ProjectStats = {
@@ -369,4 +371,37 @@ export const MOCK_PROMO_MATERIALS: PromoMaterial[] = [
 
 Не упусти свой шанс! Напиши мне "ХОЧУ В КОМАНДУ", и я расскажу все подробности. 👇`},
     { id: 'P04', type: 'text', title: 'Короткое сообщение для WhatsApp', content: `Привет! 👋 Я сейчас развиваю очень интересный онлайн-проект с отличным доходом. Подумал(а), тебе тоже может быть интересно. Если ищешь новые возможности, дай знать, расскажу подробнее!` },
+];
+
+export const MOCK_CHAT_MESSAGES: ChatMessage[] = [
+    {
+        id: 'MSG001',
+        user: MOCK_USERS_DB['L1'],
+        text: 'Всем привет! Отличный день для закрытия матриц!',
+        timestamp: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
+    },
+    {
+        id: 'MSG002',
+        user: MOCK_USERS_DB['L2'],
+        text: 'Привет, Елена! Согласен, настрой боевой. Кто на каком уровне сейчас?',
+        timestamp: new Date(Date.now() - 9 * 60 * 1000).toISOString(),
+    },
+    {
+        id: 'MSG003',
+        user: MOCK_USERS_DB['U67890'],
+        text: 'Я на 4-м, почти закрыла. Нужно еще одно место. Кстати, кто-нибудь пробовал новый AI-генератор баннеров?',
+        timestamp: new Date(Date.now() - 8 * 60 * 1000).toISOString(),
+    },
+    {
+        id: 'MSG004',
+        user: MOCK_USERS_DB['U12345'], // This is our main user
+        text: 'Да, я тестировал. Очень крутая штука, экономит кучу времени. Сделал себе пару баннеров для сторис.',
+        timestamp: new Date(Date.now() - 7 * 60 * 1000).toISOString(),
+    },
+    {
+        id: 'MSG005',
+        user: MOCK_USERS_DB['UABCDE'],
+        text: 'О, надо будет тоже заценить. Спасибо за наводку!',
+        timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+    },
 ];
