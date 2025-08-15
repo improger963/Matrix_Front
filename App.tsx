@@ -1,7 +1,8 @@
 
-import React, { useState } from 'react';
+
+import React, { useState, useMemo } from 'react';
 import Header from './components/Header.tsx';
-import { ShieldCheck, LayoutGrid, BotMessageSquare, Trophy, HelpCircle, BookOpen, Wallet as WalletIcon, UserCircle, TrendingUp, MoreHorizontal, Zap, MessageSquareQuote, LifeBuoy, Newspaper, GraduationCap, Megaphone, MessageSquare, Link } from 'lucide-react';
+import { ShieldCheck, LayoutGrid, BotMessageSquare, Trophy, HelpCircle, BookOpen, Wallet as WalletIcon, UserCircle, TrendingUp, MoreHorizontal, Zap, MessageSquareQuote, LifeBuoy, Newspaper, GraduationCap, Megaphone, MessageSquare, Link, Users, ChevronDown } from 'lucide-react';
 import type { View } from './types.ts';
 import MoreMenu from './components/MoreMenu.tsx';
 import { AppProvider, useAppContext } from './contexts/AppContext.tsx';
@@ -25,16 +26,78 @@ import Promo from './components/Promo.tsx';
 import Chat from './components/Chat.tsx';
 import LandingPage from './components/LandingPage.tsx';
 
+export type NavItem = {
+  type: 'item';
+  id: View;
+  label: string;
+  icon: React.ElementType;
+};
+
+export type NavGroup = {
+  type: 'group';
+  title: string;
+  icon: React.ElementType;
+  items: Omit<NavItem, 'type'>[];
+};
+
+const navConfig: (NavItem | NavGroup)[] = [
+    { type: 'item', id: 'dashboard', label: 'Главная', icon: LayoutGrid },
+    { type: 'item', id: 'matrix', label: 'Матрица', icon: ShieldCheck },
+    { type: 'item', id: 'team', label: 'Команда', icon: TrendingUp },
+    { type: 'item', id: 'wallet', label: 'Финансы', icon: WalletIcon },
+    { 
+        type: 'group',
+        title: 'Инструменты', 
+        icon: Zap,
+        items: [
+            { id: 'marketing', label: 'AI-Копирайтер', icon: BotMessageSquare },
+            { id: 'promo', label: 'Промо-материалы', icon: Megaphone },
+            { id: 'landingPage', label: 'Моя страница', icon: Link },
+        ]
+    },
+    {
+        type: 'group',
+        title: 'Сообщество',
+        icon: Users,
+        items: [
+            { id: 'chat', label: 'Общий чат', icon: MessageSquare },
+            { id: 'leaderboard', label: 'Лидеры', icon: Trophy },
+            { id: 'livefeed', label: 'Живая лента', icon: Zap },
+            { id: 'reviews', label: 'Отзывы', icon: MessageSquareQuote },
+        ]
+    },
+    {
+        type: 'group',
+        title: 'Информация',
+        icon: BookOpen,
+        items: [
+            { id: 'academy', label: 'Академия', icon: GraduationCap },
+            { id: 'news', label: 'Новости', icon: Newspaper },
+            { id: 'howitworks', label: 'Как это работает', icon: HelpCircle },
+            { id: 'faq', label: 'FAQ', icon: HelpCircle },
+        ]
+    }
+];
+
 
 const AppContent: React.FC = () => {
     const { activeView, setActiveView } = useAppContext();
     const [isMoreMenuOpen, setMoreMenuOpen] = useState(false);
 
+    const activeGroup = useMemo(() => 
+        navConfig.find(el => el.type === 'group' && el.items.some(item => item.id === activeView)) as NavGroup | undefined
+    , [activeView]);
+
+    const [openGroups, setOpenGroups] = useState<string[]>(activeGroup ? [activeGroup.title] : []);
+
     const handleLogout = () => {
-        // In a real app, this would clear tokens, etc.
         console.log("User logged out");
-        // For demonstration, we can just reset to the initial state or show a login screen
-        // For now, we'll just log it.
+    };
+    
+    const toggleGroup = (title: string) => {
+        setOpenGroups(prev => 
+            prev.includes(title) ? prev.filter(g => g !== title) : [...prev, title]
+        );
     };
 
     const renderView = () => {
@@ -64,60 +127,91 @@ const AppContent: React.FC = () => {
         setActiveView(view);
         setMoreMenuOpen(false);
     }
-
-    const navItems = [
-        { id: 'dashboard', label: 'Панель управления', icon: LayoutGrid },
-        { id: 'matrix', label: 'Матрица', icon: ShieldCheck },
-        { id: 'team', label: 'Команда и Прогресс', icon: TrendingUp },
-        { id: 'wallet', label: 'Кошелек', icon: WalletIcon },
-        { id: 'profile', label: 'Профиль', icon: UserCircle },
-        { id: 'landingPage', label: 'Моя страница', icon: Link },
-        { id: 'marketing', label: 'AI-Копирайтер', icon: BotMessageSquare },
-        { id: 'academy', label: 'Академия', icon: GraduationCap },
-        { id: 'promo', label: 'Промо-материалы', icon: Megaphone },
-        { id: 'leaderboard', label: 'Лидеры', icon: Trophy },
-        { id: 'livefeed', label: 'Живая лента', icon: Zap },
-        { id: 'chat', label: 'Общий чат', icon: MessageSquare },
-        { id: 'reviews', label: 'Отзывы', icon: MessageSquareQuote },
-        { id: 'news', label: 'Новости', icon: Newspaper },
-        { id: 'howitworks', label: 'Как это работает', icon: BookOpen },
-        { id: 'faq', label: 'FAQ', icon: HelpCircle },
-        { id: 'support', label: 'Тех. Поддержка', icon: LifeBuoy },
-    ];
     
     const mainMobileNavItems = [
         { id: 'dashboard', label: 'Главная', icon: LayoutGrid },
         { id: 'matrix', label: 'Матрица', icon: ShieldCheck },
         { id: 'team', label: 'Команда', icon: TrendingUp },
-        { id: 'wallet', label: 'Кошелек', icon: WalletIcon },
+        { id: 'wallet', label: 'Финансы', icon: WalletIcon },
     ];
-
+    
+    const allNavItemsForMoreMenu = navConfig.flatMap(el => el.type === 'item' ? [el] : el.items);
     const mainMobileNavIdsSet = new Set(mainMobileNavItems.map(item => item.id));
-    const moreNavItems = navItems.filter(item => !mainMobileNavIdsSet.has(item.id));
-    const isMoreMenuActive = moreNavItems.some(item => item.id === activeView);
+    const isMoreMenuActive = allNavItemsForMoreMenu.some(item => !mainMobileNavIdsSet.has(item.id) && item.id === activeView);
+
+    const moreNavConfig = useMemo(() => navConfig
+      .map(el => {
+        if (el.type === 'item') {
+          return mainMobileNavIdsSet.has(el.id) ? null : el;
+        }
+        const filteredItems = el.items.filter(item => !mainMobileNavIdsSet.has(item.id));
+        return filteredItems.length > 0 ? { ...el, items: filteredItems } : null;
+      })
+      .filter((el): el is NavItem | NavGroup => el !== null), []);
 
     return (
         <div className="min-h-screen flex bg-dark-900 font-sans">
-            <aside className="hidden lg:flex flex-col bg-dark-800/70 backdrop-blur-sm w-64 p-6 border-r border-dark-700">
-                <div className="flex items-center gap-3 mb-8">
+            <aside className="hidden lg:flex flex-col bg-dark-800/70 backdrop-blur-sm w-64 p-4 border-r border-dark-700">
+                <div className="flex items-center gap-3 mb-8 px-2">
                     <ShieldCheck className="h-10 w-10 text-brand-primary" />
                     <h1 className="text-xl font-bold text-white">MatrixFlow</h1>
                 </div>
-                <nav className="flex-1 flex flex-col space-y-2">
-                    {navItems.map(item => (
-                         <button
-                            key={item.id}
-                            onClick={() => handleViewChange(item.id as View)}
-                            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ease-in-out w-full text-left
-                                ${activeView === item.id 
-                                    ? 'bg-brand-primary text-white shadow-lg' 
-                                    : 'text-gray-300 hover:bg-dark-700 hover:text-white'
-                                }`}
-                        >
-                            <item.icon className="h-5 w-5" />
-                            <span>{item.label}</span>
-                        </button>
-                    ))}
+                <nav className="flex-1 flex flex-col space-y-1 overflow-y-auto">
+                    {navConfig.map((el) => {
+                        if (el.type === 'item') {
+                            return (
+                                <button
+                                    key={el.id}
+                                    onClick={() => handleViewChange(el.id as View)}
+                                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ease-in-out w-full text-left
+                                        ${activeView === el.id 
+                                            ? 'bg-brand-primary text-white shadow-lg' 
+                                            : 'text-gray-300 hover:bg-dark-700 hover:text-white'
+                                        }`}
+                                >
+                                    <el.icon className="h-5 w-5" />
+                                    <span>{el.label}</span>
+                                </button>
+                            );
+                        }
+                        const isGroupOpen = openGroups.includes(el.title);
+                        const isGroupActive = el.items.some(item => item.id === activeView);
+                        return (
+                             <div key={el.title}>
+                                <button
+                                    onClick={() => toggleGroup(el.title)}
+                                    className={`flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ease-in-out w-full text-left
+                                        ${isGroupActive ? 'text-white' : 'text-gray-300 hover:bg-dark-700 hover:text-white'}`}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <el.icon className={`h-5 w-5 ${isGroupActive ? 'text-brand-accent' : ''}`} />
+                                        <span>{el.title}</span>
+                                    </div>
+                                    <ChevronDown className={`h-4 w-4 transition-transform ${isGroupOpen ? 'rotate-180' : ''}`} />
+                                </button>
+                                <div className={`grid transition-all duration-300 ease-in-out ${isGroupOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
+                                    <div className="overflow-hidden">
+                                        <div className="pt-1 pl-4 border-l-2 border-dark-700 ml-5 space-y-1 mt-1">
+                                            {el.items.map(item => (
+                                                <button
+                                                    key={item.id}
+                                                    onClick={() => handleViewChange(item.id as View)}
+                                                    className={`flex items-center gap-3 px-3 py-2 rounded-md text-xs font-medium transition-all duration-200 ease-in-out w-full text-left
+                                                        ${activeView === item.id 
+                                                            ? 'bg-dark-700 text-brand-primary' 
+                                                            : 'text-gray-400 hover:bg-dark-700/50 hover:text-gray-200'
+                                                        }`}
+                                                >
+                                                    <item.icon className="h-4 w-4" />
+                                                    <span>{item.label}</span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
                 </nav>
             </aside>
             <div className="flex-1 flex flex-col relative z-10 min-w-0">
@@ -162,7 +256,7 @@ const AppContent: React.FC = () => {
              <MoreMenu 
                 isOpen={isMoreMenuOpen}
                 onClose={() => setMoreMenuOpen(false)}
-                navItems={moreNavItems}
+                navConfig={moreNavConfig}
                 activeView={activeView}
                 onViewChange={handleViewChange}
             />

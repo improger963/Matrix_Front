@@ -1,10 +1,12 @@
 
+
 import React, { useState, useEffect, useRef } from 'react';
 import type { Notification } from '../types.ts';
 import { MOCK_NOTIFICATIONS } from '../constants.ts';
 import NotificationsPanel from './NotificationsPanel.tsx';
-import { Bell, ChevronDown, LogOut, UserCircle } from 'lucide-react';
+import { Bell, ChevronDown, LogOut, UserCircle, LifeBuoy, Wallet, Search, ShieldCheck } from 'lucide-react';
 import { useAppContext } from '../contexts/AppContext.tsx';
+import { AnimatedBalance } from './ui/Stat.tsx';
 
 interface HeaderProps {
     onLogout: () => void;
@@ -54,17 +56,35 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
 
     return (
         <header className="sticky top-0 z-20 flex justify-between items-center bg-dark-800/80 backdrop-blur-sm p-4 border-b border-dark-700 lg:mx-8 lg:mt-6 lg:rounded-xl lg:border">
-            <div className="flex items-center gap-4">
-                <div>
-                    <h2 className="text-lg md:text-xl font-bold text-white">Добро пожаловать, {user.name.split(' ')[0]}!</h2>
-                    <p className="hidden md:block text-sm text-gray-400">Вот ваша статистика на сегодня.</p>
-                </div>
+            {/* Left side: Logo on mobile/tablet, Search on desktop */}
+            <div className="flex items-center gap-2 lg:hidden">
+                <ShieldCheck className="h-7 w-7 text-brand-primary" />
+                <h1 className="text-lg font-bold text-white">MatrixFlow</h1>
             </div>
-            <div className="flex items-center gap-4">
+
+            <div className="hidden lg:flex items-center gap-2 bg-dark-900/70 border border-dark-700 rounded-lg px-3 py-1.5 w-full max-w-xs transition-all focus-within:border-brand-primary focus-within:ring-1 focus-within:ring-brand-primary">
+                <Search className="h-5 w-5 text-gray-500" />
+                <input 
+                    type="text" 
+                    placeholder="Поиск..."
+                    className="bg-transparent w-full text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
+                />
+            </div>
+
+            {/* Right side: Controls */}
+            <div className="flex items-center gap-2 sm:gap-4">
+                <button 
+                    onClick={() => setActiveView('wallet')} 
+                    className="hidden sm:flex items-center gap-2 bg-dark-700/50 hover:bg-dark-700 px-3 py-2 rounded-lg transition-colors"
+                    title="Перейти в кошелек"
+                >
+                    <Wallet className="h-5 w-5 text-green-400" />
+                    <AnimatedBalance value={user.balance} className="text-white text-sm" />
+                </button>
                 <div className="relative" ref={notificationsRef}>
                     <button 
                         onClick={handleToggleNotifications} 
-                        className="relative text-gray-400 hover:text-white transition-colors"
+                        className="relative text-gray-400 hover:text-white transition-colors p-2 rounded-full hover:bg-dark-700"
                         aria-label="Открыть уведомления"
                         aria-haspopup="true"
                         aria-expanded={isNotificationsOpen}
@@ -106,7 +126,12 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
                                     <UserCircle className="h-5 w-5" />
                                     <span>Мой профиль</span>
                                 </button>
-                                <button onClick={onLogout} className="w-full text-left flex items-center gap-3 px-3 py-2 rounded-md text-gray-300 hover:bg-dark-700 hover:text-white transition-colors">
+                                <button onClick={() => { setActiveView('support'); setUserMenuOpen(false); }} className="w-full text-left flex items-center gap-3 px-3 py-2 rounded-md text-gray-300 hover:bg-dark-700 hover:text-white transition-colors">
+                                    <LifeBuoy className="h-5 w-5" />
+                                    <span>Тех. Поддержка</span>
+                                </button>
+                                <div className="h-px bg-dark-700 my-1"></div>
+                                <button onClick={onLogout} className="w-full text-left flex items-center gap-3 px-3 py-2 rounded-md text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors">
                                     <LogOut className="h-5 w-5" />
                                     <span>Выйти</span>
                                 </button>
