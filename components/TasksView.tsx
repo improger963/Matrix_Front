@@ -8,7 +8,8 @@ import type { Mission } from '../types.ts';
 import { ListChecks, Check, Trophy, Zap, Gift } from 'lucide-react';
 
 const TaskCard: React.FC<{ task: Mission, onAction: (task: Mission) => void }> = ({ task, onAction }) => {
-    const isCompleted = task.status === 'completed' || task.status === 'claimed';
+    const isCompleted = task.status === 'completed';
+    const isClaimed = task.status === 'claimed';
     const progressPercentage = task.progress ? (task.progress.current / task.progress.target) * 100 : 0;
 
     const categoryStyles = {
@@ -57,7 +58,7 @@ const TaskCard: React.FC<{ task: Mission, onAction: (task: Mission) => void }> =
         <div className={`
             relative rounded-xl border p-5 transition-all duration-300 overflow-hidden
             bg-gradient-to-br ${styles.bg} ${styles.border}
-            ${isCompleted ? 'opacity-50 saturate-50' : 'hover:border-brand-accent/70 hover:shadow-2xl hover:shadow-brand-primary/20 hover:-translate-y-1'}
+            ${isClaimed ? 'opacity-50 saturate-50' : 'hover:border-brand-accent/70 hover:shadow-2xl hover:shadow-brand-primary/20 hover:-translate-y-1'}
         `}>
             <div className="flex flex-col h-full">
                 <div className="flex items-start gap-4">
@@ -70,7 +71,7 @@ const TaskCard: React.FC<{ task: Mission, onAction: (task: Mission) => void }> =
                     </div>
                 </div>
                 
-                {task.progress && !isCompleted && (
+                {task.progress && !isCompleted && !isClaimed && (
                     <div className="mt-4">
                         <div className="flex justify-between text-xs text-gray-400 mb-1">
                             <span>Прогресс</span>
@@ -85,9 +86,10 @@ const TaskCard: React.FC<{ task: Mission, onAction: (task: Mission) => void }> =
                 <div className="mt-auto pt-4 flex items-center justify-between">
                     <div className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent-gold to-yellow-300 flex items-center gap-1.5">
                        <Zap className="w-4 h-4" /> +{task.rewardRP} RP
+                       {task.rewardCAP && <span className="text-accent-green ml-2"> +${task.rewardCAP} CAP</span>}
                     </div>
                     <div>
-                        {isCompleted ? (
+                        {isClaimed ? (
                             <div className="flex items-center justify-center gap-2 text-green-400 font-semibold p-2 rounded-lg bg-green-500/10 w-full sm:w-36 animate-check-in">
                                 <Check className="h-5 w-5" />
                                 <span>Выполнено</span>
@@ -169,7 +171,7 @@ const TasksView: React.FC = () => {
                     <ListChecks className="h-8 w-8 text-brand-primary" />
                     <div>
                         <h2 className="text-3xl font-bold text-white">Центр Миссий</h2>
-                        <p className="text-gray-400">Выполняйте задания, получайте XP и ускоряйте свой прогресс.</p>
+                        <p className="text-gray-400">Выполняйте задания, получайте RP и ускоряйте свой прогресс.</p>
                     </div>
                 </div>
             </Card>

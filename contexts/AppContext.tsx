@@ -122,7 +122,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         }
     }, [user.referralLink, handleCompleteMission, addToast, handleSetActiveView]);
 
-    const RankUpModal = () => null;
+    const RankUpModal = () => null; // Mock implementation to avoid crash
 
     const value = {
         user,

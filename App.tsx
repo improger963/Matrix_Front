@@ -136,7 +136,7 @@ const AppContent: React.FC = () => {
               {renderView()}
            </LayoutComponent>
            <AssistantWidget />
-           <RankUpModal />
+           {RankUpModal && <RankUpModal />}
         </div>
     );
 };
