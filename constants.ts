@@ -121,7 +121,7 @@ const RAW_MOCK_STARTUP_DATA: StartupNode = {
     investors: 2,
     lastActivityDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
     fundingStage: 1,
-    industry: "Fintech",
+    industry: "Финтех",
     children: [
         { 
             id: 'U67890',
@@ -134,7 +134,7 @@ const RAW_MOCK_STARTUP_DATA: StartupNode = {
             investors: 2,
             lastActivityDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
             fundingStage: 1,
-            industry: "Fintech",
+            industry: "Финтех",
             children: [
                 { 
                     id: 'U11223', 
@@ -148,10 +148,10 @@ const RAW_MOCK_STARTUP_DATA: StartupNode = {
                     investors: 2,
                     lastActivityDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
                     fundingStage: 1,
-                    industry: "Fintech",
+                    industry: "Финтех",
                     children: [
-                        { id: 'UCHILD1', name: 'Петр Ф.', nodeType: 'self', avatarUrl: 'https://i.pravatar.cc/150?u=UCHILD1', isFilled: true, joinDate: '2024-07-20', level: 2, investors: 0, lastActivityDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), fundingStage: 1, industry: "Fintech", },
-                        { id: 'UCHILD2', name: 'Свободно', avatarUrl: '', isFilled: false, fundingStage: 1, industry: "Fintech", }
+                        { id: 'UCHILD1', name: 'Петр Ф.', nodeType: 'self', avatarUrl: 'https://i.pravatar.cc/150?u=UCHILD1', isFilled: true, joinDate: '2024-07-20', level: 2, investors: 0, lastActivityDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), fundingStage: 1, industry: "Финтех", },
+                        { id: 'UCHILD2', name: 'Свободно', avatarUrl: '', isFilled: false, fundingStage: 1, industry: "Финтех", }
                     ]
                 },
                 { 
@@ -165,10 +165,10 @@ const RAW_MOCK_STARTUP_DATA: StartupNode = {
                     investors: 1,
                     lastActivityDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
                     fundingStage: 1,
-                    industry: "Fintech",
+                    industry: "Финтех",
                     children: [
-                        { id: 'UCHILD3', name: 'Екатерина Б.', nodeType: 'self', avatarUrl: 'https://i.pravatar.cc/150?u=UCHILD3', isFilled: true, joinDate: '2024-07-22', level: 1, investors: 0, lastActivityDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), fundingStage: 1, industry: "Fintech", },
-                        { id: 'UCHILD4', name: 'Свободно', avatarUrl: '', isFilled: false, fundingStage: 1, industry: "Fintech", }
+                        { id: 'UCHILD3', name: 'Екатерина Б.', nodeType: 'self', avatarUrl: 'https://i.pravatar.cc/150?u=UCHILD3', isFilled: true, joinDate: '2024-07-22', level: 1, investors: 0, lastActivityDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), fundingStage: 1, industry: "Финтех", },
+                        { id: 'UCHILD4', name: 'Свободно', avatarUrl: '', isFilled: false, fundingStage: 1, industry: "Финтех", }
                     ]
                 }
             ]
@@ -184,7 +184,7 @@ const RAW_MOCK_STARTUP_DATA: StartupNode = {
             investors: 1,
             lastActivityDate: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
             fundingStage: 1,
-            industry: "Fintech",
+            industry: "Финтех",
             children: [
                 { 
                     id: 'UFGHIJ', 
@@ -198,10 +198,10 @@ const RAW_MOCK_STARTUP_DATA: StartupNode = {
                     investors: 0,
                     lastActivityDate: new Date(Date.now() - 35 * 24 * 60 * 60 * 1000).toISOString(),
                     fundingStage: 1,
-                    industry: "Fintech",
+                    industry: "Финтех",
                      children: [
-                         { id: 'UCHILD5', name: 'Свободно', avatarUrl: '', isFilled: false, fundingStage: 1, industry: "Fintech", },
-                         { id: 'UCHILD6', name: 'Свободно', avatarUrl: '', isFilled: false, fundingStage: 1, industry: "Fintech", }
+                         { id: 'UCHILD5', name: 'Свободно', avatarUrl: '', isFilled: false, fundingStage: 1, industry: "Финтех", },
+                         { id: 'UCHILD6', name: 'Свободно', avatarUrl: '', isFilled: false, fundingStage: 1, industry: "Финтех", }
                     ]
                 },
                 { 
@@ -215,10 +215,10 @@ const RAW_MOCK_STARTUP_DATA: StartupNode = {
                     investors: 0,
                     lastActivityDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
                     fundingStage: 1,
-                    industry: "Fintech",
+                    industry: "Финтех",
                     children: [
-                         { id: 'UCHILD7', name: 'Свободно', avatarUrl: '', isFilled: false, fundingStage: 1, industry: "Fintech", },
-                         { id: 'UCHILD8', name: 'Свободно', avatarUrl: '', isFilled: false, fundingStage: 1, industry: "Fintech", }
+                         { id: 'UCHILD7', name: 'Свободно', avatarUrl: '', isFilled: false, fundingStage: 1, industry: "Финтех", },
+                         { id: 'UCHILD8', name: 'Свободно', avatarUrl: '', isFilled: false, fundingStage: 1, industry: "Финтех", }
                     ]
                 },
             ]
@@ -444,14 +444,14 @@ export const MOCK_CAPITAL_HISTORY_30_DAYS = Array.from({ length: 30 }, (_, i) =>
 });
 
 export const MOCK_PORTFOLIO = [
-    { id: 'S01', name: 'Fintech Innovations', stage: { name: 'Pre-seed', color: '#3b82f6' }, progress: [100, 75, 0], nextMilestone: 'Привлечь 2 инвесторов' },
-    { id: 'S02', name: 'AI Health Solutions', stage: { name: 'Round A', color: '#2dd4bf' }, progress: [100, 100, 40], nextMilestone: 'Закрыть раунд B' },
+    { id: 'S01', name: 'Финансовые Инновации', stage: { name: 'Пре-сид', color: '#3b82f6' }, progress: [100, 75, 0], nextMilestone: 'Привлечь 2 инвесторов' },
+    { id: 'S02', name: 'ИИ в Здравоохранении', stage: { name: 'Раунд А', color: '#2dd4bf' }, progress: [100, 100, 40], nextMilestone: 'Закрыть раунд B' },
 ];
 
 export const MOCK_MARKET_PULSE = [
-    { id: 'fintech', name: 'Fintech', avgROI: 250, avgExitTime: 14, isTrending: true },
-    { id: 'ai', name: 'AI & ML', avgROI: 180, avgExitTime: 21, isTrending: false },
-    { id: 'greentech', name: 'GreenTech', avgROI: 150, avgExitTime: 25, isTrending: false },
+    { id: 'fintech', name: 'Финтех', avgROI: 250, avgExitTime: 14, isTrending: true },
+    { id: 'ai', name: 'ИИ и МО', avgROI: 180, avgExitTime: 21, isTrending: false },
+    { id: 'greentech', name: 'Зеленые технологии', avgROI: 150, avgExitTime: 25, isTrending: false },
 ];
 
 export const MOCK_BOARDROOM_DATA: {
@@ -480,14 +480,14 @@ export const MOCK_BOARDROOM_DATA: {
 
 export const MOCK_MARKET_DATA = {
     syndicates: [
-        { id: 'G1', name: 'Alpha Investors' },
-        { id: 'G2', name: 'Quantum Leap' },
-        { id: 'G3', name: 'Momentum Traders' },
+        { id: 'G1', name: 'Альфа Инвесторы' },
+        { id: 'G2', name: 'Квантовый скачок' },
+        { id: 'G3', name: 'Импульсные Трейдеры' },
     ],
     sectors: [
-        { id: 'D1', name: 'Fintech', startups: generateStartups(6, 'Fintech', ['G1', 'G2', 'G3'], MOCK_PARTNER.id) },
-        { id: 'D2', name: 'AI & ML', startups: generateStartups(12, 'AI & ML', ['G1', 'G2', 'G3']) },
-        { id: 'D3', name: 'GreenTech', startups: generateStartups(6, 'GreenTech', ['G1', 'G2', 'G3']) },
+        { id: 'D1', name: 'Финтех', startups: generateStartups(6, 'Финтех', ['G1', 'G2', 'G3'], MOCK_PARTNER.id) },
+        { id: 'D2', name: 'ИИ и МО', startups: generateStartups(12, 'ИИ и МО', ['G1', 'G2', 'G3']) },
+        { id: 'D3', name: 'Зеленые технологии', startups: generateStartups(6, 'Зеленые технологии', ['G1', 'G2', 'G3']) },
     ],
 };
 

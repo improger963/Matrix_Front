@@ -334,15 +334,16 @@ const Chat: React.FC = () => {
     }, [messages]);
 
     useEffect(() => {
-        let typingTimeout: NodeJS.Timeout;
-        if(newMessage.length > 0) {
+        let typingTimeout: ReturnType<typeof setTimeout>;
+        if (newMessage.length > 0) {
             // In a real app, you'd emit a "start typing" event here
-            clearTimeout(typingTimeout);
             typingTimeout = setTimeout(() => {
                 // And emit a "stop typing" event here
             }, 3000);
         }
-        return () => clearTimeout(typingTimeout);
+        return () => {
+            clearTimeout(typingTimeout);
+        };
     }, [newMessage]);
 
     return (

@@ -22,13 +22,13 @@ export const generateMarketingContentStream = async (prompt: string, onChunk: (t
 
         if (!response.ok) {
              // Since we don't have a real backend, we'll simulate an error for demonstration.
-            const errorText = `Error: API endpoint not found. This is expected as the backend is not yet implemented. The app has been secured to prevent exposing the API key.`;
+            const errorText = `Ошибка: API эндпоинт не найден. Это ожидаемо, так как бэкенд еще не реализован. Приложение защищено от утечки API ключа.`;
             console.error(errorText);
             throw new Error(errorText);
         }
 
         if (!response.body) {
-            throw new Error("Response body is empty.");
+            throw new Error("Тело ответа пустое.");
         }
 
         const reader = response.body.getReader();
@@ -43,7 +43,7 @@ export const generateMarketingContentStream = async (prompt: string, onChunk: (t
         }
 
     } catch (error) {
-        console.error("Error calling backend service:", error);
+        console.error("Ошибка при вызове бэкенд-сервиса:", error);
         // Provide a more user-friendly error if the fetch fails (e.g., backend not running)
         throw new Error("Не удалось сгенерировать контент. Убедитесь, что бэкенд-сервер запущен и доступен.");
     }
@@ -51,12 +51,12 @@ export const generateMarketingContentStream = async (prompt: string, onChunk: (t
 
 
 // This is a placeholder base64 string for a futuristic abstract JPEG image.
-const MOCK_IMAGE_B64 = "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAFAAeADASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAUGAwQHAgH/xABCEAACAgEDAgMDBwgJBQAAAAAAAQIDBBEFEgYhMUETIlFhcYEHFDJCcpGhsRVSYnOCg5Kis9IkNDU2g8LwF0RzosL/xAAYAQEBAQEBAAAAAAAAAAAAAAAAAQIDBP/EACERAQEAAgICAwEBAQAAAAAAAAABEQIhMRJBUQMicYET/oADAMBAAIRAxEAPwD9xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACEzM7Fpjk22yrGqMbJSfVpNpep11e0tJ19Vw/r1i9M0vB8/MtyT1Xw+Yd+Bw+LmdDFrpxt/G4+GcpLq0kl82/BHN4maMrGvsvxKq6ZSj/AHk00/mgHRg5XLyMnKqv0zGqhO1VyXWzTrFv7bX5gdoCEzcrEx6vKyL6qa005pykkvmyGvmdPk3RqozaJ2S+FFc02/gkB04PM8vGhV7S3IqhF7uUpJJL3s8qNRo+RPpx8zHtfxVYv8AnnmHeAcriZ2FlKUcerruUdJRjJSXzSOoAAAAAAAAAAAAAAAAAAAAGL1tq+Bp9tuX4s4yUfF7tvYx/tA03+tX/wAf+J2+01BXtFp8k93CuMX9fAv8zG+8T/P6Z+aT2t6v7QNN/rV/8f8Ain2gab/Wr/4/8TA7xf2+ZneL+3zM/NPzSdr2n7QNN/rV/wDH/in2gab/AWr/AOP/ABMDvF/b5md4v7fMz80/NJ2vaftA03+tX/x/4p9oGm/1rP8A4/8AEwO8X9vmZ3i/t8zPzT80na9n/aBpv9az/wCP/E5evNcw83Sq6K5zbbjJJxa2TXUw+8X9vmZ3i/t8zPzT80na8/T9Vq+HkQttblBNSXqns/Nj94n+f0vP09q2u/GDbS+BqUv9G3xMj0zS7tS0+mG/rRjL/AFJb/nued7w/H6d/JdYAAAAAAAAAAAAAAAAAAABi/aHj23aRkKmMnJRT2Xfs0zZAcjS8D+EtNpo217tUUb+PQt/xPNV+j5P5j/AJJfyP5j2wYkqv0fJ/Mf8k+r9HyfzH/JLeB5eBJKv0fJ/Mf8k+r9HyfzH/JLeB5eBJKv0fJ/Mf8k+r9HyfzH/JLeB5eBJKv0fJ/Mf8lV7StOytRwqqaYycvaRk+vY6gEqvTdTwdOopqnO6qCj621i35/7o7PsPV/0eX+R/wAzdwY3hW7Nf2Hq/wDo8v8AI/5p9h6v+jy/yP8AmbqTwrdmP7E1f+jy/wAj/wD6PsvVf0WX+R/zN3JPCt2PP0rStOwtQuvshK1JNRbWzbW/5HbAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMd2i1S3StHuyKLFC6ajCEovdNv61/d3fyOQ9oGqai3Oqxcm+qKrJSinJ+p/YAAAAAEZnuJAAAAAAAAAAAAAAAAAAAD//Z";
+const MOCK_IMAGE_B64 = "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAFAAeADASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAUGAwQHAgH/xABCEAACAgEDAgMDBwgJBQAAAAAAAQIDBBEFEgYhMUETIlFhcYEHFDJCcpGhsRVSYnOCg5Kis9IkNDU2g8LwF0RzosL/xAAYAQEBAQEBAAAAAAAAAAAAAAAAAQIDBP/EACERAQEAAgICAwEBAQAAAAAAAAABEQIhMRJBUQMicYET/oADAMBAAIRAxEAPwD9xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACEzM7Fpjk22yrGqMbJSfVpNpep11e0tJ19Vw/r1i9M0vB8/MtyT1Xw+Yd+Bw+LmdDFrpxt/G4+GcpLq0kl82/BHN4maMrGvsvxKq6ZSj/AHk00/mgHRg5XLyMnKqv0zGqhO1VyXWzTrFv7bX5gdoCEzcrEx6vKyL6qa005pykkvmyGvmdPk3RqozaJ2S+FFc02/gkB04PM8vGhV7S3IqhF7uUpJJL3s8qNRo+RPpx8zHtfxVYv8AnnmHeAcriZ2FlKUcerruUdJRjJSXzSOoAAAAAAAAAAAAAAAAAAAAGL1tq+Bp9tuX4s4yUfF7tvYx/tA03+tX/wAf+J2+01BXtFp8k93CuMX9fAv8zG+8T/P6Z+aT2t6v7QNN/rV/8f8Ain2gab/Wr/4/8TA7xf2+ZneL+3zM/NPzSdr2n7QNN/rV/wDH/in2gab/AWr/AOP/ABMDvF/b5md4v7fMz80/NJ2vaftA03+tX/x/4p9oGm/1rP8A4/8AEwO8X9vmZ3i/t8zPzT80na9n/aBpv9az/wCP/E5evNcw83Sq6K5zbbjJJxa2TXUw+8X9vmZ3i/t8zPzT80na8/T9Vq+HkQttblBNSXqns/Nj94n+f0vP09q2u/GDbS+BqUv9G3xMj0zS7tS0+mG/rRjL/AFJb/nued7w/H6d/JdYAAAAAAAAAAAAAAAAAAABi/aHj22aRkKmMnJRT2Xfs0zZAcjS8D+EtNpo217tUUb+PQt/xPNV+j5P5j/AJJfyP5j2wYkqv0fJ/Mf8k+r9HyfzH/JLeB5eBJKv0fJ/Mf8k+r9HyfzH/JLeB5eBJKv0fJ/Mf8k+r9HyfzH/JLeB5eBJKv0fJ/Mf8lV7StOytRwqqaYycvaRk+vY6gEqvTdTwdOopqnO6qCj621i35/7o7PsPV/0eX+R/wAzdwY3hW7Nf2Hq/wDo8v8AI/5p9h6v+jy/yP8AmbqTwrdmP7E1f+jy/wAj/wD6PsvVf0WX+R/zN3JPCt2PP0rStOwtQuvshK1JNRbWzbW/5HbAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMd2i1S3StHuyKLFC6ajCEovdNv61/d3fyOQ9oGqai3Oqxcm+qKrJSinJ+p/YAAAAAEZnuJAAAAAAAAAAAAAAAAAAAD//Z";
 
 // This function simulates a call to a backend endpoint for image generation.
 // The backend would be responsible for securely calling the Gemini API's Imagen model.
 export const generateImage = async (prompt: string, aspectRatio: string): Promise<string> => {
-    console.log(`Simulating image generation for prompt: "${prompt}" with aspect ratio: ${aspectRatio}`);
+    console.log(`Симуляция генерации изображения для промпта: "${prompt}" с соотношением сторон: ${aspectRatio}`);
     
     // Simulate network delay and generation time
     await new Promise(resolve => setTimeout(resolve, 5000));
@@ -95,7 +95,7 @@ export const getAITeamAnalysisStream = async (
     teamData: SyndicateMember[],
     onChunk: (text: string) => void
 ): Promise<void> => {
-    console.log("Simulating AI team analysis for:", teamData);
+    console.log("Симуляция AI-анализа команды для:", teamData);
 
     if (teamData.length === 0) {
         throw new Error("Нет данных о команде для анализа.");

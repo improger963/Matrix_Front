@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect, useRef } from 'react';
 import type { Notification } from '../types.ts';
 import { MOCK_NOTIFICATIONS } from '../constants.ts';
@@ -75,7 +76,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
                 <button 
                     onClick={() => setActiveView('capital')} 
                     className="hidden sm:flex items-center gap-2 bg-dark-700/50 hover:bg-dark-700 px-3 py-2 rounded-lg transition-colors"
-                    title="Перейти в Капитал"
+                    title="Перейти в Казначейство"
                 >
                     <Wallet className="h-5 w-5 text-accent-green" />
                     <AnimatedBalance value={user.capital} isCurrency={true} className="text-white text-sm" />
@@ -105,7 +106,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
                 </div>
 
                 <div className="relative" ref={userMenuRef}>
-                    <button onClick={handleToggleUserMenu} type="button" className="flex items-center gap-2 group" aria-haspopup="true" aria-expanded={isUserMenuOpen}>
+                    <button onClick={handleToggleUserMenu} type="button" className="flex items-center gap-2 group" aria-haspopup="true" aria-expanded={isUserMenuOpen} aria-label="Открыть меню пользователя">
                         <img src={user.avatarUrl} alt="User Avatar" className="h-10 w-10 rounded-full border-2 border-brand-secondary group-hover:border-brand-primary transition-colors" />
                         <div className="hidden sm:block text-left">
                             <p className="font-semibold text-white">{user.name}</p>
